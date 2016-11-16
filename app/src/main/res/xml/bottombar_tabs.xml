@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <tabs>
+        <tab
+            icon="@drawable/va_home"
+            id="@+id/va_home"
+            title="@string/shouye" />
+        <tab
+            icon="@drawable/va_add"
+            id="@+id/va_add"
+            title="@string/tianjia" />
+        <tab
+            icon="@drawable/va_about"
+            id="@+id/va_about"
+            title="@string/guanyu" />
+    </tabs>
+
+</PreferenceScreen>

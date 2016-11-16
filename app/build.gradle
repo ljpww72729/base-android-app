@@ -1,15 +1,16 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 23
-    buildToolsVersion "24.0.0 rc2"
+    compileSdkVersion 24
+    buildToolsVersion '24.0.2'
 
     defaultConfig {
-        applicationId "com.ww.lp.base_android_app"
-        minSdkVersion 11
-        targetSdkVersion 23
+        applicationId "com.ww.lp.base"
+        minSdkVersion 14
+        targetSdkVersion 24
         versionCode 1
-        versionName "1.0"
+        versionName "1.0.1"
+        vectorDrawables.useSupportLibrary = true
     }
     buildTypes {
         release {
@@ -17,10 +18,27 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    dataBinding.enabled = true;
+}
+
+ext {
+    supportVersion = "24.2.1"
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'
-    compile 'com.android.support:appcompat-v7:23.3.0'
+    compile "com.android.support:appcompat-v7:${supportVersion}"
+    compile project(':volley')
+    compile 'com.google.code.gson:gson:2.7'
+    compile 'io.reactivex:rxjava:1.1.8'
+    compile 'io.reactivex:rxandroid:1.2.1'
+    compile 'com.google.guava:guava:20.0-rc1'
+    compile 'com.synnapps:carouselview:0.0.10'
+    compile 'com.facebook.fresco:fresco:0.14.1'
+    compile "com.android.support:support-vector-drawable:${supportVersion}"
+    compile "com.android.support:design:${supportVersion}"
+    compile "com.android.support:recyclerview-v7:${supportVersion}"
+    compile "com.android.support:cardview-v7:${supportVersion}"
+    compile 'com.orhanobut:logger:1.15'
 }
