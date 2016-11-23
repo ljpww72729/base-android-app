@@ -39,7 +39,7 @@ public class TempActivity extends BaseActivity {
         }
 
         // Create the presenter
-        new TempPresenter(TAG, ServerImp.getInstance(), tempFragment, SchedulerProvider.getInstance());
+        new TempPresenter(TAG, ServerImp.getInstance(getApplicationContext()), tempFragment, SchedulerProvider.getInstance());
     }
 
     @Override

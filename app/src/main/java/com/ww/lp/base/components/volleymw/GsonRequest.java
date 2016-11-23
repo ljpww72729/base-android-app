@@ -70,10 +70,13 @@ public class GsonRequest<T> extends Request<T> {
     /**
      * 去除map中NULL或者空字符串的数据项
      *
-     * @param param
+     * @param param 参数键值对
      * @return
      */
     private Map<String, String> removeNullAndEmpty(Map<String, String> param) {
+        if (param == null){
+            return null;
+        }
         Map<String,String> formatParam = new HashMap<>();
         Set<Map.Entry<String, String>> entry = param.entrySet();
         for (Map.Entry<String, String> format : entry) {

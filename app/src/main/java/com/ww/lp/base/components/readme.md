@@ -19,9 +19,9 @@ volley请求中间件，包括请求结果转化为实例对象
 ### 来源
 自定义组件
 
-## imgcompress
+## progress_layout
 ### 简介
-图片压缩组件
+页面加载布局
 ### 来源
-第三方组件，github地址：[Compressor](https://github.com/zetbaitsu/Compressor.git)
+第三方组件，github地址：[progress-activity](https://github.com/vlonjatg/progress-activity.git)
 

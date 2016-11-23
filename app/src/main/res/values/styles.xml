@@ -45,4 +45,11 @@
     <style name="BB_BottomBarBadge_Text" parent="TextAppearance.AppCompat.Body2">
         <item name="android:textColor">#FFFFFF</item>
     </style>
+
+    <style name="AppTheme.Dark.Dialog" parent="Theme.AppCompat.Dialog">
+        <item name="colorAccent">@color/white</item>
+        <item name="android:textColorPrimary">@color/colorPrimary</item>
+        <item name="android:background">@color/window_bg</item>
+    </style>
+
 </resources>

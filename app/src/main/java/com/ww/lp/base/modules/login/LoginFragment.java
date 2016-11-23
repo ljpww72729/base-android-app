@@ -43,7 +43,7 @@ public class LoginFragment extends BaseFragment implements LoginContract.View{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.login_frag, container, false);
+        View root = onCreateView(inflater, container, savedInstanceState, R.layout.login_frag, true);
         loginFragBinding = LoginFragBinding.bind(root);
         UserInfo userInfo = new UserInfo();
         userInfo.setName("test110");

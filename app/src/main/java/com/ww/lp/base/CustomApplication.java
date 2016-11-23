@@ -3,8 +3,8 @@ package com.ww.lp.base;
 import android.app.Application;
 
 import com.android.volley.toolbox.VolleySingleton;
-import com.facebook.drawee.backends.pipeline.*;
 import com.facebook.drawee.backends.pipeline.BuildConfig;
+import com.facebook.drawee.backends.pipeline.Fresco;
 import com.orhanobut.logger.LogLevel;
 import com.orhanobut.logger.Logger;
 
@@ -13,9 +13,19 @@ import com.orhanobut.logger.Logger;
  */
 
 public class CustomApplication extends Application {
+
+    private static CustomApplication app;
+
+    public static CustomApplication self() {
+        return app;
+    }
+
     @Override
     public void onCreate() {
         super.onCreate();
+        if (app == null){
+            app = this;
+        }
         //初始化volley
         VolleySingleton.init(this);
         //初始化Fresco图片加载库

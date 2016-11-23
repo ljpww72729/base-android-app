@@ -12,6 +12,16 @@ public class DataPart {
     private byte[] content;
     private String type;
 
+    public String getFilePath() {
+        return filePath;
+    }
+
+    public void setFilePath(String filePath) {
+        this.filePath = filePath;
+    }
+
+    private String filePath;
+
     /**
      * Default data part
      */
@@ -39,6 +49,12 @@ public class DataPart {
     public DataPart(String name, byte[] data, String mimeType) {
         fileName = name;
         content = data;
+        type = mimeType;
+    }
+
+    public DataPart(String name, String filePath, String mimeType) {
+        fileName = name;
+        this.filePath = filePath;
         type = mimeType;
     }
 

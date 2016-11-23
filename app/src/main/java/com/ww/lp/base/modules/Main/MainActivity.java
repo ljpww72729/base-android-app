@@ -47,7 +47,7 @@ public class MainActivity extends BaseActivity {
                         }
 
                         // Create the presenter
-                        new HomePresenter(TAG, ServerImp.getInstance(), homeFragment, SchedulerProvider.getInstance());
+                        new HomePresenter(TAG, ServerImp.getInstance(getApplicationContext()), homeFragment, SchedulerProvider.getInstance());
                         break;
                     case R.id.va_add:
                         break;

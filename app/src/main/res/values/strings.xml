@@ -3,4 +3,22 @@
     <string name="shouye">首页</string>
     <string name="tianjia">添加</string>
     <string name="guanyu">关于</string>
+
+    <string name="app_decription">Your awesome app</string>
+    <string name="email">邮箱</string>
+    <string name="password">密码</string>
+    <string name="denglu">登录</string>
+    <string name="error_invalid_email">Invalid Email</string>
+    <string name="error_invalid_password">The password is too short</string>
+    <string name="error_incorrect_password">Email or password incorrect</string>
+    <string name="error_field_required">Required</string>
+    <string name="forgot_password">忘记密码？</string>
+    <string name="create_account">注册</string>
+
+    <string name="progressActivityErrorButton">重试</string>
+    <string name="progressActivityEmptyTitlePlaceholder">无任何数据</string>
+    <string name="progressActivityEmptyContentPlaceholder">无任何数据\n是不是进错门了？</string>
+    <string name="progressActivityErrorTitlePlaceholder">无法连接</string>
+    <string name="progressActivityErrorContentPlaceholder">无法连接到服务器\n请检查网络并重试</string>
+
 </resources>
