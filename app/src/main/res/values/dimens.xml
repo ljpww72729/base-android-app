@@ -43,5 +43,11 @@
     <dimen name="dp_56">56dp</dimen>
     <dimen name="dp_64">64dp</dimen>
 
+    <dimen name="sp_16">16sp</dimen>
+    <dimen name="sp_18">18sp</dimen>
+    <dimen name="sp_20">20sp</dimen>
+    <dimen name="sp_22">22sp</dimen>
+    <dimen name="sp_24">24sp</dimen>
+
 
 </resources>

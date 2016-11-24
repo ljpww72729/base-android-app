@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 
 import com.ww.lp.base.BasePresenter;
 import com.ww.lp.base.BaseView;
+import com.ww.lp.base.data.LoginResult;
 import com.ww.lp.base.entity.UserInfo;
 
 
@@ -14,7 +15,9 @@ import com.ww.lp.base.entity.UserInfo;
 public class LoginContract {
 
     interface View extends BaseView<Presenter> {
-        void success();
+        void success(LoginResult loginResult);
+        void showProgressDialog(String msg);
+        void removeProgressDialog();
     }
 
     interface Presenter extends BasePresenter {

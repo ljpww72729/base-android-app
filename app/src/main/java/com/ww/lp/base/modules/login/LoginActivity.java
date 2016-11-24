@@ -10,6 +10,7 @@ import com.ww.lp.base.utils.ActivityUtils;
 import com.ww.lp.base.utils.schedulers.SchedulerProvider;
 
 /**
+ * 登录页面
  * Created by LinkedME06 on 16/10/27.
  */
 
@@ -19,6 +20,7 @@ public class LoginActivity extends BaseActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.base_act, true, false);
+        setTitle(getString(R.string.denglu));
 
         LoginFragment loginFragment = (LoginFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.contentFrame);

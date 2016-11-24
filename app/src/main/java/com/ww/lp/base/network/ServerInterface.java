@@ -7,7 +7,7 @@ package com.ww.lp.base.network;
 
 public class ServerInterface {
 
-    public static final String baseUrl = "http://123.207.173.78:3000/";
+    public static final String baseUrl = "http://118.178.225.234:8080/api/";
 
 
     public static final String testUrl = "http://www.kuaidi100.com/query";
@@ -22,7 +22,7 @@ public class ServerInterface {
     /**
      * 登录接口
      */
-    public static final String login = baseUrl + "passport/login";
+    public static final String login = baseUrl + "user/login";
     /**
      * 轮播图请求接口
      */

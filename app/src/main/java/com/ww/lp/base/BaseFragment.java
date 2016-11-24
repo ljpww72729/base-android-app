@@ -61,7 +61,6 @@ public class BaseFragment extends Fragment {
             rootView.addView(progressLayout);
             rootView.setTag(contentView.getTag());
             contentView.setTag(null);
-            showEmptyDefault();
         }
         return rootView;
     }
@@ -95,4 +94,5 @@ public class BaseFragment extends Fragment {
     public void showContent() {
         progressLayout.showContent();
     }
+
 }

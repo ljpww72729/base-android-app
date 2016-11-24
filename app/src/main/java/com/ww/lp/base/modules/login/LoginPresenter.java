@@ -1,15 +1,18 @@
 package com.ww.lp.base.modules.login;
 
 import android.support.annotation.NonNull;
-import android.util.Log;
+import android.text.TextUtils;
 
 import com.android.volley.Request;
+import com.orhanobut.logger.Logger;
+import com.ww.lp.base.R;
+import com.ww.lp.base.data.LoginResult;
 import com.ww.lp.base.entity.UserInfo;
 import com.ww.lp.base.network.ServerImp;
 import com.ww.lp.base.network.ServerInterface;
+import com.ww.lp.base.utils.StringResUtils;
+import com.ww.lp.base.utils.ToastUtils;
 import com.ww.lp.base.utils.schedulers.BaseSchedulerProvider;
-
-import junit.framework.TestResult;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -32,7 +35,7 @@ public class LoginPresenter implements LoginContract.Presenter {
     @NonNull
     private final ServerImp mServerImp;
     @NonNull
-    private final LoginContract.View mLoginView;
+    private final LoginContract.View mView;
     @NonNull
     private final BaseSchedulerProvider mSchedulerProvider;
     @NonNull
@@ -43,96 +46,66 @@ public class LoginPresenter implements LoginContract.Presenter {
                           @NonNull BaseSchedulerProvider schedulerProvider) {
         this.requestTag = requestTag;
         mServerImp = checkNotNull(serverImp, "serverImp cannot be null!");
-        mLoginView = checkNotNull(loginView, "loginView cannot be null!");
+        mView = checkNotNull(loginView, "loginView cannot be null!");
         mSchedulerProvider = checkNotNull(schedulerProvider, "schedulerProvider cannot be null");
 
         mSubscriptions = new CompositeSubscription();
-        mLoginView.setPresenter(this);
+        mView.setPresenter(this);
     }
 
 
     @Override
     public void login(@NonNull UserInfo userInfo) {
-//        Subscription subscription = mServerImp
-//                .login(requestTag, student)
-//                .subscribeOn(mSchedulerProvider.computation())
-//                .observeOn(mSchedulerProvider.ui())
-//                .subscribe(new Observer<LoginResult>() {
-//                    @Override
-//                    public void onCompleted() {
-//                        //mTaskDetailView.setLoadingIndicator(false);
-//                        Log.d("ddd", "onCompleted: ");
-//                        mLoginView.success();
-//                    }
-//
-//                    @Override
-//                    public void onError(Throwable e) {
-//                        Log.d("ddd", "onError: ");
-//
-//                    }
-//
-//                    @Override
-//                    public void onNext(LoginResult loginResult) {
-//                        Log.d("ddd", "onNext: " + loginResult.getCode() + "ddd" + loginResult.getToken());
-//                        //showTask(task);
-//                    }
-//                });
-//        mSubscriptions.add(subscription);
+        if (validate(userInfo)) {
+            mView.showProgressDialog(null);
+            Map<String, String> params = new HashMap<>();
+            params.put("email", userInfo.getEmail());
+            params.put("pwd", userInfo.getPassword());
+            Subscription subscription = mServerImp
+                    .common(requestTag, Request.Method.POST, ServerInterface.login, params, LoginResult.class)
+                    .subscribeOn(mSchedulerProvider.computation())
+                    .observeOn(mSchedulerProvider.ui())
+                    .subscribe(new Observer<LoginResult>() {
+                        @Override
+                        public void onCompleted() {
+                            mView.removeProgressDialog();
+                            Logger.d("onCompleted");
+                        }
 
-//        Map<String, String> paramLogin = new HashMap<>();
-//        paramLogin.put("sid", student.getSid());
-//        paramLogin.put("password", DecriptHelper.getEncryptedPassword(student.getPassword(), "0.6473738071851545"));
-//        Subscription subscription = mServerImp
-//                .common(requestTag, Request.Method.POST, ServerInterface.login, paramLogin, LoginResult.class)
-//                .subscribeOn(mSchedulerProvider.computation())
-//                .observeOn(mSchedulerProvider.ui())
-//                .subscribe(new Observer<LoginResult>() {
-//                    @Override
-//                    public void onCompleted() {
-//                        //mTaskDetailView.setLoadingIndicator(false);
-//                        Log.d("ddd", "onCompleted: ");
-//                    }
-//
-//                    @Override
-//                    public void onError(Throwable e) {
-//                        Log.d("ddd", "onError: ");
-//                    }
-//
-//                    @Override
-//                    public void onNext(LoginResult loginResult) {
-//                        Log.d("ddd", "onNext: ");
-//                        //showTask(task);
-//                    }
-//                });
-//        mSubscriptions.add(subscription);
+                        @Override
+                        public void onError(Throwable e) {
+                            mView.removeProgressDialog();
+                            ToastUtils.toastShort(e.getMessage());
+                            Logger.d("onError");
+                        }
 
-        Map<String, String> params = new HashMap<>();
-        params.put("type","test110");
-        params.put("postid", "dd");
-        Subscription subscription = mServerImp
-                .common(requestTag, Request.Method.GET, ServerInterface.login, params, TestResult.class)
-                .subscribeOn(mSchedulerProvider.computation())
-                .observeOn(mSchedulerProvider.ui())
-                .subscribe(new Observer<TestResult>() {
-                    @Override
-                    public void onCompleted() {
-                        //mTaskDetailView.setLoadingIndicator(false);
-                        Log.d("ddd", "onCompleted: ");
-                    }
+                        @Override
+                        public void onNext(LoginResult loginResult) {
+                            //请求成功
+                            mView.success(loginResult);
+                        }
+                    });
+            mSubscriptions.add(subscription);
+        }
+    }
 
-                    @Override
-                    public void onError(Throwable e) {
-                        Log.d("ddd", "onError: ");
-                    }
+    public boolean validate(UserInfo userInfo) {
+        boolean valid = true;
 
-                    @Override
-                    public void onNext(TestResult loginResult) {
-                        Log.d("ddd", "onNext: ");
-                        //showTask(task);
-                    }
-                });
-        mSubscriptions.add(subscription);
+        String email = userInfo.getEmail();
+        String password = userInfo.getPassword();
+        Logger.d(userInfo);
 
+        if (TextUtils.isEmpty(email) || !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            valid = false;
+            ToastUtils.toastShort(StringResUtils.getString(R.string.error_invalid_email));
+        }
+
+        if (TextUtils.isEmpty(password) || password.length() < 4 || password.length() > 20) {
+            valid = false;
+            ToastUtils.toastShort(StringResUtils.getString(R.string.error_invalid_password));
+        }
+        return valid;
     }
 
     @Override

@@ -28,7 +28,7 @@ public class BaseActivity extends AppCompatActivity {
 
     protected final String TAG = this.getClass().getName();
     protected ProgressLayout progressLayout;
-    public static ProgressDialog dialog = null;
+    public static ProgressDialog dialog_lp = null;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -79,7 +79,6 @@ public class BaseActivity extends AppCompatActivity {
             ViewGroup progressParentView = (ViewGroup) layoutInflater.inflate(R.layout.progress_parent_view, contentView);
             progressLayout = (ProgressLayout) progressParentView.findViewById(R.id.progress_layout);
             progressLayout.addView(userLayout);
-            showEmptyDefault();
         }
     }
 
@@ -145,24 +144,19 @@ public class BaseActivity extends AppCompatActivity {
     }
 
 
-    public void showProgressDialog() {
-        showProgressDialog("加载中...");
+    public void showProgressDialogLP() {
+        showProgressDialogLP("加载中...");
     }
 
-    public void showProgressDialog(String message) {
-        dialog = new ProgressDialog(this, R.style.AppTheme_Dark_Dialog);
-        dialog.setTitle(null);
-        dialog.setMessage(message);
-        dialog.setIndeterminate(true);
-        dialog.setCancelable(false);
-        dialog.show();
+    public void showProgressDialogLP(String message) {
+        dialog_lp = ProgressDialog.show(this, null, message, true, true);
     }
 
-    public void removeProgressDialog() {
-        if (dialog != null && dialog.isShowing()) {
-            dialog.dismiss();
-            dialog.onDetachedFromWindow();
-            dialog = null;
+    public void removeProgressDialogLP() {
+        if (dialog_lp != null && dialog_lp.isShowing()) {
+            dialog_lp.dismiss();
+            dialog_lp.onDetachedFromWindow();
+            dialog_lp = null;
         }
     }
 
@@ -180,7 +174,7 @@ public class BaseActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
-        removeProgressDialog();
+        removeProgressDialogLP();
         super.onDestroy();
     }
 }

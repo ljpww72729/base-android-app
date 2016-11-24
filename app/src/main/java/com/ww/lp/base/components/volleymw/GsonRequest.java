@@ -12,6 +12,9 @@ import com.android.volley.Response;
 import com.android.volley.toolbox.HttpHeaderParser;
 import com.orhanobut.logger.Logger;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
@@ -118,4 +121,32 @@ public class GsonRequest<T> extends Request<T> {
         Logger.d("Server Request Params --> ", param);
         return param;
     }
+
+    @Override
+    public String getBodyContentType() {
+        return "application/json; charset=" + getParamsEncoding();
+    }
+
+    @Override
+    public byte[] getBody() throws AuthFailureError {
+        Map<String, String> params = getParams();
+        if (params != null && params.size() > 0) {
+            JSONObject jsonObject = new JSONObject();
+            for (Map.Entry<String, String> entry:params.entrySet()) {
+                try {
+                    jsonObject.put(entry.getKey(), entry.getValue());
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+            try {
+                return jsonObject.toString().getBytes(getParamsEncoding());
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
+    }
+
+
 }

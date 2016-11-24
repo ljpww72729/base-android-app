@@ -4,13 +4,13 @@
     <string name="tianjia">添加</string>
     <string name="guanyu">关于</string>
 
-    <string name="app_decription">Your awesome app</string>
     <string name="email">邮箱</string>
     <string name="password">密码</string>
     <string name="denglu">登录</string>
-    <string name="error_invalid_email">Invalid Email</string>
-    <string name="error_invalid_password">The password is too short</string>
-    <string name="error_incorrect_password">Email or password incorrect</string>
+    <string name="dengluchenggong">登录成功</string>
+    <string name="error_invalid_email">邮箱无效！</string>
+    <string name="error_invalid_password">密码无效！密码长度为4-20位</string>
+    <string name="error_incorrect_password">邮箱或密码错误！</string>
     <string name="error_field_required">Required</string>
     <string name="forgot_password">忘记密码？</string>
     <string name="create_account">注册</string>

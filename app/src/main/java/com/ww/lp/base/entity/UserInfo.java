@@ -1,29 +1,51 @@
 package com.ww.lp.base.entity;
 
+import android.databinding.BaseObservable;
+import android.databinding.Bindable;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.ww.lp.base.BR;
+
+
 /**
- * Created by LinkedME06 on 16/11/12.
+ * 用户信息 Created by LinkedME06 on 16/11/12.
  */
 
-public class UserInfo implements Parcelable {
+public class UserInfo extends BaseObservable implements Parcelable {
     private String name;
 
+    @Bindable
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+        notifyPropertyChanged(BR.email);
+    }
+
+    private String email;
+
+    @Bindable
     public String getPassword() {
         return password;
     }
 
     public void setPassword(String password) {
         this.password = password;
+        notifyPropertyChanged(BR.password);
     }
 
+    @Bindable
     public String getName() {
         return name;
     }
 
     public void setName(String name) {
         this.name = name;
+        notifyPropertyChanged(BR.name);
+
     }
 
     private String password;
@@ -36,6 +58,7 @@ public class UserInfo implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(this.name);
+        dest.writeString(this.email);
         dest.writeString(this.password);
     }
 
@@ -44,6 +67,7 @@ public class UserInfo implements Parcelable {
 
     protected UserInfo(Parcel in) {
         this.name = in.readString();
+        this.email = in.readString();
         this.password = in.readString();
     }
 
