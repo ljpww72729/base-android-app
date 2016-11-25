@@ -1,4 +1,4 @@
-package com.ww.lp.base.modules.templates;
+package com.ww.lp.base.modules.main.more;
 
 import android.support.annotation.NonNull;
 
@@ -13,7 +13,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Created by LinkedME06 on 16/11/13.
  */
 
-public class TempPresenter implements TempContract.Presenter {
+public class MorePresenter implements MoreContract.Presenter {
 
     @NonNull
     private String requestTag;
@@ -21,15 +21,15 @@ public class TempPresenter implements TempContract.Presenter {
     @NonNull
     private final ServerImp mServerImp;
     @NonNull
-    private final TempContract.View mContractView;
+    private final MoreContract.View mContractView;
     @NonNull
     private final BaseSchedulerProvider mSchedulerProvider;
     @NonNull
     private CompositeSubscription mSubscriptions;
 
-    public TempPresenter(@NonNull String requestTag, @NonNull ServerImp serverImp,
-                          @NonNull TempContract.View contractView,
-                          @NonNull BaseSchedulerProvider schedulerProvider) {
+    public MorePresenter(@NonNull String requestTag, @NonNull ServerImp serverImp,
+                         @NonNull MoreContract.View contractView,
+                         @NonNull BaseSchedulerProvider schedulerProvider) {
         this.requestTag = requestTag;
         mServerImp = checkNotNull(serverImp, "serverImp cannot be null!");
         mContractView = checkNotNull(contractView, "loginView cannot be null!");

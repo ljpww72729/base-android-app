@@ -19,8 +19,8 @@ public class LoginActivity extends BaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.base_act, true, false);
-        setTitle(getString(R.string.denglu));
+        setContentView(R.layout.base_act, true, true, false);
+        setTitle(getString(R.string.login));
 
         LoginFragment loginFragment = (LoginFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.contentFrame);
@@ -34,12 +34,6 @@ public class LoginActivity extends BaseActivity {
 
         // Create the presenter
         new LoginPresenter(TAG, ServerImp.getInstance(getApplicationContext()), loginFragment, SchedulerProvider.getInstance());
-    }
-
-    @Override
-    public boolean onSupportNavigateUp() {
-        onBackPressed();
-        return true;
     }
 
 }

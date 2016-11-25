@@ -6,14 +6,18 @@
 
     <string name="email">邮箱</string>
     <string name="password">密码</string>
-    <string name="denglu">登录</string>
-    <string name="dengluchenggong">登录成功</string>
+    <string name="login">登录</string>
+    <string name="login_success">登录成功</string>
     <string name="error_invalid_email">邮箱无效！</string>
     <string name="error_invalid_password">密码无效！密码长度为4-20位</string>
     <string name="error_incorrect_password">邮箱或密码错误！</string>
     <string name="error_field_required">Required</string>
     <string name="forgot_password">忘记密码？</string>
-    <string name="create_account">注册</string>
+    <string name="register">注册</string>
+    <string name="register_success">注册成功</string>
+    <string name="no_account">无账号？注册</string>
+    <string name="has_account">已有账号？登录</string>
+
 
     <string name="progressActivityErrorButton">重试</string>
     <string name="progressActivityEmptyTitlePlaceholder">无任何数据</string>

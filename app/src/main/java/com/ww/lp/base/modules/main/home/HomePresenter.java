@@ -1,20 +1,18 @@
 package com.ww.lp.base.modules.main.home;
 
 import android.support.annotation.NonNull;
-import android.util.Log;
 
 import com.android.volley.Request;
+import com.orhanobut.logger.Logger;
 import com.ww.lp.base.entity.CarouselInfo;
-import com.ww.lp.base.entity.CarouselList;
 import com.ww.lp.base.network.ServerImp;
 import com.ww.lp.base.network.ServerInterface;
+import com.ww.lp.base.utils.ToastUtils;
 import com.ww.lp.base.utils.schedulers.BaseSchedulerProvider;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
-import rx.Observer;
+import rx.SingleSubscriber;
 import rx.Subscription;
 import rx.subscriptions.CompositeSubscription;
 
@@ -65,38 +63,30 @@ public class HomePresenter implements HomeContract.Presenter {
      * 请求轮播图列表
      */
     private void loadCarouselImgList() {
-        ArrayList<CarouselInfo> arrayList = new ArrayList<CarouselInfo>();
-        arrayList.add(new CarouselInfo("1", "http://h.hiphotos.baidu.com/zhidao/pic/item/aec379310a55b3196497de3140a98226cffc1703.jpg", "http://www.baidu.com"));
-        arrayList.add(new CarouselInfo("2", "http://img1.imgtn.bdimg.com/it/u=2944150852,3575176219&fm=21&gp=0.jpg", "http://www.baidu.com"));
-
-        mContractView.updateCarouselView(arrayList);
-        Map<String, String> params = new HashMap<>();
-        params.put("type", "test110");
-        params.put("postid", "dd");
         Subscription subscription = mServerImp
-                .common(requestTag, Request.Method.GET, ServerInterface.carousel, params, CarouselList.class)
+                .commonSingle(requestTag, Request.Method.GET, ServerInterface.carousel, null, CarouselInfo[].class)
                 .subscribeOn(mSchedulerProvider.computation())
                 .observeOn(mSchedulerProvider.ui())
-                .subscribe(new Observer<CarouselList>() {
+                .subscribe(new SingleSubscriber<CarouselInfo[]>() {
                     @Override
-                    public void onCompleted() {
-                        //mTaskDetailView.setLoadingIndicator(false);
-                        Log.d("ddd", "onCompleted: ");
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        Log.d("ddd", "onError: ");
-                    }
-
-                    @Override
-                    public void onNext(CarouselList carouselList) {
-                        Log.d("ddd", "onNext: ");
+                    public void onSuccess(CarouselInfo[] carouselInfoList) {
+//                        mView.removeProgressDialog();
+                        //请求成功
+//                        mView.success(loginResult);
                         ArrayList<CarouselInfo> arrayList = new ArrayList<CarouselInfo>();
-                        arrayList.add(new CarouselInfo("1", "http://h.hiphotos.baidu.com/zhidao/pic/item/aec379310a55b3196497de3140a98226cffc1703.jpg", "http://www.baidu.com"));
-                        arrayList.add(new CarouselInfo("2", "http://img1.imgtn.bdimg.com/it/u=2944150852,3575176219&fm=21&gp=0.jpg", "http://www.baidu.com"));
-
+                        for (int i = 0; i < carouselInfoList.length; i++){
+                            arrayList.add(carouselInfoList[i]);
+                        }
                         mContractView.updateCarouselView(arrayList);
+
+
+                    }
+
+                    @Override
+                    public void onError(Throwable error) {
+//                        mView.removeProgressDialog();
+                        ToastUtils.toastShort(error.getMessage());
+                        Logger.d("onError");
                     }
                 });
         mSubscriptions.add(subscription);

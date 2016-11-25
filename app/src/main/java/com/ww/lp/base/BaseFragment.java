@@ -26,6 +26,15 @@ public class BaseFragment extends Fragment {
     private ViewGroup rootView;
     private ProgressLayout progressLayout;
 
+    /**
+     *
+     * @param inflater inflater
+     * @param container container
+     * @param savedInstanceState savedInstanceState
+     * @param layout_res 布局id
+     * @param showProgressLayout 是否显示加载页面，true：显示
+     * @return
+     */
     @Nullable
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState, @LayoutRes int layout_res, boolean showProgressLayout) {
         contentView = (ViewGroup) inflater.inflate(layout_res, container, false);

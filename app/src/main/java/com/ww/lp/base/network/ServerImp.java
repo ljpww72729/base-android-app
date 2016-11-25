@@ -17,6 +17,7 @@ import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 import rx.Observable;
+import rx.Single;
 import rx.functions.Func0;
 import rx.functions.Func1;
 
@@ -89,6 +90,22 @@ public class ServerImp implements ServerApi {
     }
 
     @Override
+    public <T> Single<T> commonSingle(final String requestTag, final int method, final String url, final Map<String, String> param, final Class<T> clazz) {
+        return Single.defer(new Func0<Single<T>>() {
+            @Override
+            public Single<T> call() {
+                try {
+                    ServerData<T> serverData = new ServerData<T>();
+                    return Single.just(serverData.getServerData(requestTag, method, url, param, clazz));
+                } catch (InterruptedException | ExecutionException e) {
+                    Log.e("routes", e.getMessage());
+                    return Single.error(e);
+                }
+            }
+        });
+    }
+
+    @Override
     public <T> Observable<T> common(final String requestTag, final int method, final String url, final Object object, final Class<T> clazz) {
         return Observable.defer(new Func0<Observable<T>>() {
             @Override
@@ -109,6 +126,31 @@ public class ServerImp implements ServerApi {
                 } catch (InterruptedException | ExecutionException e) {
                     Log.e("routes", e.getMessage());
                     return Observable.error(e);
+                }
+            }
+        });
+    }
+    @Override
+    public <T> Single<T> commonSingle(final String requestTag, final int method, final String url, final Object object, final Class<T> clazz) {
+        return Single.defer(new Func0<Single<T>>() {
+            @Override
+            public Single<T> call() {
+                try {
+                    // TODO: 16/11/17 测试以下方式是否好用
+                    Map<String, String> param = new HashMap<String, String>();
+                    Field[] fields = object.getClass().getDeclaredFields();
+                    for (int i = 0; i < fields.length; i++) {
+                        try {
+                            param.put(fields[i].getName(), String.valueOf(fields[i].get(object)));
+                        } catch (IllegalAccessException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    ServerData<T> serverData = new ServerData<T>();
+                    return Single.just(serverData.getServerData(requestTag, method, url, param, clazz));
+                } catch (InterruptedException | ExecutionException e) {
+                    Log.e("routes", e.getMessage());
+                    return Single.error(e);
                 }
             }
         });

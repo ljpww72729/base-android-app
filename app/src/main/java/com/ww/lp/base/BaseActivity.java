@@ -38,7 +38,7 @@ public class BaseActivity extends AppCompatActivity {
     }
 
     public void setContentView(@LayoutRes int layoutResID) {
-        setContentView(layoutResID, true, true);
+        setContentView(layoutResID, true, true, true);
     }
 
     /**
@@ -48,13 +48,13 @@ public class BaseActivity extends AppCompatActivity {
      * @param showAppBar         true:显示 false:隐藏
      * @param showProgressLayout true:显示 false:隐藏
      */
-    public void setContentView(@LayoutRes int layoutResID, boolean showAppBar, boolean showProgressLayout) {
+    public void setContentView(@LayoutRes int layoutResID, boolean showAppBar, boolean showHome, boolean showProgressLayout) {
         super.setContentView(layoutResID);
         showAppBar(showAppBar);
         showProgressLayout(showProgressLayout);
         if (showAppBar) {
             //设置toolbar
-            setToolBar();
+            setToolBar(showHome);
         }
     }
 
@@ -102,15 +102,24 @@ public class BaseActivity extends AppCompatActivity {
 
     /**
      * 设置ToolBar
+     *
+     * @param showHome 是否显示回退图标
      */
-    public void setToolBar() {
+    public void setToolBar(boolean showHome) {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         if (toolbar != null) {
             setSupportActionBar(toolbar);
             ActionBar ab = getSupportActionBar();
-            ab.setDisplayHomeAsUpEnabled(true);
-            ab.setDisplayShowHomeEnabled(true);
+            ab.setDisplayHomeAsUpEnabled(showHome);
+            ab.setDisplayShowHomeEnabled(showHome);
         }
+    }
+
+    //重写，关闭当前activity
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 
     /**

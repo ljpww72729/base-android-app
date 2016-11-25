@@ -1,5 +1,6 @@
 package com.ww.lp.base.modules.main.home;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -12,6 +13,7 @@ import com.ww.lp.base.BaseFragment;
 import com.ww.lp.base.R;
 import com.ww.lp.base.databinding.HomeFragBinding;
 import com.ww.lp.base.entity.CarouselInfo;
+import com.ww.lp.base.modules.webview.NormalWVActvity;
 
 import java.util.ArrayList;
 
@@ -25,13 +27,6 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
 
     private HomeFragBinding binding;
     private HomeContract.Presenter mPresenter;
-    int[] sampleImages = {
-            R.drawable.va_home,
-            R.drawable.va_home,
-            R.drawable.va_home
-    };
-
-
 
     public static HomeFragment newInstance() {
 
@@ -45,7 +40,6 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
     @Override
     public void onResume() {
         super.onResume();
-        mPresenter.subscribe();
     }
 
     @Override
@@ -58,8 +52,9 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.home_frag, container, false);
+        View root = onCreateView(inflater, container, savedInstanceState, R.layout.home_frag, false);
         binding = HomeFragBinding.bind(root);
+        mPresenter.subscribe();
         return root;
     }
 
@@ -70,17 +65,18 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
 
     @Override
     public void updateCarouselView(final ArrayList<CarouselInfo> carouselList) {
-        binding.homeCarouselView.setPageCount(carouselList.size());
         ViewListener viewListener = new ViewListener() {
             @Override
-            public View setViewForPosition(int position) {
+            public View setViewForPosition(final int position) {
                 View carouselView = LayoutInflater.from(getActivity()).inflate(R.layout.carousel_view, null);
                 SimpleDraweeView simpleDraweeView = (SimpleDraweeView) carouselView.findViewById(R.id.carousel_img);
-                simpleDraweeView.setImageURI(carouselList.get(position).getImgUrl());
+                simpleDraweeView.setImageURI(carouselList.get(position).getImg());
                 simpleDraweeView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-
+                        Intent intent = new Intent(getActivity(), NormalWVActvity.class);
+                        intent.putExtra(NormalWVActvity.LOADURL, carouselList.get(position).getUrl());
+                        startActivity(intent);
                     }
                 });
 
@@ -88,5 +84,8 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
             }
         };
         binding.homeCarouselView.setViewListener(viewListener);
+        //setPageCount方法的调用需要放到setViewListener之后
+        binding.homeCarouselView.setPageCount(carouselList.size());
+
     }
 }

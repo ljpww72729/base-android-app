@@ -17,13 +17,15 @@ import com.ww.lp.base.utils.schedulers.BaseSchedulerProvider;
 import java.util.HashMap;
 import java.util.Map;
 
-import rx.Observer;
+import rx.SingleSubscriber;
 import rx.Subscription;
 import rx.subscriptions.CompositeSubscription;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
+ * 登录Presenter
+ *
  * Created by LinkedME06 on 16/10/27.
  */
 
@@ -55,6 +57,36 @@ public class LoginPresenter implements LoginContract.Presenter {
 
 
     @Override
+    public void register(@NonNull UserInfo userInfo) {
+        if (validate(userInfo)) {
+            mView.showProgressDialog(null);
+            Map<String, String> params = new HashMap<>();
+            params.put("email", userInfo.getEmail());
+            params.put("pwd", userInfo.getPassword());
+            Subscription subscription = mServerImp
+                    .commonSingle(requestTag, Request.Method.POST, ServerInterface.reg, params, LoginResult.class)
+                    .subscribeOn(mSchedulerProvider.computation())
+                    .observeOn(mSchedulerProvider.ui())
+                    .subscribe(new SingleSubscriber<LoginResult>() {
+                        @Override
+                        public void onSuccess(LoginResult loginResult) {
+                            mView.removeProgressDialog();
+                            //请求成功
+                            mView.success(loginResult);
+                        }
+
+                        @Override
+                        public void onError(Throwable error) {
+                            mView.removeProgressDialog();
+                            ToastUtils.toastShort(error.getMessage());
+                            Logger.d("onError");
+                        }
+                    });
+            mSubscriptions.add(subscription);
+        }
+    }
+
+    @Override
     public void login(@NonNull UserInfo userInfo) {
         if (validate(userInfo)) {
             mView.showProgressDialog(null);
@@ -62,27 +94,22 @@ public class LoginPresenter implements LoginContract.Presenter {
             params.put("email", userInfo.getEmail());
             params.put("pwd", userInfo.getPassword());
             Subscription subscription = mServerImp
-                    .common(requestTag, Request.Method.POST, ServerInterface.login, params, LoginResult.class)
+                    .commonSingle(requestTag, Request.Method.POST, ServerInterface.login, params, LoginResult.class)
                     .subscribeOn(mSchedulerProvider.computation())
                     .observeOn(mSchedulerProvider.ui())
-                    .subscribe(new Observer<LoginResult>() {
+                    .subscribe(new SingleSubscriber<LoginResult>() {
                         @Override
-                        public void onCompleted() {
+                        public void onSuccess(LoginResult loginResult) {
                             mView.removeProgressDialog();
-                            Logger.d("onCompleted");
-                        }
-
-                        @Override
-                        public void onError(Throwable e) {
-                            mView.removeProgressDialog();
-                            ToastUtils.toastShort(e.getMessage());
-                            Logger.d("onError");
-                        }
-
-                        @Override
-                        public void onNext(LoginResult loginResult) {
                             //请求成功
                             mView.success(loginResult);
+                        }
+
+                        @Override
+                        public void onError(Throwable error) {
+                            mView.removeProgressDialog();
+                            ToastUtils.toastShort(error.getMessage());
+                            Logger.d("onError");
                         }
                     });
             mSubscriptions.add(subscription);

@@ -15,16 +15,16 @@
             android:id="@+id/login_form"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:fitsSystemWindows="true"
-            android:paddingLeft="@dimen/dp_24"
-            android:paddingRight="@dimen/dp_24"
-            android:paddingTop="@dimen/dp_56">
+            android:fitsSystemWindows="true">
 
         <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:paddingLeft="@dimen/dp_24"
+                android:paddingRight="@dimen/dp_24"
+                android:paddingTop="@dimen/dp_56">
 
             <ImageView
                     android:src="@drawable/avatar"
@@ -76,14 +76,14 @@
                     android:layout_marginTop="@dimen/dp_24"
                     android:layout_marginBottom="@dimen/dp_24"
                     style="@style/LP_Normal_Button"
-                    android:text="@string/denglu"/>
+                    android:text="@string/login"/>
 
             <TextView
-                    android:id="@+id/link_signup"
+                    android:id="@+id/btn_register"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/dp_24"
-                    android:text="无账号？注册"
+                    android:text="@string/no_account"
                     android:gravity="center"/>
         </LinearLayout>
 

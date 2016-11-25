@@ -5,6 +5,7 @@ import com.ww.lp.base.components.volleymw.DataPart;
 import java.util.Map;
 
 import rx.Observable;
+import rx.Single;
 
 /**
  * Created by LinkedME06 on 16/10/28.
@@ -24,6 +25,7 @@ public interface ServerApi {
      * @return 服务器返回的结果
      */
     <T> Observable<T> common(String requestTag, int method, String url, Map<String, String> param, Class<T> clazz);
+    <T> Single<T> commonSingle(String requestTag, int method, String url, Map<String, String> param, Class<T> clazz);
     /**
      * 通用的单次数据请求调用方法
      *
@@ -36,6 +38,7 @@ public interface ServerApi {
      * @return 服务器返回的结果
      */
     <T> Observable<T> common(String requestTag, int method, String url, Object object, Class<T> clazz);
+    <T> Single<T> commonSingle(String requestTag, int method, String url, Object object, Class<T> clazz);
 //    Observable<LoginResult> login(String requestTag, @NonNull UserInfo userInfo);
 
     /**

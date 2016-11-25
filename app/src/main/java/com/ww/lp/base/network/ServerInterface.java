@@ -18,7 +18,7 @@ public class ServerInterface {
     /**
      * 注册接口
      */
-    public static final String reg= baseUrl + "passport/reg";
+    public static final String reg= baseUrl + "user/add";
     /**
      * 登录接口
      */
@@ -26,7 +26,7 @@ public class ServerInterface {
     /**
      * 轮播图请求接口
      */
-    public static final String carousel = baseUrl + "carousel";
+    public static final String carousel = baseUrl + "ads/list";
     /**
      * 上传文件请求接口
      */

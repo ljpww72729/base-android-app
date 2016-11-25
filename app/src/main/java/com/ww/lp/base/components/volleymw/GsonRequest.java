@@ -134,6 +134,7 @@ public class GsonRequest<T> extends Request<T> {
             JSONObject jsonObject = new JSONObject();
             for (Map.Entry<String, String> entry:params.entrySet()) {
                 try {
+                    // TODO: 16/11/24 并没有进行encode编码
                     jsonObject.put(entry.getKey(), entry.getValue());
                 } catch (JSONException e) {
                     e.printStackTrace();

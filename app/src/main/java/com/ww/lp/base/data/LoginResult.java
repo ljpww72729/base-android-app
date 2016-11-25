@@ -108,4 +108,5 @@ public class LoginResult implements Parcelable {
             }
         };
     }
+
 }

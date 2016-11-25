@@ -22,6 +22,7 @@ public class LoginContract {
 
     interface Presenter extends BasePresenter {
 
+        void register(@NonNull UserInfo userInfo);
         void login(@NonNull UserInfo userInfo);
 
     }

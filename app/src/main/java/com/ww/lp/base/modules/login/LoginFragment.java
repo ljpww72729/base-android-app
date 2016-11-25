@@ -20,6 +20,7 @@ import com.ww.lp.base.utils.ToastUtils;
 import static com.google.gson.internal.$Gson$Preconditions.checkNotNull;
 
 /**
+ * 登录
  * Created by LinkedME06 on 16/10/27.
  */
 
@@ -48,7 +49,7 @@ public class LoginFragment extends BaseFragment implements LoginContract.View {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View root = onCreateView(inflater, container, savedInstanceState, R.layout.login_frag, true);
+        View root = onCreateView(inflater, container, savedInstanceState, R.layout.login_frag, false);
         loginFragBinding = LoginFragBinding.bind(root);
         UserInfo userInfo = new UserInfo();
         userInfo.setEmail("ljpww72729@163.com");
@@ -57,7 +58,23 @@ public class LoginFragment extends BaseFragment implements LoginContract.View {
         loginFragBinding.btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mPresenter.login(loginFragBinding.getUserInfo());
+                if (isLogin()) {
+                    mPresenter.login(loginFragBinding.getUserInfo());
+                } else {
+                    mPresenter.register(loginFragBinding.getUserInfo());
+                }
+            }
+        });
+        loginFragBinding.btnRegister.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(isLogin()){
+                    loginFragBinding.btnLogin.setText(getString(R.string.register));
+                    loginFragBinding.btnRegister.setText(getString(R.string.has_account));
+                }else{
+                    loginFragBinding.btnLogin.setText(getString(R.string.login));
+                    loginFragBinding.btnRegister.setText(getString(R.string.no_account));
+                }
             }
         });
         return root;
@@ -73,7 +90,11 @@ public class LoginFragment extends BaseFragment implements LoginContract.View {
         if (loginResult.getStatus() == 200) {
             //请求成功
             SPUtils.put(getActivity(), SPUtils.TOKEN, loginResult.getData().getToken());
-            ToastUtils.toastShort(getString(R.string.dengluchenggong));
+            if (isLogin()){
+                ToastUtils.toastShort(getString(R.string.login_success));
+            }else {
+                ToastUtils.toastShort(getString(R.string.register_success));
+            }
             getActivity().finish();
         } else {
             ToastUtils.toastShort(loginResult.getData().getErr_msg());
@@ -95,5 +116,8 @@ public class LoginFragment extends BaseFragment implements LoginContract.View {
         ((BaseActivity) getActivity()).removeProgressDialogLP();
     }
 
+    public boolean isLogin() {
+        return !loginFragBinding.btnLogin.getText().toString().equals(getString(R.string.register));
+    }
 
 }

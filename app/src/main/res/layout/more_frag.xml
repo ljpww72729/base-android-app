@@ -16,7 +16,7 @@
             android:id="@+id/temp_test"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@={tempInfo.info}" />
+            android:text="@{tempInfo.info}" />
 
     </LinearLayout>
 </layout>

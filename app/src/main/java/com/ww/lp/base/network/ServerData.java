@@ -24,7 +24,7 @@ public class ServerData<T> {
 
     protected T getServerData(String requestTag, int method, String url, Map<String, String> param, Class<T> clazz) throws ExecutionException, InterruptedException {
         RequestFuture<T> future = RequestFuture.newFuture();
-        if (method == Request.Method.GET && !param.isEmpty()){
+        if (method == Request.Method.GET && param != null && !param.isEmpty()){
             url += addParameters(param);
             param.clear();
         }
