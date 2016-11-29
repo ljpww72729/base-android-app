@@ -3,8 +3,8 @@ package com.ww.lp.base;
 import android.app.Application;
 
 import com.android.volley.toolbox.VolleySingleton;
-import com.facebook.drawee.backends.pipeline.BuildConfig;
 import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.imagepipeline.core.ImagePipelineConfig;
 import com.orhanobut.logger.LogLevel;
 import com.orhanobut.logger.Logger;
 
@@ -23,20 +23,25 @@ public class CustomApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        if (app == null){
+        if (app == null) {
             app = this;
         }
         //初始化volley
         VolleySingleton.init(this);
         //初始化Fresco图片加载库
-        Fresco.initialize(this);
+        ImagePipelineConfig config = ImagePipelineConfig.newBuilder(getApplicationContext())
+                .setDownsampleEnabled(true)// This option can help prove the performance.
+                //other settings
+                .build();
+        Fresco.initialize(this, config);
         //logger配置
 
         if (BuildConfig.DEBUG) {
             Logger.init("lp_log");
-        }else {
+        } else {
             //release版本需要隐藏日志
             Logger.init("lp_log").logLevel(LogLevel.NONE);
         }
+
     }
 }

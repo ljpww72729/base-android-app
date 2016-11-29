@@ -68,7 +68,7 @@ public class LoginResult implements Parcelable {
     /**
      * Created by LinkedME06 on 16/11/24.
      */
-    public static class Token extends ErrorResult {
+    public static class Token extends ErrorInfo {
         public String getToken() {
             return token;
         }

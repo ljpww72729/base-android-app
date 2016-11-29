@@ -3,16 +3,23 @@ package com.ww.lp.base.modules.main.home;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.synnapps.carouselview.ViewListener;
+import com.ww.lp.base.BR;
 import com.ww.lp.base.BaseFragment;
 import com.ww.lp.base.R;
+import com.ww.lp.base.components.rvrl.LPRecyclerViewAdapter;
+import com.ww.lp.base.components.rvrl.SingleItemClickListener;
+import com.ww.lp.base.data.CarouselInfo;
+import com.ww.lp.base.data.ProjectInfo;
 import com.ww.lp.base.databinding.HomeFragBinding;
-import com.ww.lp.base.entity.CarouselInfo;
+import com.ww.lp.base.modules.order.detail.OrderDetailActivity;
+import com.ww.lp.base.modules.team.list.TeamListActivity;
 import com.ww.lp.base.modules.webview.NormalWVActvity;
 
 import java.util.ArrayList;
@@ -27,6 +34,9 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
 
     private HomeFragBinding binding;
     private HomeContract.Presenter mPresenter;
+    private LinearLayoutManager mLayoutManager;
+    private ArrayList<ProjectInfo> mRVData = new ArrayList<>();
+    private LPRecyclerViewAdapter<ProjectInfo> lpRecyclerViewAdapter;
 
     public static HomeFragment newInstance() {
 
@@ -54,6 +64,35 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
                              Bundle savedInstanceState) {
         View root = onCreateView(inflater, container, savedInstanceState, R.layout.home_frag, false);
         binding = HomeFragBinding.bind(root);
+        binding.lpRv.setHasFixedSize(true);
+
+        // use a linear layout manager
+        mLayoutManager = new LinearLayoutManager(getActivity());
+        mLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        binding.lpRv.setLayoutManager(mLayoutManager);
+        lpRecyclerViewAdapter = new LPRecyclerViewAdapter<>(mRVData, R.layout.project_info_item, BR.lp_rv_item);
+        binding.lpRv.setAdapter(lpRecyclerViewAdapter);
+        binding.lpRv.addOnItemTouchListener(new SingleItemClickListener(binding.lpRv, new SingleItemClickListener.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                Intent intent = new Intent(getActivity(), OrderDetailActivity.class);
+                intent.putExtra(OrderDetailActivity.PROJECT_ID, mRVData.get(position).getProjectId());
+                startActivity(intent);
+            }
+
+            @Override
+            public void onItemLongClick(View view, int position) {
+
+            }
+        }));
+        binding.team.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), TeamListActivity.class);
+                startActivity(intent);
+
+            }
+        });
         mPresenter.subscribe();
         return root;
     }
@@ -87,5 +126,13 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
         //setPageCount方法的调用需要放到setViewListener之后
         binding.homeCarouselView.setPageCount(carouselList.size());
 
+    }
+
+    @Override
+    public void updateProjectList(ArrayList<ProjectInfo> arrayList) {
+        // TODO: 16/11/26 数据是否这样更新有待优化
+        mRVData.clear();
+        mRVData.addAll(arrayList);
+        lpRecyclerViewAdapter.notifyDataSetChanged();
     }
 }

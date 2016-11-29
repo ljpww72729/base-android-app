@@ -1,21 +1,25 @@
 package com.ww.lp.base.components.volleymw;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 
 import android.text.TextUtils;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;
-import com.android.volley.ParseError;
 import com.android.volley.Request;
 import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.android.volley.toolbox.HttpHeaderParser;
 import com.orhanobut.logger.Logger;
+import com.ww.lp.base.data.ErrorResult;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -103,16 +107,21 @@ public class GsonRequest<T> extends Request<T> {
 
     @Override
     protected Response<T> parseNetworkResponse(NetworkResponse response) {
+        Gson gson = new Gson();
+        String json = null;
         try {
-            Gson gson = new Gson();
-            String json = new String(
+            json = new String(
                     response.data,
                     HttpHeaderParser.parseCharset(response.headers));
-            Logger.json("Server Response --> " + json);
+            Logger.json(json);
             return Response.success(gson.fromJson(json, clazz),
                     HttpHeaderParser.parseCacheHeaders(response));
+        } catch (JsonSyntaxException e){
+            // TODO: 16/11/27 此处有待优化，如何更顺滑的体验
+            return Response.error(new VolleyError(gson.fromJson(json, ErrorResult.class).getData().getErr_msg()));
         } catch (UnsupportedEncodingException e) {
-            return Response.error(new ParseError(e));
+            return Response.error(new VolleyError(gson.fromJson(json, ErrorResult.class).getData().getErr_msg()));
+//            return Response.error(new ParseError(e));
         }
     }
 
@@ -135,7 +144,12 @@ public class GsonRequest<T> extends Request<T> {
             for (Map.Entry<String, String> entry:params.entrySet()) {
                 try {
                     // TODO: 16/11/24 并没有进行encode编码
-                    jsonObject.put(entry.getKey(), entry.getValue());
+                    // TODO: 16/11/28 特别argly的地方
+                    if (!TextUtils.equals(entry.getKey(), "imgs")){
+                        jsonObject.put(entry.getKey(), entry.getValue());
+                    }else{
+                        jsonObject.put(entry.getKey(), new JSONArray(entry.getValue()));
+                    }
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

@@ -1,22 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
-
-    <data>
-        <variable
-            name="tempInfo"
-            type="com.ww.lp.base.entity.TempInfo"/>
-    </data>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/temp_test"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@{tempInfo.info}" />
+        <android.support.v7.widget.CardView
+                android:id="@+id/create_order"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/dp_1">
+
+            <RelativeLayout
+                    android:padding="@dimen/dp_16"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical">
+
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:textAppearance="@android:style/TextAppearance.Medium"
+                        android:text="我发布的订单"/>
+
+                <ImageView
+                        android:layout_alignParentEnd="true"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:srcCompat="@drawable/va_arrow"
+                        android:layout_alignParentRight="true"/>
+            </RelativeLayout>
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView
+                android:id="@+id/accept_order"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/dp_1">
+
+            <RelativeLayout
+                    android:padding="@dimen/dp_16"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical">
+
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:textAppearance="@android:style/TextAppearance.Medium"
+                        android:text="我承接的订单"/>
+
+                <ImageView
+                        android:layout_alignParentEnd="true"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:srcCompat="@drawable/va_arrow"
+                        android:layout_alignParentRight="true"/>
+            </RelativeLayout>
+        </android.support.v7.widget.CardView>
 
     </LinearLayout>
 </layout>

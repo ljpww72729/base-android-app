@@ -4,7 +4,8 @@ import android.support.annotation.NonNull;
 
 import com.android.volley.Request;
 import com.orhanobut.logger.Logger;
-import com.ww.lp.base.entity.CarouselInfo;
+import com.ww.lp.base.data.CarouselInfo;
+import com.ww.lp.base.data.ProjectInfo;
 import com.ww.lp.base.network.ServerImp;
 import com.ww.lp.base.network.ServerInterface;
 import com.ww.lp.base.utils.ToastUtils;
@@ -52,6 +53,7 @@ public class HomePresenter implements HomeContract.Presenter {
     public void subscribe() {
         //此处为页面打开后开始加载数据时调用的方法
         loadCarouselImgList();
+        loadProjectList();
     }
 
     @Override
@@ -85,8 +87,41 @@ public class HomePresenter implements HomeContract.Presenter {
                     @Override
                     public void onError(Throwable error) {
 //                        mView.removeProgressDialog();
-                        ToastUtils.toastShort(error.getMessage());
-                        Logger.d("onError");
+                        ToastUtils.toastShort(error.getCause().getMessage());
+                        Logger.d(error.getCause().getMessage());
+                    }
+                });
+        mSubscriptions.add(subscription);
+
+    }
+    /**
+     * 请求项目列表
+     */
+    private void loadProjectList() {
+        Subscription subscription = mServerImp
+                .commonSingle(requestTag, Request.Method.GET, ServerInterface.project_list, null, ProjectInfo[].class)
+                .subscribeOn(mSchedulerProvider.computation())
+                .observeOn(mSchedulerProvider.ui())
+                .subscribe(new SingleSubscriber<ProjectInfo[]>() {
+                    @Override
+                    public void onSuccess(ProjectInfo[] projectInfoList) {
+//                        mView.removeProgressDialog();
+                        //请求成功
+//                        mView.success(loginResult);
+                        ArrayList<ProjectInfo> arrayList = new ArrayList<ProjectInfo>();
+                        for (int i = 0; i < projectInfoList.length; i++){
+                            arrayList.add(projectInfoList[i]);
+                        }
+                        mContractView.updateProjectList(arrayList);
+
+
+                    }
+
+                    @Override
+                    public void onError(Throwable error) {
+//                        mView.removeProgressDialog();
+                        ToastUtils.toastShort(error.getCause().getMessage());
+                        Logger.d(error.getCause().getMessage());
                     }
                 });
         mSubscriptions.add(subscription);

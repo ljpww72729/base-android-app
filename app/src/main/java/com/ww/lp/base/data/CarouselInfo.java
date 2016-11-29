@@ -1,4 +1,4 @@
-package com.ww.lp.base.entity;
+package com.ww.lp.base.data;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -8,11 +8,6 @@ import android.os.Parcelable;
  */
 
 public class CarouselInfo implements Parcelable {
-    public CarouselInfo(String s, String s1, String s2) {
-        this.id = s;
-        this.img = s1;
-        this.url = s2;
-    }
 
     public String getId() {
         return id;

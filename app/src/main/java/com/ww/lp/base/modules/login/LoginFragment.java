@@ -90,6 +90,7 @@ public class LoginFragment extends BaseFragment implements LoginContract.View {
         if (loginResult.getStatus() == 200) {
             //请求成功
             SPUtils.put(getActivity(), SPUtils.TOKEN, loginResult.getData().getToken());
+            SPUtils.put(getActivity(), SPUtils.USER_ID, loginFragBinding.getUserInfo().getEmail());
             if (isLogin()){
                 ToastUtils.toastShort(getString(R.string.login_success));
             }else {

@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools">
+    <data>
+        <variable
+                name="projectPostInfo"
+                type="com.ww.lp.base.entity.ProjectPostInfo"/>
+    </data>
+
+    <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+            <android.support.v7.widget.RecyclerView
+                    android:id="@+id/lp_rv"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+
+            <Button
+                    android:id="@+id/img_picker"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/LP_Normal_Button"
+                    android:text="选择图片"/>
+
+            <android.support.v7.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="@dimen/dp_6"
+                        android:orientation="horizontal">
+
+                    <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:orientation="vertical"
+                            android:gravity="right">
+
+                        <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="0dp"
+                                android:layout_weight="1"
+                                android:text="价格(￥)："/>
+
+                        <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="0dp"
+                                android:layout_weight="1"
+                                android:text="项目名称："/>
+
+                        <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="0dp"
+                                android:layout_weight="1"
+                                android:text="电话："/>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+                        <EditText
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:inputType="numberDecimal"
+                                android:text="@={projectPostInfo.price}"
+                                tools:text="100"/>
+
+                        <EditText
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="@={projectPostInfo.title}"
+                                tools:text="100"/>
+
+                        <EditText
+                                android:inputType="phone"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="@={projectPostInfo.phoneNum}"
+                                tools:text="100"/>
+                    </LinearLayout>
+                </LinearLayout>
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/dp_1">
+
+                <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="@dimen/dp_6">
+
+                    <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="需求描述："/>
+
+                    <EditText
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/dp_128"
+                            android:inputType="textMultiLine"
+                            android:text="@={projectPostInfo.describe}"
+                            android:id="@+id/editText"/>
+                </LinearLayout>
+            </android.support.v7.widget.CardView>
+
+            <Button
+                    android:id="@+id/btn_post"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="发布需求"
+                    style="@style/LP_Normal_Button"/>
+
+        </LinearLayout>
+    </ScrollView>
+</layout>

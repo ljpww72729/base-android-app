@@ -48,7 +48,7 @@ public class TempFragment extends BaseFragment implements TempContract.View{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.temp_frag, container, false);
+        View root = onCreateView(inflater, container,savedInstanceState, R.layout.temp_frag, false);
         binding = TempFragBinding.bind(root);
         TempInfo tempInfo = new TempInfo();
         tempInfo.setInfo("Fragment test info.");

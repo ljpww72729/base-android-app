@@ -17,6 +17,9 @@
     <string name="register_success">注册成功</string>
     <string name="no_account">无账号？注册</string>
     <string name="has_account">已有账号？登录</string>
+    <string name="call_phone">拨打电话\n%1$s\n(电话沟通确认后再付款)</string>
+    <string name="logout">退出</string>
+
 
 
     <string name="progressActivityErrorButton">重试</string>

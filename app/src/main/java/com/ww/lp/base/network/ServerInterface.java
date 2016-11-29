@@ -28,9 +28,30 @@ public class ServerInterface {
      */
     public static final String carousel = baseUrl + "ads/list";
     /**
+     * 所有项目列表接口
+     */
+    public static final String project_list = baseUrl + "project/projectlist";
+    /**
+     * 项目详情接口
+     */
+    public static final String project_detail = baseUrl + "project/detail";
+    /**
+     * 用户订单列表接口
+     */
+    public static final String user_order_list = baseUrl + "project/usercenter";
+    /**
+     * 发布需求接口
+     */
+    public static final String project_post = baseUrl + "project/add";
+
+    /**
      * 上传文件请求接口
      */
-    public static final String uploadFile = baseUrl + "upload";
+    public static final String uploadFile = baseUrl + "img/upload";
+    /**
+     * 上传文件请求接口
+     */
+    public static final String team_list = baseUrl + "team/list";
 
 
 }

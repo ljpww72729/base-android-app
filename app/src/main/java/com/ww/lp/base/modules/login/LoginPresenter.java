@@ -78,8 +78,8 @@ public class LoginPresenter implements LoginContract.Presenter {
                         @Override
                         public void onError(Throwable error) {
                             mView.removeProgressDialog();
-                            ToastUtils.toastShort(error.getMessage());
-                            Logger.d("onError");
+                            ToastUtils.toastShort(error.getCause().getMessage());
+                            Logger.d(error.getCause().getMessage());
                         }
                     });
             mSubscriptions.add(subscription);
@@ -108,8 +108,8 @@ public class LoginPresenter implements LoginContract.Presenter {
                         @Override
                         public void onError(Throwable error) {
                             mView.removeProgressDialog();
-                            ToastUtils.toastShort(error.getMessage());
-                            Logger.d("onError");
+                            ToastUtils.toastShort(error.getCause().getMessage());
+                            Logger.d(error.getCause().getMessage());
                         }
                     });
             mSubscriptions.add(subscription);

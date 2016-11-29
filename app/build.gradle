@@ -43,4 +43,10 @@ dependencies {
     compile "com.android.support:percent:${supportVersion}"
     compile 'com.orhanobut:logger:1.15'
     compile "com.android.support:support-v4:${supportVersion}"
+    compile files('libs/alipaySdk-20161009.jar')
+    compile project(':PhotoPicker')
+    compile 'top.zibin:Luban:1.0.9'
+    compile "me.henrytao:smooth-app-bar-layout:24.2.1.0"
+
+
 }

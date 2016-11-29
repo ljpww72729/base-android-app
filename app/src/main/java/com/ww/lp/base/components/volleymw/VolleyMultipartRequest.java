@@ -1,13 +1,16 @@
 package com.ww.lp.base.components.volleymw;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
+
 import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;
-import com.android.volley.ParseError;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.HttpHeaderParser;
-import com.google.gson.Gson;
+import com.orhanobut.logger.Logger;
+import com.ww.lp.base.data.ErrorResult;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -17,8 +20,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.Map;
 
 /**
- * 文件上传类，请不要上传大文件
- * Created by LinkedME06 on 16/11/14.
+ * 文件上传类，请不要上传大文件 Created by LinkedME06 on 16/11/14.
  */
 
 public class VolleyMultipartRequest<T> extends Request<T> {
@@ -40,7 +42,6 @@ public class VolleyMultipartRequest<T> extends Request<T> {
      * @param headers       predefined custom header
      * @param listener      on success achieved 200 code from request
      * @param errorListener on error http or library timeout
-     * @param clazz
      */
     public VolleyMultipartRequest(String url, Map<String, String> headers, Class<T> clazz,
                                   Response.Listener<T> listener,
@@ -86,7 +87,6 @@ public class VolleyMultipartRequest<T> extends Request<T> {
      * @param url           request destination
      * @param listener      on success event handler
      * @param errorListener on error event handler
-     * @param clazz
      */
     public VolleyMultipartRequest(int method, String url, Class<T> clazz,
                                   Response.Listener<T> listener,
@@ -144,7 +144,6 @@ public class VolleyMultipartRequest<T> extends Request<T> {
      * Custom method handle data payload.
      *
      * @return Map data part label with data byte
-     * @throws AuthFailureError
      */
     protected Map<String, DataPart> getByteData() throws AuthFailureError {
         return fileParam;
@@ -152,15 +151,20 @@ public class VolleyMultipartRequest<T> extends Request<T> {
 
     @Override
     protected Response<T> parseNetworkResponse(NetworkResponse response) {
+        Gson gson = new Gson();
+        String json = null;
         try {
-            Gson gson = new Gson();
-            String json = new String(
+            json = new String(
                     response.data,
                     HttpHeaderParser.parseCharset(response.headers));
+            Logger.json(json);
             return Response.success(gson.fromJson(json, clazz),
                     HttpHeaderParser.parseCacheHeaders(response));
+        } catch (JsonSyntaxException e) {
+            // TODO: 16/11/27 此处有待优化，如何更顺滑的体验
+            return Response.error(new VolleyError(gson.fromJson(json, ErrorResult.class).getData().getErr_msg()));
         } catch (UnsupportedEncodingException e) {
-            return Response.error(new ParseError(e));
+            return Response.error(new VolleyError(gson.fromJson(json, ErrorResult.class).getData().getErr_msg()));
         }
 
     }
@@ -182,7 +186,6 @@ public class VolleyMultipartRequest<T> extends Request<T> {
      * @param dataOutputStream data output stream handle string parsing
      * @param params           string inputs collection
      * @param encoding         encode the inputs, default UTF-8
-     * @throws IOException
      */
     private void textParse(DataOutputStream dataOutputStream, Map<String, String> params, String encoding) throws IOException {
         try {
@@ -199,7 +202,6 @@ public class VolleyMultipartRequest<T> extends Request<T> {
      *
      * @param dataOutputStream data output stream handle file attachment
      * @param data             loop through data
-     * @throws IOException
      */
     private void dataParse(DataOutputStream dataOutputStream, Map<String, DataPart> data) throws IOException {
         for (Map.Entry<String, DataPart> entry : data.entrySet()) {
@@ -213,7 +215,6 @@ public class VolleyMultipartRequest<T> extends Request<T> {
      * @param dataOutputStream data output stream handle string parsing
      * @param parameterName    name of input
      * @param parameterValue   value of input
-     * @throws IOException
      */
     private void buildTextPart(DataOutputStream dataOutputStream, String parameterName, String parameterValue) throws IOException {
         dataOutputStream.writeBytes(twoHyphens + boundary + lineEnd);
@@ -230,7 +231,6 @@ public class VolleyMultipartRequest<T> extends Request<T> {
      * @param dataOutputStream data output stream handle data parsing
      * @param dataFile         data byte as DataPart from collection
      * @param inputName        name of data input
-     * @throws IOException
      */
     private void buildDataPart(DataOutputStream dataOutputStream, DataPart dataFile, String inputName) throws IOException {
         dataOutputStream.writeBytes(twoHyphens + boundary + lineEnd);

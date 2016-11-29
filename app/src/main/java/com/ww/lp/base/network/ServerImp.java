@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
+import com.orhanobut.logger.Logger;
 import com.ww.lp.base.CustomApplication;
 import com.ww.lp.base.components.imgcompress.Compressor;
 import com.ww.lp.base.components.volleymw.DataPart;
@@ -97,8 +98,8 @@ public class ServerImp implements ServerApi {
                 try {
                     ServerData<T> serverData = new ServerData<T>();
                     return Single.just(serverData.getServerData(requestTag, method, url, param, clazz));
-                } catch (InterruptedException | ExecutionException e) {
-                    Log.e("routes", e.getMessage());
+                } catch (InterruptedException | ExecutionException| NullPointerException e) {
+                    Logger.d(e.getCause().getMessage());
                     return Single.error(e);
                 }
             }
@@ -166,8 +167,6 @@ public class ServerImp implements ServerApi {
         return Observable.defer(new Func0<Observable<T>>() {
             @Override
             public Observable<T> call() {
-                // TODO: 16/11/17
-
                 return Observable.from(fileParam.entrySet()).concatMap(new Func1<Map.Entry<String, DataPart>, Observable<T>>() {
                     @Override
                     public Observable<T> call(Map.Entry<String, DataPart> stringDataPartEntry) {
@@ -185,7 +184,8 @@ public class ServerImp implements ServerApi {
                         stringDataPartEntry.setValue(compressDataPart);
                         ServerData<T> serverData = new ServerData<T>();
                         Map<String, DataPart> compressMap = new HashMap<String, DataPart>();
-                        compressMap.put(stringDataPartEntry.getKey(), stringDataPartEntry.getValue());
+                        // TODO: 16/11/28 此处写死了，需要优化
+                        compressMap.put("img", stringDataPartEntry.getValue());
                         try {
                             return Observable.just(serverData.uploadFile(requestTag, url, headers, param, compressMap, clazz));
                         } catch (ExecutionException | InterruptedException e) {
