@@ -71,12 +71,18 @@ public class PostPresenter implements PostContract.Presenter {
     }
 
     @Override
-    public void post(ProjectPostInfo projectPostInfo) {
+    public void post(ProjectPostInfo projectPostInfo, final boolean isAdd) {
+        String requestUrl = ServerInterface.project_post;
+        if (!isAdd){
+            requestUrl = ServerInterface.project_edit;
+        }
         Map<String, String> params = new HashMap<>();
+        params.put("projectId", projectPostInfo.getProjectId());
         params.put("userEmail", (String) SPUtils.get(CustomApplication.self(), SPUtils.USER_ID, ""));
         params.put("status", "0");
         params.put("flag", "release");
-        params.put("title", projectPostInfo.getTitle());
+        // TODO: 16/11/29 此处title拼写错误
+        params.put("tittle", projectPostInfo.getTitle());
         params.put("describe", projectPostInfo.getDescribe());
         params.put("price", projectPostInfo.getPrice());
         params.put("phoneNum", projectPostInfo.getPhoneNum());
@@ -88,7 +94,7 @@ public class PostPresenter implements PostContract.Presenter {
         params.put("imgs", new Gson().toJson(projectPostInfo.getImgs()));
         params.put("token", (String) SPUtils.get(CustomApplication.self(), SPUtils.TOKEN, ""));
         Subscription subscription = mServerImp
-                .commonSingle(requestTag, Request.Method.POST, ServerInterface.project_post, params, ProjectAddResult.class)
+                .commonSingle(requestTag, Request.Method.POST, requestUrl, params, ProjectAddResult.class)
                 .subscribeOn(mSchedulerProvider.computation())
                 .observeOn(mSchedulerProvider.ui())
                 .subscribe(new SingleSubscriber<ProjectAddResult>() {
@@ -98,13 +104,13 @@ public class PostPresenter implements PostContract.Presenter {
                         //请求成功
 //                        mView.success(loginResult);
 //                        mContractView.updateOrdertList(arrayList);
-                        ToastUtils.toastShort("成功");
+                        mContractView.addOrModifySuccess(projectInfoList.getStatus());
                     }
 
                     @Override
                     public void onError(Throwable error) {
 //                        mView.removeProgressDialog();
-                        ToastUtils.toastShort(error.getMessage());
+                        ToastUtils.toastError(error);
                         Logger.d("onError");
                     }
                 });
@@ -127,12 +133,13 @@ public class PostPresenter implements PostContract.Presenter {
                     @Override
                     public void onCompleted() {
                         Logger.d("onCompleted");
-                        mContractView.uploadFileSuccess(uploadImgUrlList);
+                        mContractView.uploadFileResult(true, uploadImgUrlList);
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        ToastUtils.toastShort(e.getMessage());
+                        mContractView.uploadFileResult(false, null);
+                        ToastUtils.toastError(e);
                         Logger.d("onError");
                     }
 

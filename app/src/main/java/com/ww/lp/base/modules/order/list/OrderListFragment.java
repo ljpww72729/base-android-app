@@ -1,5 +1,6 @@
 package com.ww.lp.base.modules.order.list;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -15,6 +16,7 @@ import com.ww.lp.base.components.rvrl.LPRecyclerViewAdapter;
 import com.ww.lp.base.components.rvrl.SingleItemClickListener;
 import com.ww.lp.base.data.ProjectInfo;
 import com.ww.lp.base.databinding.OrderListBinding;
+import com.ww.lp.base.modules.order.detail.OrderDetailActivity;
 
 import java.util.ArrayList;
 
@@ -46,6 +48,7 @@ public class OrderListFragment extends BaseFragment implements OrderListContract
     public void onResume() {
         super.onResume();
         mPresenter.subscribe();
+        mPresenter.loadOrderList(getArguments().getString(OrderListActivity.ORDER_FLAG));
     }
 
     @Override
@@ -70,9 +73,11 @@ public class OrderListFragment extends BaseFragment implements OrderListContract
         binding.lpRv.addOnItemTouchListener(new SingleItemClickListener(binding.lpRv, new SingleItemClickListener.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-//                Intent intent = new Intent(getActivity(), OrderDetailActivity.class);
-//                intent.putExtra(OrderDetailActivity.PROJECT_ID, mRVData.get(position).getProjectId());
-//                startActivity(intent);
+                Intent intent = new Intent(getActivity(), OrderDetailActivity.class);
+                intent.putExtra(OrderDetailActivity.PROJECT_ID, mRVData.get(position).getProjectId());
+                intent.putExtra(OrderDetailActivity.SHOW_PAY, false);
+                intent.putExtra("isMe", true);
+                startActivity(intent);
             }
 
             @Override

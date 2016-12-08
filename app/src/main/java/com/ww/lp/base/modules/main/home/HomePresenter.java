@@ -87,8 +87,8 @@ public class HomePresenter implements HomeContract.Presenter {
                     @Override
                     public void onError(Throwable error) {
 //                        mView.removeProgressDialog();
-                        ToastUtils.toastShort(error.getCause().getMessage());
-                        Logger.d(error.getCause().getMessage());
+                        ToastUtils.toastError(error);
+                        Logger.d(error);
                     }
                 });
         mSubscriptions.add(subscription);
@@ -120,8 +120,8 @@ public class HomePresenter implements HomeContract.Presenter {
                     @Override
                     public void onError(Throwable error) {
 //                        mView.removeProgressDialog();
-                        ToastUtils.toastShort(error.getCause().getMessage());
-                        Logger.d(error.getCause().getMessage());
+                        ToastUtils.toastError(error);
+                        Logger.d(error);
                     }
                 });
         mSubscriptions.add(subscription);

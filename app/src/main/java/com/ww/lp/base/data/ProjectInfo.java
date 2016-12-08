@@ -78,8 +78,6 @@ public class ProjectInfo implements Parcelable {
 
     private String img;
 
-    public ProjectInfo() {
-    }
 
     @Override
     public int describeContents() {
@@ -97,6 +95,9 @@ public class ProjectInfo implements Parcelable {
         dest.writeString(this.img);
     }
 
+    public ProjectInfo() {
+    }
+
     protected ProjectInfo(Parcel in) {
         this.projectId = in.readString();
         this.title = in.readString();
@@ -107,4 +108,15 @@ public class ProjectInfo implements Parcelable {
         this.img = in.readString();
     }
 
+    public static final Creator<ProjectInfo> CREATOR = new Creator<ProjectInfo>() {
+        @Override
+        public ProjectInfo createFromParcel(Parcel source) {
+            return new ProjectInfo(source);
+        }
+
+        @Override
+        public ProjectInfo[] newArray(int size) {
+            return new ProjectInfo[size];
+        }
+    };
 }

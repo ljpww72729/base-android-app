@@ -17,9 +17,12 @@ import com.ww.lp.base.R;
 import com.ww.lp.base.components.rvrl.LPRecyclerViewAdapter;
 import com.ww.lp.base.components.rvrl.SingleItemClickListener;
 import com.ww.lp.base.data.CarouselInfo;
+import com.ww.lp.base.data.ProjectDetail;
+import com.ww.lp.base.data.ProjectInfo;
 import com.ww.lp.base.databinding.PostFragBinding;
 import com.ww.lp.base.entity.ImageInfo;
 import com.ww.lp.base.entity.ProjectPostInfo;
+import com.ww.lp.base.utils.ToastUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,11 +44,14 @@ public class PostFragment extends BaseFragment implements PostContract.View {
     private ArrayList<ImageInfo> mRVData = new ArrayList<>();
     private LPRecyclerViewAdapter<ImageInfo> lpRecyclerViewAdapter;
     private ArrayList<CarouselInfo> imgCarouseList = new ArrayList<>();
+    private boolean isAdd = true;
 
-    public static PostFragment newInstance() {
+    public static PostFragment newInstance(Intent intent) {
 
         Bundle args = new Bundle();
-
+        if (intent != null) {
+            args.putParcelable("projectDetail", intent.getParcelableExtra("projectDetail"));
+        }
         PostFragment fragment = new PostFragment();
         fragment.setArguments(args);
         return fragment;
@@ -70,6 +76,19 @@ public class PostFragment extends BaseFragment implements PostContract.View {
         View root = onCreateView(inflater, container, savedInstanceState, R.layout.post_frag, false);
         binding = PostFragBinding.bind(root);
         ProjectPostInfo projectPostInfo = new ProjectPostInfo();
+        if (getArguments().getParcelable("projectDetail") != null) {
+            ProjectInfo projectInfo = ((ProjectDetail) getArguments().getParcelable("projectDetail")).getProjectInfo();
+            projectPostInfo.setTitle(projectInfo.getTitle());
+            projectPostInfo.setDescribe(projectInfo.getDescribe());
+            projectPostInfo.setPrice(projectInfo.getPrice());
+            projectPostInfo.setPhoneNum(projectInfo.getPhoneNum());
+            projectPostInfo.setProjectId(projectInfo.getProjectId());
+            projectPostInfo.setImg(projectInfo.getImg());
+            imgCarouseList = ((ProjectDetail) getArguments().getParcelable("projectDetail")).getCarouselInfo();
+            projectPostInfo.setImgs(imgCarouseList);
+            isAdd = false;
+            binding.btnPost.setText("修改需求");
+        }
         binding.setProjectPostInfo(projectPostInfo);
         binding.lpRv.setHasFixedSize(true);
         // use a linear layout manager
@@ -85,7 +104,8 @@ public class PostFragment extends BaseFragment implements PostContract.View {
 
             @Override
             public void onItemLongClick(View view, int position) {
-
+                deleteImg(position);
+                ToastUtils.toastLong("删除图片成功！");
             }
         }));
         binding.imgPicker.setOnClickListener(new View.OnClickListener() {
@@ -103,9 +123,12 @@ public class PostFragment extends BaseFragment implements PostContract.View {
             public void onClick(View v) {
                 ProjectPostInfo projectPostInfo = binding.getProjectPostInfo();
                 projectPostInfo.setImgs(imgCarouseList);
-                mPresenter.post(projectPostInfo);
+                mPresenter.post(projectPostInfo, isAdd);
             }
         });
+        if (!isAdd){
+            showImgList();
+        }
         return root;
     }
 
@@ -123,25 +146,64 @@ public class PostFragment extends BaseFragment implements PostContract.View {
             List<String> photos = null;
             if (data != null) {
                 photos = data.getStringArrayListExtra(PhotoPicker.KEY_SELECTED_PHOTOS);
-                ((BaseActivity)getActivity()).showProgressDialogLP("正在上传图片，请稍后...");
+                ((BaseActivity) getActivity()).showProgressDialogLP("正在上传图片，请稍后...");
                 mPresenter.uploadFile((ArrayList<String>) photos);
             }
         }
     }
 
     @Override
-    public void uploadFileSuccess(ArrayList<String> imgList) {
-        ((BaseActivity)getActivity()).removeProgressDialogLP();
-        mRVData.clear();
-        for (int i = 0; i < imgList.size(); i++) {
+    public void uploadFileResult(boolean result, ArrayList<String> imgList) {
+        ((BaseActivity) getActivity()).removeProgressDialogLP();
+        if (result) {
+            if (isAdd) {
+                mRVData.clear();
+                imgCarouseList.clear();
+            }
+            for (int i = 0; i < imgList.size(); i++) {
+                ImageInfo imageInfo = new ImageInfo();
+                imageInfo.setUri(Uri.parse(imgList.get(i)));
+                mRVData.add(imageInfo);
+                CarouselInfo carouselInfo = new CarouselInfo();
+                carouselInfo.setImg(imgList.get(i));
+                imgCarouseList.add(carouselInfo);
+            }
+            lpRecyclerViewAdapter.notifyDataSetChanged();
+        }
+    }
+
+    @Override
+    public void addOrModifySuccess(String status) {
+        if (status.equals("200")){
+            if (isAdd){
+                ToastUtils.toastShort("发布成功");
+            }else{
+                ToastUtils.toastShort("修改成功");
+            }
+            getActivity().finish();
+        }else{
+            if (isAdd){
+                ToastUtils.toastShort("发布失败，请重试~");
+            }else{
+                ToastUtils.toastShort("修改失败，请重试~");
+            }
+        }
+    }
+
+
+    public void showImgList() {
+        for (int i = 0; i < imgCarouseList.size(); i++) {
             ImageInfo imageInfo = new ImageInfo();
-            imageInfo.setUri(Uri.parse(imgList.get(i)));
+            imageInfo.setUri(Uri.parse(imgCarouseList.get(i).getImg()));
             mRVData.add(imageInfo);
-            CarouselInfo carouselInfo = new CarouselInfo();
-            carouselInfo.setImg(imgList.get(i));
-            imgCarouseList.add(carouselInfo);
         }
         lpRecyclerViewAdapter.notifyDataSetChanged();
-
     }
+
+    public void deleteImg(int position) {
+        mRVData.remove(position);
+        imgCarouseList.remove(position);
+        lpRecyclerViewAdapter.notifyDataSetChanged();
+    }
+
 }

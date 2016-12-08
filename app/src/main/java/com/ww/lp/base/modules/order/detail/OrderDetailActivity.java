@@ -16,6 +16,7 @@ import com.ww.lp.base.utils.schedulers.SchedulerProvider;
 public class OrderDetailActivity extends BaseActivity {
 
     public static final String PROJECT_ID = "projectId";
+    public static final String SHOW_PAY = "showPay";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -28,7 +29,7 @@ public class OrderDetailActivity extends BaseActivity {
                 .findFragmentById(R.id.contentFrame);
 
         if (orderDetailFragment == null) {
-            orderDetailFragment = OrderDetailFragment.newInstance(getIntent().getStringExtra(PROJECT_ID));
+            orderDetailFragment = OrderDetailFragment.newInstance(getIntent());
 
             ActivityUtils.addFragmentToActivity(getSupportFragmentManager(),
                     orderDetailFragment, R.id.contentFrame);
@@ -37,5 +38,7 @@ public class OrderDetailActivity extends BaseActivity {
         // Create the presenter
         new OrderDetailPresenter(TAG, ServerImp.getInstance(getApplicationContext()), orderDetailFragment, SchedulerProvider.getInstance());
     }
+
+
 
 }

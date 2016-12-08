@@ -20,4 +20,16 @@ public class ToastUtils {
         Toast.makeText(CustomApplication.self(), msg, Toast.LENGTH_LONG).show();
     }
 
+    public static void toastError(Throwable error) {
+        try {
+            toastShort(error.getCause().getMessage());
+        } catch (NullPointerException e) {
+            try {
+                toastShort(error.getMessage());
+            } catch (Exception exception) {
+                toastShort("请求发生错误！");
+            }
+        }
+    }
+
 }

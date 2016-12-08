@@ -78,13 +78,12 @@ public class GsonRequest<T> extends Request<T> {
      * 去除map中NULL或者空字符串的数据项
      *
      * @param param 参数键值对
-     * @return
      */
     private Map<String, String> removeNullAndEmpty(Map<String, String> param) {
-        if (param == null){
+        if (param == null) {
             return null;
         }
-        Map<String,String> formatParam = new HashMap<>();
+        Map<String, String> formatParam = new HashMap<>();
         Set<Map.Entry<String, String>> entry = param.entrySet();
         for (Map.Entry<String, String> format : entry) {
             if (!TextUtils.isEmpty(format.getValue())) {
@@ -114,9 +113,14 @@ public class GsonRequest<T> extends Request<T> {
                     response.data,
                     HttpHeaderParser.parseCharset(response.headers));
             Logger.json(json);
-            return Response.success(gson.fromJson(json, clazz),
-                    HttpHeaderParser.parseCacheHeaders(response));
-        } catch (JsonSyntaxException e){
+            if (json.contains("\"status\":\"400\"")) {
+//                用户未登录
+                return Response.error(new VolleyError("请先登录再操作！"));
+            } else {
+                return Response.success(gson.fromJson(json, clazz),
+                        HttpHeaderParser.parseCacheHeaders(response));
+            }
+        } catch (JsonSyntaxException e) {
             // TODO: 16/11/27 此处有待优化，如何更顺滑的体验
             return Response.error(new VolleyError(gson.fromJson(json, ErrorResult.class).getData().getErr_msg()));
         } catch (UnsupportedEncodingException e) {
@@ -141,13 +145,13 @@ public class GsonRequest<T> extends Request<T> {
         Map<String, String> params = getParams();
         if (params != null && params.size() > 0) {
             JSONObject jsonObject = new JSONObject();
-            for (Map.Entry<String, String> entry:params.entrySet()) {
+            for (Map.Entry<String, String> entry : params.entrySet()) {
                 try {
                     // TODO: 16/11/24 并没有进行encode编码
                     // TODO: 16/11/28 特别argly的地方
-                    if (!TextUtils.equals(entry.getKey(), "imgs")){
+                    if (!TextUtils.equals(entry.getKey(), "imgs")) {
                         jsonObject.put(entry.getKey(), entry.getValue());
-                    }else{
+                    } else {
                         jsonObject.put(entry.getKey(), new JSONArray(entry.getValue()));
                     }
                 } catch (JSONException e) {

@@ -12,12 +12,13 @@ import java.util.ArrayList;
 
 public class PostContract {
     interface View extends BaseView<PostContract.Presenter> {
-       void uploadFileSuccess(ArrayList<String> imgList);
+       void uploadFileResult(boolean result, ArrayList<String> imgList);
+        void addOrModifySuccess(String status);
     }
 
     interface Presenter extends BasePresenter {
         //发布需求
-        void post(ProjectPostInfo projectPostInfo);
+        void post(ProjectPostInfo projectPostInfo, boolean isAdd);
         void uploadFile(ArrayList<String> arrayList);
     }
 }

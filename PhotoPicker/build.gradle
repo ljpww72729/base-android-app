@@ -1,0 +1,31 @@
+apply plugin: 'com.android.library'
+
+android {
+  compileSdkVersion 24
+  buildToolsVersion "24"
+  resourcePrefix "__picker_"
+
+  defaultConfig {
+    minSdkVersion 14
+    targetSdkVersion 24
+    versionCode 1
+    versionName "0.9.0"
+  }
+}
+
+ext {
+  supportLibVersion = "24.2.1"
+}
+dependencies {
+  compile "com.android.support:support-v4:$supportLibVersion"
+  compile "com.android.support:appcompat-v7:$supportLibVersion"
+  compile "com.android.support:design:$supportLibVersion"
+  compile "com.android.support:recyclerview-v7:$supportLibVersion"
+  compile "com.android.support:support-annotations:$supportLibVersion"
+  compile "com.nineoldandroids:library:2.4.0"
+  compile 'com.facebook.fresco:fresco:0.14.1'
+  compile 'com.facebook.fresco:animated-gif:0.14.1'
+  compile 'me.relex:photodraweeview:1.1.2'
+}
+
+

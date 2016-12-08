@@ -9,6 +9,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.CALL_PHONE"/>
 
     <application
             android:name="com.ww.lp.base.CustomApplication"
@@ -40,21 +41,34 @@
         <activity
                 android:name=".modules.order.detail.OrderDetailActivity"
                 android:screenOrientation="portrait"/>
-        <activity android:name=".modules.order.post.PostActivity"
-                  android:screenOrientation="portrait"/>
-        <activity android:name=".modules.team.list.TeamListActivity"
-                  android:screenOrientation="portrait"/>
-        <activity android:name=".modules.team.detail.TeamDetailActivity"
-                  android:screenOrientation="portrait"/>
-        <activity android:name=".modules.team.member.MemberActivity"
-                  android:screenOrientation="portrait"/>
+        <activity
+                android:name=".modules.order.post.PostActivity"
+                android:screenOrientation="portrait"/>
+        <activity
+                android:name=".modules.team.list.TeamListActivity"
+                android:screenOrientation="portrait"/>
+        <activity
+                android:name=".modules.team.detail.TeamDetailActivity"
+                android:screenOrientation="portrait"/>
+        <activity
+                android:name=".modules.team.member.MemberActivity"
+                android:screenOrientation="portrait"/>
+        <activity
+                android:name=".modules.team.developer.DeveloperActivity"
+                android:screenOrientation="portrait"/>
+        <activity
+                android:name=".modules.main.user.UserInfoActivity"
+                android:screenOrientation="portrait"
+                android:windowSoftInputMode="stateHidden"/>
 
-        <activity android:name="me.iwf.photopicker.PhotoPickerActivity"
-                  android:theme="@style/Theme.AppCompat.NoActionBar"
+        <activity
+                android:name="me.iwf.photopicker.PhotoPickerActivity"
+                android:theme="@style/Theme.AppCompat.NoActionBar"
                 />
 
-        <activity android:name="me.iwf.photopicker.PhotoPagerActivity"
-                  android:theme="@style/Theme.AppCompat.NoActionBar"/>
+        <activity
+                android:name="me.iwf.photopicker.PhotoPagerActivity"
+                android:theme="@style/Theme.AppCompat.NoActionBar"/>
 
         <!-- alipay sdk begin -->
 

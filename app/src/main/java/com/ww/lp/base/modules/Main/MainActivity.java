@@ -8,12 +8,15 @@ import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.android.volley.Request;
 import com.orhanobut.logger.Logger;
 import com.ww.lp.base.BaseActivity;
+import com.ww.lp.base.CustomApplication;
 import com.ww.lp.base.R;
 import com.ww.lp.base.components.bottombar.BottomBar;
 import com.ww.lp.base.components.bottombar.OnTabReselectListener;
 import com.ww.lp.base.components.bottombar.OnTabSelectListener;
+import com.ww.lp.base.data.LoginResult;
 import com.ww.lp.base.modules.login.LoginActivity;
 import com.ww.lp.base.modules.main.home.HomeFragment;
 import com.ww.lp.base.modules.main.home.HomePresenter;
@@ -21,10 +24,16 @@ import com.ww.lp.base.modules.main.more.MoreFragment;
 import com.ww.lp.base.modules.main.more.MorePresenter;
 import com.ww.lp.base.modules.order.post.PostActivity;
 import com.ww.lp.base.network.ServerImp;
+import com.ww.lp.base.network.ServerInterface;
 import com.ww.lp.base.utils.ActivityUtils;
 import com.ww.lp.base.utils.SPUtils;
 import com.ww.lp.base.utils.ToastUtils;
 import com.ww.lp.base.utils.schedulers.SchedulerProvider;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import rx.SingleSubscriber;
 
 /**
  * 首页
@@ -56,7 +65,7 @@ public class MainActivity extends BaseActivity {
             @Override
             public void onTabReSelected(@IdRes int tabId) {
                 Logger.d("reselect tabId= " + tabId);
-                if (tabId == R.id.va_add){
+                if (tabId == R.id.va_add) {
 
                     Intent intent = new Intent(MainActivity.this, PostActivity.class);
                     startActivity(intent);
@@ -164,12 +173,36 @@ public class MainActivity extends BaseActivity {
                 startActivity(intent);
                 return true;
             case R.id.logout:
-                SPUtils.put(MainActivity.this, SPUtils.TOKEN, "");
-                SPUtils.put(MainActivity.this, SPUtils.USER_ID, "");
-                ToastUtils.toastShort("退出成功！");
+               logout();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
+
+    public void logout() {
+        Map<String, String> params = new HashMap<>();
+        params.put("token", (String) SPUtils.get(CustomApplication.self(), SPUtils.TOKEN, ""));
+        ServerImp.getInstance(getApplicationContext())
+                .commonSingle(this.getClass().getSimpleName(), Request.Method.POST, ServerInterface.logout, params, LoginResult.class)
+                .subscribeOn(SchedulerProvider.getInstance().computation())
+                .observeOn(SchedulerProvider.getInstance().ui())
+                .subscribe(new SingleSubscriber<LoginResult>() {
+                    @Override
+                    public void onSuccess(LoginResult loginResult) {
+                        //请求成功
+                        SPUtils.put(MainActivity.this, SPUtils.TOKEN, "");
+                        SPUtils.put(MainActivity.this, SPUtils.USER_ID, "");
+                        ToastUtils.toastShort("退出成功！");
+                    }
+
+                    @Override
+                    public void onError(Throwable error) {
+                        ToastUtils.toastError(error);
+                        Logger.d(error);
+                    }
+                });
+    }
+
+
 }

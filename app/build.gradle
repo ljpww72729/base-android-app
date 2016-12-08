@@ -46,7 +46,6 @@ dependencies {
     compile files('libs/alipaySdk-20161009.jar')
     compile project(':PhotoPicker')
     compile 'top.zibin:Luban:1.0.9'
-    compile "me.henrytao:smooth-app-bar-layout:24.2.1.0"
-
+    compile 'com.tbruyelle.rxpermissions:rxpermissions:0.9.0@aar'
 
 }

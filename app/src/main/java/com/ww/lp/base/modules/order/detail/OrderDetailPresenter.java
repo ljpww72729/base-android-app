@@ -11,12 +11,15 @@ import android.util.Log;
 import com.alipay.sdk.app.PayTask;
 import com.android.volley.Request;
 import com.orhanobut.logger.Logger;
+import com.ww.lp.base.CustomApplication;
 import com.ww.lp.base.components.alipay.BizContent;
 import com.ww.lp.base.components.alipay.OrderInfoUtil2_0;
 import com.ww.lp.base.components.alipay.PayResult;
 import com.ww.lp.base.data.ProjectDetail;
+import com.ww.lp.base.data.ServerResult;
 import com.ww.lp.base.network.ServerImp;
 import com.ww.lp.base.network.ServerInterface;
+import com.ww.lp.base.utils.SPUtils;
 import com.ww.lp.base.utils.ToastUtils;
 import com.ww.lp.base.utils.schedulers.BaseSchedulerProvider;
 
@@ -47,15 +50,23 @@ public class OrderDetailPresenter implements OrderDetailContract.Presenter {
     private final BaseSchedulerProvider mSchedulerProvider;
     @NonNull
     private CompositeSubscription mSubscriptions;
-    /** 支付宝支付业务：入参app_id */
+    /**
+     * 支付宝支付业务：入参app_id
+     */
     public static final String APPID = "2016102100733937";
 
-    /** 支付宝账户登录授权业务：入参pid值 */
+    /**
+     * 支付宝账户登录授权业务：入参pid值
+     */
     public static final String PID = "";
-    /** 支付宝账户登录授权业务：入参target_id值 */
+    /**
+     * 支付宝账户登录授权业务：入参target_id值
+     */
     public static final String TARGET_ID = "";
 
-    /** 商户私钥，pkcs8格式 */
+    /**
+     * 商户私钥，pkcs8格式
+     */
     public static final String RSA_PRIVATE = "MIICdgIBADANBgkqhkiG9w0BAQEFAASCAmAwggJcAgEAAoGBAL3j7zDifWSiswF3\n" +
             "uJO93KXR9s/3wt0U1KNbXRLVUehT9ge53WZMlfAdCVOQnO77KIHwGqrTjDTmTV26\n" +
             "sE6AV2ulInr5Seh/eCrNEMCk0Xv3r570g/a2ukYhYcZRCuOrPP2SzAVGY+8YjEWC\n" +
@@ -99,7 +110,9 @@ public class OrderDetailPresenter implements OrderDetailContract.Presenter {
                 default:
                     break;
             }
-        };
+        }
+
+        ;
     };
 
     public OrderDetailPresenter(@NonNull String requestTag, @NonNull ServerImp serverImp,
@@ -150,10 +163,8 @@ public class OrderDetailPresenter implements OrderDetailContract.Presenter {
 
                     @Override
                     public void onError(Throwable error) {
-                        System.out.print(error);
-//                        mView.removeProgressDialog();
-                        ToastUtils.toastShort(error.getCause().getMessage());
-                        Logger.d(error.getCause().getMessage());
+                        ToastUtils.toastError(error);
+                        Logger.d(error);
                     }
                 });
         mSubscriptions.add(subscription);
@@ -194,6 +205,39 @@ public class OrderDetailPresenter implements OrderDetailContract.Presenter {
             Thread payThread = new Thread(payRunnable);
             payThread.start();
         }
+    }
+
+    @Override
+    public void deleteProject(String projectId) {
+        Map<String, String> params = new HashMap<>();
+        params.put(PROJECT_ID, projectId);
+        params.put("token", (String) SPUtils.get(CustomApplication.self(), SPUtils.TOKEN, ""));
+        Subscription subscription = mServerImp
+                .commonSingle(requestTag, Request.Method.POST, ServerInterface.project_delete, params, ServerResult.class)
+                .subscribeOn(mSchedulerProvider.computation())
+                .observeOn(mSchedulerProvider.ui())
+                .subscribe(new SingleSubscriber<ServerResult>() {
+                    @Override
+                    public void onSuccess(ServerResult serverResult) {
+//                        mView.removeProgressDialog();
+                        //请求成功
+//                        mView.success(loginResult);
+                        if (serverResult.getStatus().equals("200")) {
+                            mContractView.deleteSuccess();
+                        } else {
+                            ToastUtils.toastShort("删除失败");
+                        }
+
+
+                    }
+
+                    @Override
+                    public void onError(Throwable error) {
+                        ToastUtils.toastError(error);
+                        Logger.d(error);
+                    }
+                });
+        mSubscriptions.add(subscription);
     }
 
 

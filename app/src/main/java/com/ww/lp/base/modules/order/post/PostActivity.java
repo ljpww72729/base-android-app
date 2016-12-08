@@ -25,7 +25,7 @@ public class PostActivity extends BaseActivity {
                 .findFragmentById(R.id.contentFrame);
 
         if (postFragment == null) {
-            postFragment = PostFragment.newInstance();
+            postFragment = PostFragment.newInstance(getIntent());
 
             ActivityUtils.addFragmentToActivity(getSupportFragmentManager(),
                     postFragment, R.id.contentFrame);

@@ -158,8 +158,13 @@ public class VolleyMultipartRequest<T> extends Request<T> {
                     response.data,
                     HttpHeaderParser.parseCharset(response.headers));
             Logger.json(json);
-            return Response.success(gson.fromJson(json, clazz),
-                    HttpHeaderParser.parseCacheHeaders(response));
+            if (json.contains("\"status\":\"400\"")) {
+//                用户未登录
+                return Response.error(new VolleyError("请先登录再操作！"));
+            } else {
+                return Response.success(gson.fromJson(json, clazz),
+                        HttpHeaderParser.parseCacheHeaders(response));
+            }
         } catch (JsonSyntaxException e) {
             // TODO: 16/11/27 此处有待优化，如何更顺滑的体验
             return Response.error(new VolleyError(gson.fromJson(json, ErrorResult.class).getData().getErr_msg()));

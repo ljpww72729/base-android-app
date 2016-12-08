@@ -91,7 +91,7 @@ public class OrderListPresenter implements OrderListContract.Presenter {
                     @Override
                     public void onError(Throwable error) {
 //                        mView.removeProgressDialog();
-                        ToastUtils.toastShort(error.getCause().getMessage());
+                        ToastUtils.toastError(error);
                         Logger.d("onError");
                     }
                 });

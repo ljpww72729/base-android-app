@@ -19,6 +19,7 @@ import com.ww.lp.base.data.CarouselInfo;
 import com.ww.lp.base.data.ProjectInfo;
 import com.ww.lp.base.databinding.HomeFragBinding;
 import com.ww.lp.base.modules.order.detail.OrderDetailActivity;
+import com.ww.lp.base.modules.team.developer.DeveloperActivity;
 import com.ww.lp.base.modules.team.list.TeamListActivity;
 import com.ww.lp.base.modules.webview.NormalWVActvity;
 
@@ -50,6 +51,7 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
     @Override
     public void onResume() {
         super.onResume();
+        mPresenter.subscribe();
     }
 
     @Override
@@ -64,6 +66,7 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
                              Bundle savedInstanceState) {
         View root = onCreateView(inflater, container, savedInstanceState, R.layout.home_frag, false);
         binding = HomeFragBinding.bind(root);
+        binding.lpRv.setVisibility(View.GONE);
         binding.lpRv.setHasFixedSize(true);
 
         // use a linear layout manager
@@ -77,6 +80,7 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
             public void onItemClick(View view, int position) {
                 Intent intent = new Intent(getActivity(), OrderDetailActivity.class);
                 intent.putExtra(OrderDetailActivity.PROJECT_ID, mRVData.get(position).getProjectId());
+                intent.putExtra("isMe", false);
                 startActivity(intent);
             }
 
@@ -93,7 +97,15 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
 
             }
         });
-        mPresenter.subscribe();
+        binding.developer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), DeveloperActivity.class);
+                startActivity(intent);
+
+            }
+        });
+
         return root;
     }
 
@@ -131,6 +143,7 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
     @Override
     public void updateProjectList(ArrayList<ProjectInfo> arrayList) {
         // TODO: 16/11/26 数据是否这样更新有待优化
+        binding.lpRv.setVisibility(View.VISIBLE);
         mRVData.clear();
         mRVData.addAll(arrayList);
         lpRecyclerViewAdapter.notifyDataSetChanged();

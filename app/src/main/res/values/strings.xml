@@ -20,6 +20,8 @@
     <string name="call_phone">拨打电话\n%1$s\n(电话沟通确认后再付款)</string>
     <string name="logout">退出</string>
 
+    <string name="price">价格：%1$s元</string>
+
 
 
     <string name="progressActivityErrorButton">重试</string>

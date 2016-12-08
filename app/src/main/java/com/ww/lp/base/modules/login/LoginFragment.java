@@ -52,8 +52,10 @@ public class LoginFragment extends BaseFragment implements LoginContract.View {
         View root = onCreateView(inflater, container, savedInstanceState, R.layout.login_frag, false);
         loginFragBinding = LoginFragBinding.bind(root);
         UserInfo userInfo = new UserInfo();
-        userInfo.setEmail("ljpww72729@163.com");
-        userInfo.setPassword("12345678");
+        if (com.ww.lp.base.BuildConfig.DEBUG){
+            userInfo.setEmail("ljpww72729@163.com");
+            userInfo.setPassword("12345678");
+        }
         loginFragBinding.setUserInfo(userInfo);
         loginFragBinding.btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override

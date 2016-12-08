@@ -14,11 +14,13 @@ import com.ww.lp.base.data.ProjectDetail;
 public class OrderDetailContract {
     interface View extends BaseView<OrderDetailContract.Presenter> {
         void showDetail(ProjectDetail projectDetail);
+        void deleteSuccess();
     }
 
     interface Presenter extends BasePresenter {
         void loadData(String projectId);
 
         void pay(Activity activity, BizContent bizContent);
+        void deleteProject(String projectId);
     }
 }

@@ -24,7 +24,7 @@
                     android:layout_height="@dimen/dp_64"
                     android:layout_alignParentLeft="true"
                     android:layout_centerVertical="true"
-                    fresco:placeholderImage="@color/primary"
+                    fresco:placeholderImage="@drawable/va_img_default"
                     fresco:actualImageUri="@{lp_rv_item.img}">
 
             </com.facebook.drawee.view.SimpleDraweeView>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--<ScrollView -->
+    <!--android:orientation="vertical"-->
+    <!--android:gravity="center"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:fillViewport="true"-->
+    <!--&gt;-->
+
+<me.relex.photodraweeview.PhotoDraweeView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/iv_pager"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    fresco:placeholderImage="@drawable/__picker_ic_photo_black_48dp"
+    fresco:placeholderImageScaleType="fitCenter"
+    fresco:failureImage="@drawable/__picker_ic_broken_image_black_48dp"
+    fresco:failureImageScaleType="fitCenter" />
+
+<!--</ScrollView>-->

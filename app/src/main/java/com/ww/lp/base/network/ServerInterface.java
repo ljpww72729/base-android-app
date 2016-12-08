@@ -24,6 +24,14 @@ public class ServerInterface {
      */
     public static final String login = baseUrl + "user/login";
     /**
+     * 退出接口
+     */
+    public static final String logout = baseUrl + "user/logout";
+    /**
+     * 修改用户信息接口
+     */
+    public static final String edit = baseUrl + "user/edit";
+    /**
      * 轮播图请求接口
      */
     public static final String carousel = baseUrl + "ads/list";
@@ -43,7 +51,14 @@ public class ServerInterface {
      * 发布需求接口
      */
     public static final String project_post = baseUrl + "project/add";
-
+    /**
+     * 修改需求接口
+     */
+    public static final String project_edit = baseUrl + "project/edit";
+    /**
+     * 删除需求接口
+     */
+    public static final String project_delete = baseUrl + "project/delete";
     /**
      * 上传文件请求接口
      */
