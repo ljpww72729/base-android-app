@@ -1,9 +1,16 @@
 apply plugin: 'com.android.application'
 
 android {
+    signingConfigs {
+        release {
+            keyAlias 'qrzb'
+            keyPassword 'qrzb2729'
+            storeFile file('/Users/LinkedME06/Documents/lipeng/person/jks/qrzb.jks')
+            storePassword 'qrzb2729'
+        }
+    }
     compileSdkVersion 24
     buildToolsVersion '24.0.2'
-
     defaultConfig {
         applicationId "com.ww.lp.base"
         minSdkVersion 14
@@ -13,9 +20,14 @@ android {
         vectorDrawables.useSupportLibrary = true
     }
     buildTypes {
-        release {
+        debug {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        release {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
         }
     }
     dataBinding.enabled = true;
@@ -33,7 +45,7 @@ dependencies {
     compile 'com.google.code.gson:gson:2.7'
     compile 'io.reactivex:rxjava:1.1.8'
     compile 'io.reactivex:rxandroid:1.2.1'
-    compile 'com.google.guava:guava:20.0-rc1'
+    compile 'com.google.guava:guava:20.0'
     compile 'com.synnapps:carouselview:0.0.10'
     compile 'com.facebook.fresco:fresco:0.14.1'
     compile "com.android.support:support-vector-drawable:${supportVersion}"
@@ -43,9 +55,6 @@ dependencies {
     compile "com.android.support:percent:${supportVersion}"
     compile 'com.orhanobut:logger:1.15'
     compile "com.android.support:support-v4:${supportVersion}"
-    compile files('libs/alipaySdk-20161009.jar')
     compile project(':PhotoPicker')
-    compile 'top.zibin:Luban:1.0.9'
     compile 'com.tbruyelle.rxpermissions:rxpermissions:0.9.0@aar'
-
 }

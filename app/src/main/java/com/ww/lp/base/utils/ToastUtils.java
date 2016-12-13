@@ -25,7 +25,7 @@ public class ToastUtils {
             toastShort(error.getCause().getMessage());
         } catch (NullPointerException e) {
             try {
-                toastShort(error.getMessage());
+                toastShort("请求发生错误，请稍后重试");
             } catch (Exception exception) {
                 toastShort("请求发生错误！");
             }
