@@ -1,7 +1,9 @@
 <resources>
+
     <string name="app_name">我的应用</string>
+
     <string name="shouye">首页</string>
-    <string name="tianjia">添加</string>
+    <string name="tianjia">发布</string>
     <string name="guanyu">关于</string>
 
     <string name="email">邮箱</string>
@@ -22,6 +24,16 @@
 
     <string name="price">价格：%1$s元</string>
 
+    <string name="publish">待承接</string>
+    <string name="chengjie">承接</string>
+    <string name="accept">已承接</string>
+    <string name="jujuechengjie">拒绝承接</string>
+    <string name="yiwancheng">已完成</string>
+    <string name="unpay">已完成未支付</string>
+    <string name="zhifu">支付</string>
+    <string name="payed">完成且已支付</string>
+    <string name="pingja">评价</string>
+
 
 
     <string name="progressActivityErrorButton">重试</string>
@@ -29,5 +41,7 @@
     <string name="progressActivityEmptyContentPlaceholder">无任何数据\n是不是进错门了？</string>
     <string name="progressActivityErrorTitlePlaceholder">无法连接</string>
     <string name="progressActivityErrorContentPlaceholder">无法连接到服务器\n请检查网络并重试</string>
+    <string name="count_down_str">%d秒</string>
+    <string name="shenhe">要成为开发者需提供以下资料发送到%1$s邮箱，等待审核通过</string>
 
 </resources>

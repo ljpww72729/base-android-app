@@ -39,7 +39,7 @@ public interface ServerApi {
      */
     <T> Observable<T> common(String requestTag, int method, String url, Object object, Class<T> clazz);
     <T> Single<T> commonSingle(String requestTag, int method, String url, Object object, Class<T> clazz);
-//    Observable<LoginResult> login(String requestTag, @NonNull UserInfo userInfo);
+//    Observable<UserInfo> login(String requestTag, @NonNull UserInfo userInfo);
 
     /**
      * 采用volley上传文件到服务器，不适合上传大文件

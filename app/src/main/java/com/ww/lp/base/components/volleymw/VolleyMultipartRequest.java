@@ -10,6 +10,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.HttpHeaderParser;
 import com.orhanobut.logger.Logger;
+import com.ww.lp.base.data.BaseResult;
 import com.ww.lp.base.data.ErrorResult;
 
 import java.io.ByteArrayInputStream;
@@ -158,18 +159,23 @@ public class VolleyMultipartRequest<T> extends Request<T> {
                     response.data,
                     HttpHeaderParser.parseCharset(response.headers));
             Logger.json(json);
-            if (json.contains("\"status\":\"400\"")) {
-//                用户未登录
-                return Response.error(new VolleyError("请先登录再操作！"));
+            BaseResult baseResult = gson.fromJson(json, BaseResult.class);
+            if (baseResult.getStatus() == 400){
+                ErrorResult errorResult = gson.fromJson(json, ErrorResult.class);
+                String message = "未知错误，请稍后重试!";
+                if (errorResult.getErrors() != null && errorResult.getErrors().size() > 0){
+                    message = errorResult.getErrors().get(0).getMessage();
+                }
+                return Response.error(new VolleyError(message));
             } else {
                 return Response.success(gson.fromJson(json, clazz),
                         HttpHeaderParser.parseCacheHeaders(response));
             }
         } catch (JsonSyntaxException e) {
             // TODO: 16/11/27 此处有待优化，如何更顺滑的体验
-            return Response.error(new VolleyError(gson.fromJson(json, ErrorResult.class).getData().getErr_msg()));
+            return Response.error(new VolleyError("未知错误，请稍后重试!"));
         } catch (UnsupportedEncodingException e) {
-            return Response.error(new VolleyError(gson.fromJson(json, ErrorResult.class).getData().getErr_msg()));
+            return Response.error(new VolleyError("未知错误，请稍后重试!"));
         }
 
     }

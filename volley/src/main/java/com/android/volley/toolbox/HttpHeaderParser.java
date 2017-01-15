@@ -29,7 +29,7 @@ import java.util.Map;
 public class HttpHeaderParser {
 
     public static final String CONTENT_TYPE = "Content-Type";
-    public static final String DEFAULT_CONTENT_CHARSET = "ISO-8859-1";
+    public static final String DEFAULT_CONTENT_CHARSET = "UTF-8";
 
     /**
      * Extracts a {@link Cache.Entry} from a {@link NetworkResponse}.

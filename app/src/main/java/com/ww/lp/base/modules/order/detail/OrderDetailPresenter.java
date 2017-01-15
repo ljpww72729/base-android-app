@@ -1,24 +1,26 @@
 package com.ww.lp.base.modules.order.detail;
 
+import com.google.gson.Gson;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
-import android.util.Log;
 
+import com.alipay.sdk.app.EnvUtils;
 import com.alipay.sdk.app.PayTask;
 import com.android.volley.Request;
 import com.orhanobut.logger.Logger;
 import com.ww.lp.base.CustomApplication;
-import com.ww.lp.base.components.alipay.BizContent;
-import com.ww.lp.base.components.alipay.OrderInfoUtil2_0;
-import com.ww.lp.base.components.alipay.PayResult;
-import com.ww.lp.base.data.ProjectDetail;
-import com.ww.lp.base.data.ServerResult;
+import com.ww.lp.base.data.CommonResult;
+import com.ww.lp.base.data.pay.SignResult;
+import com.ww.lp.base.data.project.ProjectInfo;
+import com.ww.lp.base.data.project.ProjectListResult;
 import com.ww.lp.base.network.ServerImp;
 import com.ww.lp.base.network.ServerInterface;
+import com.ww.lp.base.utils.Constants;
 import com.ww.lp.base.utils.SPUtils;
 import com.ww.lp.base.utils.ToastUtils;
 import com.ww.lp.base.utils.schedulers.BaseSchedulerProvider;
@@ -26,8 +28,10 @@ import com.ww.lp.base.utils.schedulers.BaseSchedulerProvider;
 import java.util.HashMap;
 import java.util.Map;
 
+import rx.Single;
 import rx.SingleSubscriber;
 import rx.Subscription;
+import rx.functions.Func0;
 import rx.subscriptions.CompositeSubscription;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -50,37 +54,6 @@ public class OrderDetailPresenter implements OrderDetailContract.Presenter {
     private final BaseSchedulerProvider mSchedulerProvider;
     @NonNull
     private CompositeSubscription mSubscriptions;
-    /**
-     * 支付宝支付业务：入参app_id
-     */
-    public static final String APPID = "2016102100733937";
-
-    /**
-     * 支付宝账户登录授权业务：入参pid值
-     */
-    public static final String PID = "";
-    /**
-     * 支付宝账户登录授权业务：入参target_id值
-     */
-    public static final String TARGET_ID = "";
-
-    /**
-     * 商户私钥，pkcs8格式
-     */
-    public static final String RSA_PRIVATE = "MIICdgIBADANBgkqhkiG9w0BAQEFAASCAmAwggJcAgEAAoGBAL3j7zDifWSiswF3\n" +
-            "uJO93KXR9s/3wt0U1KNbXRLVUehT9ge53WZMlfAdCVOQnO77KIHwGqrTjDTmTV26\n" +
-            "sE6AV2ulInr5Seh/eCrNEMCk0Xv3r570g/a2ukYhYcZRCuOrPP2SzAVGY+8YjEWC\n" +
-            "GegKPrKFrQ9mcaf8NSCJyRkLreyJAgMBAAECgYAO8HPNAMSkujgjEWwwE2vcj9w/\n" +
-            "GFr4Ub846uMzrBy5joF4siK8/aF+NoqZTHNMSe4x6tXuQp5xOv0zNpDQXECEUMhC\n" +
-            "isjWcOdUHayq2DOBssRy5p2BXYHgQVdeVHMxbbdUZr0LTn0oMWsArWCCAsEPKiEp\n" +
-            "KRJ5XUms1lwoKsHVQQJBAOhJZePlqhGhAoacHIFiJFho3119KQFzpcI6GGpmUbFp\n" +
-            "eeuPos5gLXDR1ZZHlBeMv0GoJrvgxZM2XpXECrJxDzUCQQDRRovlXD0mpwttiqkP\n" +
-            "dTTA7q8m/naR9k2XxpQXbHiCbYaHlg1Kgu2eCWCcH2qgH0kaS9h38LBftV4NyfIA\n" +
-            "j66FAkBydiiVIkipozOBbU/GmbvbLOJUSSZ5pqkZilMZqw26ZIVFhGPvWglKPLwI\n" +
-            "74CUEjD0g42CqwHwxqvZFN9Iitm5AkATOFpy1zTaju7ywZBjVg1hRsqZVzeGkktw\n" +
-            "DBHf0NuEhxCa9UIFPN8b65qO3CfLyvPI0XxxD47zS1H3DDwIpymNAkEAj342yflU\n" +
-            "79doxFYu5CBUEq9YoicM9Bvgw14R5RJJVGvxvAY6TVSUptPISQ9eb1oldETFFSAc\n" +
-            "S6nftqhJKQbXsA==\n";
 
     private static final int SDK_PAY_FLAG = 1;
 
@@ -90,21 +63,21 @@ public class OrderDetailPresenter implements OrderDetailContract.Presenter {
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case SDK_PAY_FLAG: {
-                    @SuppressWarnings("unchecked")
-                    PayResult payResult = new PayResult((Map<String, String>) msg.obj);
-                    /**
-                     对于支付结果，请商户依赖服务端的异步通知结果。同步通知结果，仅作为支付结束的通知。
-                     */
-                    String resultInfo = payResult.getResult();// 同步返回需要验证的信息
-                    String resultStatus = payResult.getResultStatus();
-                    // 判断resultStatus 为9000则代表支付成功
-                    if (TextUtils.equals(resultStatus, "9000")) {
-                        // 该笔订单是否真实支付成功，需要依赖服务端的异步通知。
-                        ToastUtils.toastLong("支付成功");
-                    } else {
-                        // 该笔订单真实的支付结果，需要依赖服务端的异步通知。
-                        ToastUtils.toastLong("支付失败");
-                    }
+//                    PayResult aliPay = new PayResult((Map<String, String>) msg.obj);
+                    mContractView.aliPay(true, (Map<String, String>) msg.obj);
+//                    /**
+//                     对于支付结果，请商户依赖服务端的异步通知结果。同步通知结果，仅作为支付结束的通知。
+//                     */
+//                    String resultInfo = aliPay.getResult();// 同步返回需要验证的信息
+//                    String resultStatus = aliPay.getResultStatus();
+//                    // 判断resultStatus 为9000则代表支付成功
+//                    if (TextUtils.equals(resultStatus, "9000")) {
+//                        // 该笔订单是否真实支付成功，需要依赖服务端的异步通知。
+//                        ToastUtils.toastLong("支付成功");
+//                    } else {
+//                        // 该笔订单真实的支付结果，需要依赖服务端的异步通知。
+//                        ToastUtils.toastLong("支付失败");
+//                    }
                     break;
                 }
                 default:
@@ -138,27 +111,172 @@ public class OrderDetailPresenter implements OrderDetailContract.Presenter {
         mSubscriptions.clear();
     }
 
-    /**
-     * 请求轮播图列表
-     */
     @Override
-    public void loadData(String projectId) {
+    public void getSign(String projectId) {
+
         Map<String, String> params = new HashMap<>();
         params.put(PROJECT_ID, projectId);
+        params.put("token", (String) SPUtils.get(CustomApplication.self(), SPUtils.TOKEN, ""));
         Subscription subscription = mServerImp
-                .commonSingle(requestTag, Request.Method.POST, ServerInterface.project_detail, params, ProjectDetail.class)
+                .commonSingle(requestTag, Request.Method.POST, ServerInterface.get_sign, params, SignResult.class)
                 .subscribeOn(mSchedulerProvider.computation())
                 .observeOn(mSchedulerProvider.ui())
-                .subscribe(new SingleSubscriber<ProjectDetail>() {
+                .subscribe(new SingleSubscriber<SignResult>() {
                     @Override
-                    public void onSuccess(ProjectDetail projectDetail) {
+                    public void onSuccess(SignResult signResult) {
+                        if (!TextUtils.isEmpty(signResult.getData())) {
+                            mContractView.signResult(true, signResult.getData());
+                        } else {
+                            mContractView.signResult(false, "");
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable error) {
+                        mContractView.signResult(false, "");
+//                        ToastUtils.toastError(error);
+                        Logger.d(error);
+                    }
+                });
+        mSubscriptions.add(subscription);
+
+
+    }
+
+    @Override
+    public void pay(final Activity activity, final String signStr) {
+        /**
+         * 这里只是为了方便直接向商户展示支付宝的整个支付流程；所以Demo中加签过程直接放在客户端完成；
+         * 真实App里，privateKey等数据严禁放在客户端，加签过程务必要放在服务端完成；
+         * 防止商户私密数据泄露，造成不必要的资金损失，及面临各种安全风险；
+         *
+         * orderInfo的获取必须来自服务端；
+         */
+//        Runnable payRunnable = new Runnable() {
+//
+//            @Override
+//            public void run() {
+//                EnvUtils.setEnv(EnvUtils.EnvEnum.SANDBOX);
+//                PayTask alipay = new PayTask(activity);
+//                Map<String, String> result = alipay.payV2(signStr, true);
+//                Log.i("msp", result.toString());
+//
+//                Message msg = new Message();
+//                msg.what = SDK_PAY_FLAG;
+//                msg.obj = result;
+//                mHandler.sendMessage(msg);
+//            }
+//        };
+//
+//        Thread payThread = new Thread(payRunnable);
+//        payThread.start();
+        // TODO: 28/12/2016 线上版本一定要将此注释掉
+        EnvUtils.setEnv(EnvUtils.EnvEnum.SANDBOX);
+        final PayTask alipay = new PayTask(activity);
+        Single.defer(new Func0<Single<Map<String, String>>>() {
+            @Override
+            public Single<Map<String, String>> call() {
+                return Single.just(alipay.payV2(signStr, true));
+            }
+        }).subscribeOn(mSchedulerProvider.computation())
+                .observeOn(mSchedulerProvider.ui())
+                .subscribe(new SingleSubscriber<Map<String, String>>() {
+                    @Override
+                    public void onSuccess(Map<String, String> payMap) {
+                        Logger.d(payMap);
+                        mContractView.aliPay(true, payMap);
+                    }
+
+                    @Override
+                    public void onError(Throwable error) {
+                        mContractView.aliPay(false, new HashMap<String, String>());
+                        Logger.d(error);
+                    }
+                });
+    }
+
+    @Override
+    public void deleteProject(String projectId) {
+        Map<String, String> params = new HashMap<>();
+        params.put(PROJECT_ID, projectId);
+        params.put("token", (String) SPUtils.get(CustomApplication.self(), SPUtils.TOKEN, ""));
+        Subscription subscription = mServerImp
+                .commonSingle(requestTag, Request.Method.POST, ServerInterface.project_delete, params, CommonResult.class)
+                .subscribeOn(mSchedulerProvider.computation())
+                .observeOn(mSchedulerProvider.ui())
+                .subscribe(new SingleSubscriber<CommonResult>() {
+                    @Override
+                    public void onSuccess(CommonResult commonResult) {
+                        mContractView.deleteSuccess(commonResult.isData());
+                    }
+
+                    @Override
+                    public void onError(Throwable error) {
+                        mContractView.deleteSuccess(false);
+                        ToastUtils.toastError(error);
+                        Logger.d(error);
+                    }
+                });
+        mSubscriptions.add(subscription);
+    }
+
+    @Override
+    public void editProject(ProjectInfo projectInfo, int status) {
+        Map<String, String> params = new HashMap<>();
+        params.put("projectId", projectInfo.getProjectId());
+        params.put("status", status + "");
+        // TODO: 16/11/29 此处title拼写错误
+        params.put("tittle", projectInfo.getTittle());
+        params.put("describes", projectInfo.getDescribes());
+        params.put("price", projectInfo.getPrice());
+        params.put("phoneNum", projectInfo.getPhoneNum());
+        String img = "";
+        if (projectInfo.getProjectImgs() != null && projectInfo.getProjectImgs().size() > 0) {
+            img = projectInfo.getProjectImgs().get(0).getImg();
+        }
+        params.put("img", img);
+        params.put(Constants.PROJECTIMGS, new Gson().toJson(projectInfo.getProjectImgs()));
+        params.put("token", (String) SPUtils.get(CustomApplication.self(), SPUtils.TOKEN, ""));
+        Subscription subscription = mServerImp
+                .commonSingle(requestTag, Request.Method.POST, ServerInterface.project_edit, params, CommonResult.class)
+                .subscribeOn(mSchedulerProvider.computation())
+                .observeOn(mSchedulerProvider.ui())
+                .subscribe(new SingleSubscriber<CommonResult>() {
+                    @Override
+                    public void onSuccess(CommonResult commonResult) {
 //                        mView.removeProgressDialog();
                         //请求成功
 //                        mView.success(loginResult);
+//                        mContractView.updateOrderList(arrayList);
+                        mContractView.editSuccess(commonResult.isData());
+                    }
 
-                        mContractView.showDetail(projectDetail);
+                    @Override
+                    public void onError(Throwable error) {
+//                        mView.removeProgressDialog();
+                        mContractView.editSuccess(false);
+                        ToastUtils.toastError(error);
+                        Logger.d("onError");
+                    }
+                });
+        mSubscriptions.add(subscription);
+    }
 
-
+    @Override
+    public void loadProjectInfo(String projectId) {
+        Map<String, String> params = new HashMap<>();
+        params.put("pageIndex", "1");
+        params.put("projectId", projectId);
+        params.put("isOnlyQueryMyPublis", "0");
+        params.put("token", (String) SPUtils.get(CustomApplication.self(), SPUtils.TOKEN, ""));
+        Subscription subscription = mServerImp
+                .commonSingle(requestTag, Request.Method.POST, ServerInterface.project_list, params, ProjectListResult.class)
+                .subscribeOn(mSchedulerProvider.computation())
+                .observeOn(mSchedulerProvider.ui())
+                .subscribe(new SingleSubscriber<ProjectListResult>() {
+                    @Override
+                    public void onSuccess(ProjectListResult projectList) {
+                        mContractView.showDetail(projectList.getData().getList().get(0));
                     }
 
                     @Override
@@ -168,71 +286,52 @@ public class OrderDetailPresenter implements OrderDetailContract.Presenter {
                     }
                 });
         mSubscriptions.add(subscription);
-
     }
 
     @Override
-    public void pay(final Activity activity, BizContent bizContent) {
-        /**
-         * 这里只是为了方便直接向商户展示支付宝的整个支付流程；所以Demo中加签过程直接放在客户端完成；
-         * 真实App里，privateKey等数据严禁放在客户端，加签过程务必要放在服务端完成；
-         * 防止商户私密数据泄露，造成不必要的资金损失，及面临各种安全风险；
-         *
-         * orderInfo的获取必须来自服务端；
-         */
-        String bizContentStr = bizContent.toJsonStr();
-        if (bizContentStr != null) {
-            Map<String, String> params = OrderInfoUtil2_0.buildOrderParamMap(APPID, bizContentStr);
-            String orderParam = OrderInfoUtil2_0.buildOrderParam(params);
-            String sign = OrderInfoUtil2_0.getSign(params, RSA_PRIVATE);
-            final String orderInfo = orderParam + "&" + sign;
-
-            Runnable payRunnable = new Runnable() {
-
-                @Override
-                public void run() {
-                    PayTask alipay = new PayTask(activity);
-                    Map<String, String> result = alipay.payV2(orderInfo, true);
-                    Log.i("msp", result.toString());
-
-                    Message msg = new Message();
-                    msg.what = SDK_PAY_FLAG;
-                    msg.obj = result;
-                    mHandler.sendMessage(msg);
-                }
-            };
-
-            Thread payThread = new Thread(payRunnable);
-            payThread.start();
-        }
-    }
-
-    @Override
-    public void deleteProject(String projectId) {
+    public void acceptProject(String projectId) {
         Map<String, String> params = new HashMap<>();
-        params.put(PROJECT_ID, projectId);
+        params.put("teamId", (String) SPUtils.get(CustomApplication.self(), SPUtils.TEAM_ID, ""));
+        params.put("projectId", projectId);
         params.put("token", (String) SPUtils.get(CustomApplication.self(), SPUtils.TOKEN, ""));
         Subscription subscription = mServerImp
-                .commonSingle(requestTag, Request.Method.POST, ServerInterface.project_delete, params, ServerResult.class)
+                .commonSingle(requestTag, Request.Method.POST, ServerInterface.accept_project, params, CommonResult.class)
                 .subscribeOn(mSchedulerProvider.computation())
                 .observeOn(mSchedulerProvider.ui())
-                .subscribe(new SingleSubscriber<ServerResult>() {
+                .subscribe(new SingleSubscriber<CommonResult>() {
                     @Override
-                    public void onSuccess(ServerResult serverResult) {
-//                        mView.removeProgressDialog();
-                        //请求成功
-//                        mView.success(loginResult);
-                        if (serverResult.getStatus().equals("200")) {
-                            mContractView.deleteSuccess();
-                        } else {
-                            ToastUtils.toastShort("删除失败");
-                        }
-
-
+                    public void onSuccess(CommonResult commonResult) {
+                        mContractView.acceptProjectResult(commonResult.isData());
                     }
 
                     @Override
                     public void onError(Throwable error) {
+                        mContractView.acceptProjectResult(false);
+                        ToastUtils.toastError(error);
+                        Logger.d(error);
+                    }
+                });
+        mSubscriptions.add(subscription);
+    }
+
+    @Override
+    public void getPayResult(String payResult) {
+        Map<String, String> params = new HashMap<>();
+        params.put("beToVerify", payResult);
+        params.put("token", (String) SPUtils.get(CustomApplication.self(), SPUtils.TOKEN, ""));
+        Subscription subscription = mServerImp
+                .commonSingle(requestTag, Request.Method.POST, ServerInterface.project_verify, params, CommonResult.class)
+                .subscribeOn(mSchedulerProvider.computation())
+                .observeOn(mSchedulerProvider.ui())
+                .subscribe(new SingleSubscriber<CommonResult>() {
+                    @Override
+                    public void onSuccess(CommonResult commonResult) {
+                        mContractView.payResult(commonResult.isData());
+                    }
+
+                    @Override
+                    public void onError(Throwable error) {
+                        mContractView.payResult(false);
                         ToastUtils.toastError(error);
                         Logger.d(error);
                     }

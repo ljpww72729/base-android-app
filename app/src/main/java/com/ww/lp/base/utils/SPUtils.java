@@ -3,6 +3,8 @@ package com.ww.lp.base.utils;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.orhanobut.logger.Logger;
+
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Map;
@@ -17,7 +19,16 @@ public class SPUtils {
      */
     public static final String FILE_NAME = "lp_sp_data";
     public static final String TOKEN = "token";
+    public static final String EMAIL = "email";
+    public static final String PHONENUM = "phoneNum";
+    public static final String ADMIN_EMAIL = "admin_email";
     public static final String USER_ID = "user_id";
+    public static final String IS_ADMIN = "is_admin";
+    public static final String IS_DEVELOPER = "is_developer";
+    //0：普通用户 1：开发者 2：超级管理员
+    public static final String ROLE = "role";
+    public static final String TEAM_NAME = "team_name";
+    public static final String TEAM_ID = "team_id";
 
     /**
      * 保存数据的方法，我们需要拿到保存数据的具体类型，然后根据类型调用不同的保存方法
@@ -27,6 +38,11 @@ public class SPUtils {
         SharedPreferences sp = context.getSharedPreferences(FILE_NAME,
                 Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
+
+        if (object == null){
+            Logger.d("存储的数据不能为null");
+            return;
+        }
 
         if (object instanceof String) {
             editor.putString(key, (String) object);

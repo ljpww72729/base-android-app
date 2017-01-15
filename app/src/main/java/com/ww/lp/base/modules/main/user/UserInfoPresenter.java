@@ -7,11 +7,11 @@ import com.android.volley.Request;
 import com.orhanobut.logger.Logger;
 import com.ww.lp.base.CustomApplication;
 import com.ww.lp.base.R;
-import com.ww.lp.base.data.LoginResult;
-import com.ww.lp.base.data.ServerResult;
-import com.ww.lp.base.entity.UserInfo;
+import com.ww.lp.base.data.CommonResult;
+import com.ww.lp.base.data.user.UserInfo;
 import com.ww.lp.base.network.ServerImp;
 import com.ww.lp.base.network.ServerInterface;
+import com.ww.lp.base.utils.Constants;
 import com.ww.lp.base.utils.SPUtils;
 import com.ww.lp.base.utils.StringResUtils;
 import com.ww.lp.base.utils.ToastUtils;
@@ -63,22 +63,26 @@ public class UserInfoPresenter implements UserInfoContract.Presenter {
         if (validate(userInfo)) {
             Map<String, String> params = new HashMap<>();
             params.put("email", userInfo.getEmail());
-            params.put("pwd", userInfo.getPassword());
-            params.put("isAdmin", "0");
+            params.put("password", userInfo.getPassword());
+            params.put("isAdmin", (int) SPUtils.get(CustomApplication.self(), SPUtils.IS_ADMIN, Constants.NORMAL) + "");
+            params.put("isDeveloper", (int) SPUtils.get(CustomApplication.self(), SPUtils.IS_DEVELOPER, Constants.NORMAL) + "");
+            params.put("userId", (String) SPUtils.get(CustomApplication.self(), SPUtils.USER_ID, ""));
+            params.put("phoneNum", userInfo.getPhoneNum());
             params.put("token", (String) SPUtils.get(CustomApplication.self(), SPUtils.TOKEN, ""));
             Subscription subscription = mServerImp
-                    .commonSingle(requestTag, Request.Method.POST, ServerInterface.edit, params, ServerResult.class)
+                    .commonSingle(requestTag, Request.Method.POST, ServerInterface.edit, params, CommonResult.class)
                     .subscribeOn(mSchedulerProvider.computation())
                     .observeOn(mSchedulerProvider.ui())
-                    .subscribe(new SingleSubscriber<ServerResult>() {
+                    .subscribe(new SingleSubscriber<CommonResult>() {
                         @Override
-                        public void onSuccess(ServerResult serverResult) {
+                        public void onSuccess(CommonResult commonResult) {
                             //请求成功
-                            mView.success(serverResult);
+                            mView.success(commonResult.isData());
                         }
 
                         @Override
                         public void onError(Throwable error) {
+                            mView.success(false);
                             ToastUtils.toastError(error);
                             Logger.d(error);
                         }

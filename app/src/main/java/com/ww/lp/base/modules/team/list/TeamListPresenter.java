@@ -4,13 +4,18 @@ import android.support.annotation.NonNull;
 
 import com.android.volley.Request;
 import com.orhanobut.logger.Logger;
-import com.ww.lp.base.data.TeamResult;
+import com.ww.lp.base.CustomApplication;
+import com.ww.lp.base.data.team.TeamInfo;
+import com.ww.lp.base.data.team.TeamListResult;
 import com.ww.lp.base.network.ServerImp;
 import com.ww.lp.base.network.ServerInterface;
+import com.ww.lp.base.utils.SPUtils;
 import com.ww.lp.base.utils.ToastUtils;
 import com.ww.lp.base.utils.schedulers.BaseSchedulerProvider;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import rx.SingleSubscriber;
 import rx.Subscription;
@@ -51,7 +56,6 @@ public class TeamListPresenter implements TeamListContract.Presenter {
     @Override
     public void subscribe() {
         //此处为页面打开后开始加载数据时调用的方法
-        loadTeamList();
     }
 
     @Override
@@ -60,31 +64,27 @@ public class TeamListPresenter implements TeamListContract.Presenter {
     }
 
     /**
-     * 请求项目列表
+     * 请求团队列表
+     * @param pageNum
      */
-    private void loadTeamList() {
+    @Override
+    public void loadTeamList(int pageNum) {
+        Map<String, String> params = new HashMap<>();
+        params.put("token", (String) SPUtils.get(CustomApplication.self(), SPUtils.TOKEN, ""));
+        params.put("isOnlyQueryMyOwn", "0");
         Subscription subscription = mServerImp
-                .commonSingle(requestTag, Request.Method.GET, ServerInterface.team_list, null, TeamResult[].class)
+                .commonSingle(requestTag, Request.Method.POST, ServerInterface.team_list, params, TeamListResult.class)
                 .subscribeOn(mSchedulerProvider.computation())
                 .observeOn(mSchedulerProvider.ui())
-                .subscribe(new SingleSubscriber<TeamResult[]>() {
+                .subscribe(new SingleSubscriber<TeamListResult>() {
                     @Override
-                    public void onSuccess(TeamResult[] teamList) {
-//                        mView.removeProgressDialog();
-                        //请求成功
-//                        mView.success(loginResult);
-                        ArrayList<TeamResult> arrayList = new ArrayList<TeamResult>();
-                        for (int i = 0; i < teamList.length; i++){
-                            arrayList.add(teamList[i]);
-                        }
-                        mContractView.updateTeamList(arrayList);
-
-
+                    public void onSuccess(TeamListResult teamList) {
+                        mContractView.updateTeamList(true, teamList.getData().getList(), teamList.getData().getPageCount());
                     }
 
                     @Override
                     public void onError(Throwable error) {
-//                        mView.removeProgressDialog();
+                        mContractView.updateTeamList(false, new ArrayList<TeamInfo>(), 0);
                         ToastUtils.toastError(error);
                         Logger.d(error);
                     }

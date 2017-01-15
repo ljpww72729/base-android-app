@@ -5,8 +5,8 @@ import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 
 import com.android.volley.Request;
 import com.orhanobut.logger.Logger;
@@ -16,8 +16,7 @@ import com.ww.lp.base.R;
 import com.ww.lp.base.components.bottombar.BottomBar;
 import com.ww.lp.base.components.bottombar.OnTabReselectListener;
 import com.ww.lp.base.components.bottombar.OnTabSelectListener;
-import com.ww.lp.base.data.LoginResult;
-import com.ww.lp.base.modules.login.LoginActivity;
+import com.ww.lp.base.data.user.LoginResult;
 import com.ww.lp.base.modules.main.home.HomeFragment;
 import com.ww.lp.base.modules.main.home.HomePresenter;
 import com.ww.lp.base.modules.main.more.MoreFragment;
@@ -43,7 +42,6 @@ import rx.SingleSubscriber;
 
 public class MainActivity extends BaseActivity {
 
-    private int currentTabId = R.id.va_home;
     private BottomBar bottomBar;
 
     @Override
@@ -52,7 +50,7 @@ public class MainActivity extends BaseActivity {
         setContentView(R.layout.main_act, true, false, false);
         bottomBar = (BottomBar) findViewById(R.id.bottomBar);
         // Set up the toolbar.
-        setTitle("Base App");
+        setTitle("清软众包");
         //页面切换
         bottomBar.setOnTabSelectListener(new OnTabSelectListener() {
             @Override
@@ -65,8 +63,16 @@ public class MainActivity extends BaseActivity {
             @Override
             public void onTabReSelected(@IdRes int tabId) {
                 Logger.d("reselect tabId= " + tabId);
-                if (tabId == R.id.va_add) {
+            }
+        });
 
+        TextView add_project = (TextView) findViewById(R.id.add_project);
+        add_project.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (TextUtils.isEmpty((String) SPUtils.get(CustomApplication.self(), SPUtils.TOKEN, ""))) {
+                    ToastUtils.toastShort("请先登录后再操作！");
+                } else {
                     Intent intent = new Intent(MainActivity.this, PostActivity.class);
                     startActivity(intent);
                 }
@@ -78,7 +84,6 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        bottomBar.selectTabWithId(currentTabId);
     }
 
     /**
@@ -90,7 +95,6 @@ public class MainActivity extends BaseActivity {
         Logger.d("tabId= " + tabId);
         switch (tabId) {
             case R.id.va_home:
-                currentTabId = R.id.va_home;
                 setTitle(getString(R.string.shouye));
                 if (getSupportFragmentManager().findFragmentByTag("home") != null) {
                     showFragment("home");
@@ -98,17 +102,14 @@ public class MainActivity extends BaseActivity {
                     hideAllFragments();
                     HomeFragment fragment = HomeFragment.newInstance();
                     // Create the presenter
-                    new HomePresenter(TAG, ServerImp.getInstance(getApplicationContext()), (HomeFragment) fragment, SchedulerProvider.getInstance());
+                    new HomePresenter(TAG, ServerImp.getInstance(getApplicationContext()), fragment, SchedulerProvider.getInstance());
                     ActivityUtils.addFragmentToActivity(getSupportFragmentManager(),
                             fragment, R.id.contentFrame, "home");
                 }
                 break;
             case R.id.va_add:
-                Intent intent = new Intent(this, PostActivity.class);
-                startActivity(intent);
                 break;
             case R.id.va_about:
-                currentTabId = R.id.va_about;
                 setTitle(getString(R.string.guanyu));
                 if (getSupportFragmentManager().findFragmentByTag("about") != null) {
                     showFragment("about");
@@ -116,7 +117,7 @@ public class MainActivity extends BaseActivity {
                     hideAllFragments();
                     MoreFragment fragment = MoreFragment.newInstance();
                     // Create the presenter
-                    new MorePresenter(TAG, ServerImp.getInstance(getApplicationContext()), (MoreFragment) fragment, SchedulerProvider.getInstance());
+                    new MorePresenter(TAG, ServerImp.getInstance(getApplicationContext()), fragment, SchedulerProvider.getInstance());
 
                     ActivityUtils.addFragmentToActivity(getSupportFragmentManager(),
                             fragment, R.id.contentFrame, "about");
@@ -144,41 +145,42 @@ public class MainActivity extends BaseActivity {
         }
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        if (TextUtils.isEmpty((String) SPUtils.get(this, SPUtils.TOKEN, ""))) {
-            getMenuInflater().inflate(R.menu.user_login, menu);
-        } else {
-            getMenuInflater().inflate(R.menu.user_logout, menu);
-        }
-        return true;
-    }
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        if (TextUtils.isEmpty((String) SPUtils.get(this, SPUtils.TOKEN, ""))) {
+//            getMenuInflater().inflate(R.menu.user_login, menu);
+//        } else {
+//            getMenuInflater().inflate(R.menu.user_logout, menu);
+//        }
+//        return true;
+//    }
+//
+//    @Override
+//    public boolean onPrepareOptionsMenu(Menu menu) {
+//        menu.clear();
+//        if (TextUtils.isEmpty((String) SPUtils.get(this, SPUtils.TOKEN, ""))) {
+//            getMenuInflater().inflate(R.menu.user_login, menu);
+//        } else {
+//            getMenuInflater().inflate(R.menu.user_logout, menu);
+//        }
+//        return super.onPrepareOptionsMenu(menu);
+//    }
 
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        menu.clear();
-        if (TextUtils.isEmpty((String) SPUtils.get(this, SPUtils.TOKEN, ""))) {
-            getMenuInflater().inflate(R.menu.user_login, menu);
-        } else {
-            getMenuInflater().inflate(R.menu.user_logout, menu);
-        }
-        return super.onPrepareOptionsMenu(menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.login:
-                Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-                startActivity(intent);
-                return true;
-            case R.id.logout:
-               logout();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        switch (item.getItemId()) {
+//            case R.id.login:
+//                Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+//                startActivity(intent);
+//                return true;
+//            case R.id.logout:
+//                SPUtils.clear(MainActivity.this);
+//                ToastUtils.toastShort("退出成功！");
+//                return true;
+//            default:
+//                return super.onOptionsItemSelected(item);
+//        }
+//    }
 
     public void logout() {
         Map<String, String> params = new HashMap<>();
@@ -192,7 +194,7 @@ public class MainActivity extends BaseActivity {
                     public void onSuccess(LoginResult loginResult) {
                         //请求成功
                         SPUtils.put(MainActivity.this, SPUtils.TOKEN, "");
-                        SPUtils.put(MainActivity.this, SPUtils.USER_ID, "");
+                        SPUtils.put(MainActivity.this, SPUtils.EMAIL, "");
                         ToastUtils.toastShort("退出成功！");
                     }
 

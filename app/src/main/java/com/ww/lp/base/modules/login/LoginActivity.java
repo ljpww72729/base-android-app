@@ -36,4 +36,5 @@ public class LoginActivity extends BaseActivity {
         new LoginPresenter(TAG, ServerImp.getInstance(getApplicationContext()), loginFragment, SchedulerProvider.getInstance());
     }
 
+
 }

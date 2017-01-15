@@ -4,8 +4,7 @@ import android.support.annotation.NonNull;
 
 import com.ww.lp.base.BasePresenter;
 import com.ww.lp.base.BaseView;
-import com.ww.lp.base.data.ServerResult;
-import com.ww.lp.base.entity.UserInfo;
+import com.ww.lp.base.data.user.UserInfo;
 
 
 /**
@@ -15,7 +14,7 @@ import com.ww.lp.base.entity.UserInfo;
 public class UserInfoContract {
 
     interface View extends BaseView<Presenter> {
-        void success(ServerResult serverResult);
+        void success(boolean result);
     }
 
     interface Presenter extends BasePresenter {

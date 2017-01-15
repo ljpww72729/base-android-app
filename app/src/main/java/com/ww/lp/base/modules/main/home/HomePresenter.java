@@ -4,14 +4,19 @@ import android.support.annotation.NonNull;
 
 import com.android.volley.Request;
 import com.orhanobut.logger.Logger;
-import com.ww.lp.base.data.CarouselInfo;
-import com.ww.lp.base.data.ProjectInfo;
+import com.ww.lp.base.CustomApplication;
+import com.ww.lp.base.data.ads.AdsListResult;
+import com.ww.lp.base.data.project.ProjectInfo;
+import com.ww.lp.base.data.project.ProjectListResult;
 import com.ww.lp.base.network.ServerImp;
 import com.ww.lp.base.network.ServerInterface;
+import com.ww.lp.base.utils.SPUtils;
 import com.ww.lp.base.utils.ToastUtils;
 import com.ww.lp.base.utils.schedulers.BaseSchedulerProvider;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import rx.SingleSubscriber;
 import rx.Subscription;
@@ -53,7 +58,6 @@ public class HomePresenter implements HomeContract.Presenter {
     public void subscribe() {
         //此处为页面打开后开始加载数据时调用的方法
         loadCarouselImgList();
-        loadProjectList();
     }
 
     @Override
@@ -66,27 +70,17 @@ public class HomePresenter implements HomeContract.Presenter {
      */
     private void loadCarouselImgList() {
         Subscription subscription = mServerImp
-                .commonSingle(requestTag, Request.Method.GET, ServerInterface.carousel, null, CarouselInfo[].class)
+                .commonSingle(requestTag, Request.Method.GET, ServerInterface.carousel, null, AdsListResult.class)
                 .subscribeOn(mSchedulerProvider.computation())
                 .observeOn(mSchedulerProvider.ui())
-                .subscribe(new SingleSubscriber<CarouselInfo[]>() {
+                .subscribe(new SingleSubscriber<AdsListResult>() {
                     @Override
-                    public void onSuccess(CarouselInfo[] carouselInfoList) {
-//                        mView.removeProgressDialog();
-                        //请求成功
-//                        mView.success(loginResult);
-                        ArrayList<CarouselInfo> arrayList = new ArrayList<CarouselInfo>();
-                        for (int i = 0; i < carouselInfoList.length; i++){
-                            arrayList.add(carouselInfoList[i]);
-                        }
-                        mContractView.updateCarouselView(arrayList);
-
-
+                    public void onSuccess(AdsListResult adsListResult) {
+                        mContractView.updateCarouselView(adsListResult.getData());
                     }
 
                     @Override
                     public void onError(Throwable error) {
-//                        mView.removeProgressDialog();
                         ToastUtils.toastError(error);
                         Logger.d(error);
                     }
@@ -94,32 +88,30 @@ public class HomePresenter implements HomeContract.Presenter {
         mSubscriptions.add(subscription);
 
     }
+
     /**
      * 请求项目列表
      */
-    private void loadProjectList() {
+    @Override
+    public void loadProjectList(int pageIndex) {
+        Map<String, String> params = new HashMap<>();
+        params.put("pageIndex", pageIndex + "");
+        params.put("isOnlyQueryMyPublis", "0");
+        params.put("token", (String) SPUtils.get(CustomApplication.self(), SPUtils.TOKEN, ""));
         Subscription subscription = mServerImp
-                .commonSingle(requestTag, Request.Method.GET, ServerInterface.project_list, null, ProjectInfo[].class)
+                .commonSingle(requestTag, Request.Method.POST, ServerInterface.project_list, params, ProjectListResult.class)
                 .subscribeOn(mSchedulerProvider.computation())
                 .observeOn(mSchedulerProvider.ui())
-                .subscribe(new SingleSubscriber<ProjectInfo[]>() {
+                .subscribe(new SingleSubscriber<ProjectListResult>() {
                     @Override
-                    public void onSuccess(ProjectInfo[] projectInfoList) {
-//                        mView.removeProgressDialog();
-                        //请求成功
-//                        mView.success(loginResult);
-                        ArrayList<ProjectInfo> arrayList = new ArrayList<ProjectInfo>();
-                        for (int i = 0; i < projectInfoList.length; i++){
-                            arrayList.add(projectInfoList[i]);
-                        }
-                        mContractView.updateProjectList(arrayList);
-
-
+                    public void onSuccess(ProjectListResult projectList) {
+                        ArrayList<ProjectInfo> arrayList = projectList.getData().getList();
+                        mContractView.updateProjectList(true, arrayList, projectList.getData().getPageCount());
                     }
 
                     @Override
                     public void onError(Throwable error) {
-//                        mView.removeProgressDialog();
+                        mContractView.updateProjectList(false, new ArrayList<ProjectInfo>(), 0);
                         ToastUtils.toastError(error);
                         Logger.d(error);
                     }

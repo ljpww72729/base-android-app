@@ -5,12 +5,9 @@ import android.support.annotation.Nullable;
 
 import com.ww.lp.base.BaseActivity;
 import com.ww.lp.base.R;
-import com.ww.lp.base.data.TeamDetail;
 import com.ww.lp.base.network.ServerImp;
 import com.ww.lp.base.utils.ActivityUtils;
 import com.ww.lp.base.utils.schedulers.SchedulerProvider;
-
-import java.util.ArrayList;
 
 /**
  * Created by LinkedME06 on 16/11/13.
@@ -23,14 +20,23 @@ public class TeamDetailActivity extends BaseActivity {
         setContentView(R.layout.base_act, true, true, false);
 
         setTitle("成员列表");
-        ArrayList<TeamDetail> arrayList = new ArrayList<>();
-        arrayList = getIntent().getParcelableArrayListExtra("team_detail");
-
+        String flag = "";
+        if (getIntent() != null && getIntent().hasExtra("flag")){
+            flag = getIntent().getStringExtra("flag");
+        }
+        String teamId = "";
+        if (getIntent() != null){
+            teamId = getIntent().getStringExtra("teamId");
+        }
+        String isOnlyQueryMyOwn = "0";
+        if (getIntent() != null){
+            isOnlyQueryMyOwn = getIntent().getStringExtra("isOnlyQueryMyOwn");
+        }
         TeamDetailFragment teamListFragment = (TeamDetailFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.contentFrame);
 
         if (teamListFragment == null) {
-            teamListFragment = TeamDetailFragment.newInstance(arrayList);
+            teamListFragment = TeamDetailFragment.newInstance(flag, teamId, isOnlyQueryMyOwn);
 
             ActivityUtils.addFragmentToActivity(getSupportFragmentManager(),
                     teamListFragment, R.id.contentFrame);

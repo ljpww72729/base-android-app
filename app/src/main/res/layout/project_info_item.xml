@@ -6,7 +6,7 @@
 
         <variable
                 name="lp_rv_item"
-                type="com.ww.lp.base.data.ProjectInfo"/>
+                type="com.ww.lp.base.data.project.ProjectInfo"/>
     </data>
 
     <android.support.v7.widget.CardView
@@ -36,7 +36,7 @@
                     android:layout_alignParentTop="true"
                     android:layout_toRightOf="@id/img"
                     android:padding="10dp"
-                    android:text="@{lp_rv_item.title}">
+                    android:text="@{lp_rv_item.tittle}">
 
             </TextView>
 

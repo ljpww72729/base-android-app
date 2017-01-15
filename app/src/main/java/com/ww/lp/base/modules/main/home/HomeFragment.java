@@ -3,6 +3,7 @@ package com.ww.lp.base.modules.main.home;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,9 +15,10 @@ import com.ww.lp.base.BR;
 import com.ww.lp.base.BaseFragment;
 import com.ww.lp.base.R;
 import com.ww.lp.base.components.rvrl.LPRecyclerViewAdapter;
+import com.ww.lp.base.components.rvrl.LPRefreshLoadListener;
 import com.ww.lp.base.components.rvrl.SingleItemClickListener;
-import com.ww.lp.base.data.CarouselInfo;
-import com.ww.lp.base.data.ProjectInfo;
+import com.ww.lp.base.data.ads.CarouselInfo;
+import com.ww.lp.base.data.project.ProjectInfo;
 import com.ww.lp.base.databinding.HomeFragBinding;
 import com.ww.lp.base.modules.order.detail.OrderDetailActivity;
 import com.ww.lp.base.modules.team.developer.DeveloperActivity;
@@ -51,13 +53,21 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
     @Override
     public void onResume() {
         super.onResume();
-        mPresenter.subscribe();
+        if (mPresenter == null){
+            getActivity().finish();
+        }else {
+            mPresenter.subscribe();
+            lpRecyclerViewAdapter.setPageCurrentNum(lpRecyclerViewAdapter.getPageStartNum());
+            mPresenter.loadProjectList(lpRecyclerViewAdapter.getPageStartNum());
+        }
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        mPresenter.unsubscribe();
+        if (mPresenter != null){
+            mPresenter.unsubscribe();
+        }
     }
 
     @Nullable
@@ -73,14 +83,23 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
         mLayoutManager = new LinearLayoutManager(getActivity());
         mLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         binding.lpRv.setLayoutManager(mLayoutManager);
-        lpRecyclerViewAdapter = new LPRecyclerViewAdapter<>(mRVData, R.layout.project_info_item, BR.lp_rv_item);
-        binding.lpRv.setAdapter(lpRecyclerViewAdapter);
+
+        // Set up progress indicator
+        binding.lpScsr.setColorSchemeColors(
+                ContextCompat.getColor(getActivity(), R.color.primary_dark),
+                ContextCompat.getColor(getActivity(), R.color.accent),
+                ContextCompat.getColor(getActivity(), R.color.primary)
+        );
+        // Set the scrolling view in the custom SwipeRefreshLayout.
+        binding.lpScsr.setScrollUpChild(binding.lpRv);
+        lpRecyclerViewAdapter = new LPRecyclerViewAdapter<>(mRVData, R.layout.project_info_item, BR.lp_rv_item, binding.lpScsr, binding.lpRv);
+        lpRecyclerViewAdapter.setPageStartNum(1);
         binding.lpRv.addOnItemTouchListener(new SingleItemClickListener(binding.lpRv, new SingleItemClickListener.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
                 Intent intent = new Intent(getActivity(), OrderDetailActivity.class);
                 intent.putExtra(OrderDetailActivity.PROJECT_ID, mRVData.get(position).getProjectId());
-                intent.putExtra("isMe", false);
+                intent.putExtra(OrderDetailActivity.IS_PERSONAL, false);
                 startActivity(intent);
             }
 
@@ -89,6 +108,23 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
 
             }
         }));
+        lpRecyclerViewAdapter.setOnLoadMoreListener(new LPRefreshLoadListener.OnLoadMoreListener() {
+            @Override
+            public void onLoadMore() {
+                lpRecyclerViewAdapter.showLoadingMore(true);
+                mPresenter.loadProjectList(lpRecyclerViewAdapter.getPageCurrentNum() + 1);
+
+            }
+        });
+        lpRecyclerViewAdapter.setOnRefreshListener(new LPRefreshLoadListener.onRefreshListener() {
+            @Override
+            public void onRefresh() {
+                //数据刷新操作
+                mPresenter.loadProjectList(lpRecyclerViewAdapter.getPageStartNum());
+            }
+        });
+        binding.lpRv.setAdapter(lpRecyclerViewAdapter);
+
         binding.team.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -125,9 +161,11 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
                 simpleDraweeView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent intent = new Intent(getActivity(), NormalWVActvity.class);
-                        intent.putExtra(NormalWVActvity.LOADURL, carouselList.get(position).getUrl());
-                        startActivity(intent);
+                        if (!carouselList.get(position).getUrl().startsWith("empty") && carouselList.get(position).getUrl().startsWith("http")) {
+                            Intent intent = new Intent(getActivity(), NormalWVActvity.class);
+                            intent.putExtra(NormalWVActvity.LOADURL, carouselList.get(position).getUrl());
+                            startActivity(intent);
+                        }
                     }
                 });
 
@@ -141,11 +179,30 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
     }
 
     @Override
-    public void updateProjectList(ArrayList<ProjectInfo> arrayList) {
+    public void updateProjectList(boolean result, ArrayList<ProjectInfo> arrayList, int pageCount) {
         // TODO: 16/11/26 数据是否这样更新有待优化
         binding.lpRv.setVisibility(View.VISIBLE);
-        mRVData.clear();
-        mRVData.addAll(arrayList);
-        lpRecyclerViewAdapter.notifyDataSetChanged();
+        if (result) {
+            lpRecyclerViewAdapter.setPageCount(pageCount);
+            // TODO: 16/11/26 数据是否这样更新有待优化
+            if (lpRecyclerViewAdapter.isLoadingMore()) {
+                lpRecyclerViewAdapter.showLoadingMore(false);
+            } else {
+                mRVData.clear();
+                if (binding.lpScsr.isRefreshing()) {
+                    lpRecyclerViewAdapter.setPageCurrentNum(lpRecyclerViewAdapter.getPageStartNum());
+                }
+            }
+            mRVData.addAll(arrayList);
+            lpRecyclerViewAdapter.notifyDataSetChanged();
+        }
+        if (lpRecyclerViewAdapter.isLoadingMore()) {
+            lpRecyclerViewAdapter.loadMoreSuccess();
+            lpRecyclerViewAdapter.setLoadingMore(false);
+        }
+        if (binding.lpScsr.isRefreshing()) {
+            binding.lpScsr.setRefreshing(false);
+        }
+
     }
 }

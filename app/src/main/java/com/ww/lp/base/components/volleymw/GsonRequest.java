@@ -12,14 +12,15 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.HttpHeaderParser;
 import com.orhanobut.logger.Logger;
+import com.ww.lp.base.data.BaseResult;
 import com.ww.lp.base.data.ErrorResult;
+import com.ww.lp.base.utils.Constants;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -113,19 +114,24 @@ public class GsonRequest<T> extends Request<T> {
                     response.data,
                     HttpHeaderParser.parseCharset(response.headers));
             Logger.json(json);
-            if (json.contains("\"status\":\"400\"")) {
-//                用户未登录
-                return Response.error(new VolleyError("请先登录再操作！"));
+            BaseResult baseResult = gson.fromJson(json, BaseResult.class);
+            if (baseResult.getStatus() == 400){
+                ErrorResult errorResult = gson.fromJson(json, ErrorResult.class);
+                String message = "未知错误，请稍后重试!";
+                if (errorResult.getErrors() != null && errorResult.getErrors().size() > 0){
+                    message = errorResult.getErrors().get(0).getMessage();
+                }
+                return Response.error(new VolleyError(message));
             } else {
+                gson.fromJson(json, clazz);
+                gson.fromJson(json, clazz);
                 return Response.success(gson.fromJson(json, clazz),
                         HttpHeaderParser.parseCacheHeaders(response));
             }
         } catch (JsonSyntaxException e) {
-            // TODO: 16/11/27 此处有待优化，如何更顺滑的体验
-            return Response.error(new VolleyError(gson.fromJson(json, ErrorResult.class).getData().getErr_msg()));
+            return Response.error(new VolleyError("未知错误，请稍后重试!"));
         } catch (UnsupportedEncodingException e) {
-            return Response.error(new VolleyError(gson.fromJson(json, ErrorResult.class).getData().getErr_msg()));
-//            return Response.error(new ParseError(e));
+            return Response.error(new VolleyError("未知错误，请稍后重试!"));
         }
     }
 
@@ -149,7 +155,7 @@ public class GsonRequest<T> extends Request<T> {
                 try {
                     // TODO: 16/11/24 并没有进行encode编码
                     // TODO: 16/11/28 特别argly的地方
-                    if (!TextUtils.equals(entry.getKey(), "imgs")) {
+                    if (!TextUtils.equals(entry.getKey(), Constants.PROJECTIMGS)) {
                         jsonObject.put(entry.getKey(), entry.getValue());
                     } else {
                         jsonObject.put(entry.getKey(), new JSONArray(entry.getValue()));

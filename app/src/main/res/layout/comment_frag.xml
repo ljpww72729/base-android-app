@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="@dimen/dp_16"
+        android:orientation="vertical">
+<TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/sp_18"
+        android:text="请您对承接该项目的团队进行评分，为其他项目发布者选择团队提供参考："/>
+
+        <RatingBar
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_16"
+                android:rating="3"
+                android:stepSize="1"
+                android:id="@+id/score"/>
+
+        <android.support.v7.widget.AppCompatButton
+                android:id="@+id/btn_score"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_24"
+                android:layout_marginBottom="@dimen/dp_24"
+                style="@style/LP_Normal_Button"
+                android:text="评分"/>
+
+    </LinearLayout>
+</layout>

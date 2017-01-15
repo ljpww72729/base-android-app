@@ -1,35 +1,22 @@
 package com.ww.lp.base.data;
 
-import com.google.gson.annotations.SerializedName;
-
 import android.os.Parcel;
-import android.os.Parcelable;
 
 /**
  * Created by LinkedME06 on 16/11/28.
  */
 
-public class UploadResult implements Parcelable {
-    private String status;
+public class UploadResult extends BaseResult {
 
-    public CarouselInfo getData() {
+    public String getData() {
         return data;
     }
 
-    public void setData(CarouselInfo data) {
+    public void setData(String data) {
         this.data = data;
     }
 
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    @SerializedName("data")
-    private CarouselInfo data;
+    private String data;
 
     @Override
     public int describeContents() {
@@ -38,16 +25,16 @@ public class UploadResult implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(this.status);
-        dest.writeParcelable(this.data, flags);
+        super.writeToParcel(dest, flags);
+        dest.writeString(this.data);
     }
 
     public UploadResult() {
     }
 
     protected UploadResult(Parcel in) {
-        this.status = in.readString();
-        this.data = in.readParcelable(CarouselInfo.class.getClassLoader());
+        super(in);
+        this.data = in.readString();
     }
 
     public static final Creator<UploadResult> CREATOR = new Creator<UploadResult>() {

@@ -1,4 +1,4 @@
-package com.ww.lp.base.data;
+package com.ww.lp.base.data.ads;
 
 import android.os.Parcel;
 import android.os.Parcelable;

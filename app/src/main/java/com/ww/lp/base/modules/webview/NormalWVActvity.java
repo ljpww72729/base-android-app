@@ -28,7 +28,9 @@ public class NormalWVActvity extends BaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.normal_wv_act);
+
+        setContentView(R.layout.normal_wv_act,true,true,true);
+        setTitle("详情");
         if (getIntent() != null) {
             loadUrl = getIntent().getStringExtra(LOADURL);
         }

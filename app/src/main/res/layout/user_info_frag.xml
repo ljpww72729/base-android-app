@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
         <variable
                 name="userInfo"
-                type="com.ww.lp.base.entity.UserInfo"/>
+                type="com.ww.lp.base.data.user.UserInfo"/>
+
         <variable
                 name="presenter"
                 type="com.ww.lp.base.modules.login.LoginPresenter"/>
@@ -24,14 +26,56 @@
                 android:orientation="vertical"
                 android:paddingLeft="@dimen/dp_24"
                 android:paddingRight="@dimen/dp_24"
-                android:paddingTop="@dimen/dp_56">
+                android:paddingTop="@dimen/dp_24">
 
-            <ImageView
-                    android:src="@drawable/avatar"
-                    android:layout_width="wrap_content"
-                    android:layout_height="72dp"
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_marginBottom="24dp"
-                    android:layout_gravity="center_horizontal"/>
+                    android:orientation="horizontal">
+
+                <ImageView
+                        android:src="@drawable/avatar"
+                        android:layout_width="wrap_content"
+                        android:layout_height="72dp"
+                        android:layout_gravity="center_horizontal"/>
+
+                <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="@dimen/dp_16"
+                        android:gravity="center_vertical"
+                        android:orientation="vertical">
+
+                    <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="@dimen/sp_14"
+                            android:text="我的角色："/>
+
+                    <TextView
+                            android:id="@+id/my_role"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="普通用户"
+                            android:textColor="@color/black"
+                            tools:text="管理员"/>
+                </LinearLayout>
+
+                <android.support.v7.widget.AppCompatButton
+                        android:visibility="gone"
+                        tools:visibility="visible"
+                        android:layout_marginLeft="@dimen/dp_16"
+                        android:id="@+id/btn_certification"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom"
+                        android:textSize="@dimen/sp_14"
+                        style="@style/LP_Normal_Button"
+                        android:text="开发者认证"/>
+
+            </LinearLayout>
+
 
             <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
@@ -52,6 +96,24 @@
             </android.support.design.widget.TextInputLayout>
 
             <android.support.design.widget.TextInputLayout
+                    android:visibility="gone"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dp_8"
+                    android:layout_marginBottom="@dimen/dp_8">
+
+                <EditText
+                        android:id="@+id/user_phone"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="手机号"
+                        android:enabled="false"
+                        android:maxLines="1"
+                        android:text="@={userInfo.phoneNum}"/>
+                <!--android:textColorHint="@color/abc_primary_text_material_dark" />-->
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
                     android:id="@+id/pwd_layout"
                     android:visibility="gone"
                     android:layout_width="match_parent"
@@ -64,13 +126,10 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/password"
-                        android:imeActionId="@+id/login"
-                        android:imeOptions="actionUnspecified"
                         android:inputType="textPassword"
                         android:maxLines="1"
                         android:text="@={userInfo.password}"/>
             </android.support.design.widget.TextInputLayout>
-
 
             <android.support.v7.widget.AppCompatButton
                     android:visibility="gone"

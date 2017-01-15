@@ -14,6 +14,36 @@ import com.ww.lp.base.BR;
 
 public class UserInfo extends BaseObservable implements Parcelable {
     private String name;
+    private String role;
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
+    public String getCaptcha() {
+        return captcha;
+    }
+
+    public void setCaptcha(String captcha) {
+        this.captcha = captcha;
+    }
+
+    private String captcha;
+
+    @Bindable
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    private String phone;
 
     @Bindable
     public String getEmail() {
@@ -50,6 +80,10 @@ public class UserInfo extends BaseObservable implements Parcelable {
 
     private String password;
 
+
+    public UserInfo() {
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -58,15 +92,18 @@ public class UserInfo extends BaseObservable implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(this.name);
+        dest.writeString(this.role);
+        dest.writeString(this.captcha);
+        dest.writeString(this.phone);
         dest.writeString(this.email);
         dest.writeString(this.password);
     }
 
-    public UserInfo() {
-    }
-
     protected UserInfo(Parcel in) {
         this.name = in.readString();
+        this.role = in.readString();
+        this.captcha = in.readString();
+        this.phone = in.readString();
         this.email = in.readString();
         this.password = in.readString();
     }

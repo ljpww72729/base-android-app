@@ -2,7 +2,7 @@ package com.ww.lp.base.modules.order.list;
 
 import com.ww.lp.base.BasePresenter;
 import com.ww.lp.base.BaseView;
-import com.ww.lp.base.data.ProjectInfo;
+import com.ww.lp.base.data.project.ProjectInfo;
 
 import java.util.ArrayList;
 
@@ -12,10 +12,10 @@ import java.util.ArrayList;
 
 public class OrderListContract {
     interface View extends BaseView<OrderListContract.Presenter> {
-        void updateOrdertList(ArrayList<ProjectInfo> arrayList);
+        void updateOrderList(boolean result, ArrayList<ProjectInfo> arrayList, int pageCount);
     }
 
     interface Presenter extends BasePresenter {
-        void loadOrderList(String flag);
+        void loadProjectList(String order_flag, String isOnlyQueryMyPublis, int pageIndex);
     }
 }

@@ -5,7 +5,8 @@ import android.support.annotation.NonNull;
 import com.android.volley.Request;
 import com.orhanobut.logger.Logger;
 import com.ww.lp.base.CustomApplication;
-import com.ww.lp.base.data.ProjectInfo;
+import com.ww.lp.base.data.project.ProjectInfo;
+import com.ww.lp.base.data.project.ProjectListResult;
 import com.ww.lp.base.network.ServerImp;
 import com.ww.lp.base.network.ServerInterface;
 import com.ww.lp.base.utils.SPUtils;
@@ -61,38 +62,38 @@ public class OrderListPresenter implements OrderListContract.Presenter {
     public void unsubscribe() {
         mSubscriptions.clear();
     }
-
     /**
      * 请求项目列表
      */
     @Override
-    public void loadOrderList(String flag) {
+    public void loadProjectList(String order_flag, String isOnlyQueryMyPublis, int pageIndex) {
+        String requestUrl = ServerInterface.project_list;
         Map<String, String> params = new HashMap<>();
-        params.put("userEmail", (String) SPUtils.get(CustomApplication.self(), SPUtils.USER_ID, ""));
-        params.put("flag", flag);
+        if (order_flag.equals(OrderListActivity.ACCEPT)){
+            requestUrl = ServerInterface.team_project_list;
+            params.put("teamId", (String)SPUtils.get(CustomApplication.self(), SPUtils.TEAM_ID, ""));
+        }else{
+            params.put("isOnlyQueryMyPublish", isOnlyQueryMyPublis);
+        }
+        params.put("pageIndex", pageIndex + "");
         params.put("token", (String) SPUtils.get(CustomApplication.self(), SPUtils.TOKEN, ""));
         Subscription subscription = mServerImp
-                .commonSingle(requestTag, Request.Method.POST, ServerInterface.user_order_list, params, ProjectInfo[].class)
+                .commonSingle(requestTag, Request.Method.POST, requestUrl, params, ProjectListResult.class)
                 .subscribeOn(mSchedulerProvider.computation())
                 .observeOn(mSchedulerProvider.ui())
-                .subscribe(new SingleSubscriber<ProjectInfo[]>() {
+                .subscribe(new SingleSubscriber<ProjectListResult>() {
                     @Override
-                    public void onSuccess(ProjectInfo[] projectInfoList) {
-//                        mView.removeProgressDialog();
-                        //请求成功
-//                        mView.success(loginResult);
-                        ArrayList<ProjectInfo> arrayList = new ArrayList<ProjectInfo>();
-                        for (int i = 0; i < projectInfoList.length; i++) {
-                            arrayList.add(projectInfoList[i]);
-                        }
-                        mContractView.updateOrdertList(arrayList);
+                    public void onSuccess(ProjectListResult projectList) {
+                        ArrayList<ProjectInfo> arrayList = projectList.getData().getList();
+                        mContractView.updateOrderList(true, arrayList, projectList.getData().getPageCount());
                     }
 
                     @Override
                     public void onError(Throwable error) {
 //                        mView.removeProgressDialog();
+                        mContractView.updateOrderList(false, new ArrayList<ProjectInfo>(), 0);
                         ToastUtils.toastError(error);
-                        Logger.d("onError");
+                        Logger.d(error);
                     }
                 });
         mSubscriptions.add(subscription);
