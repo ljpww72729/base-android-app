@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+            android:id="@+id/update_member"
+            android:title="修改成员信息"
+            app:showAsAction="never">
+    </item>
+    <item
+            android:id="@+id/remove_member"
+            android:title="移除该成员"
+            app:showAsAction="never">
+    </item>
+</menu>

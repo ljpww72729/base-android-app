@@ -5,11 +5,11 @@ package com.ww.lp.base.components.rvrl;
  */
 
 public class LPRefreshLoadListener {
-    interface OnLoadMoreListener {
+    public interface OnLoadMoreListener {
         void onLoadMore();
     }
 
-    interface onRefreshListener {
+    public interface onRefreshListener {
         void onRefresh();
     }
 }

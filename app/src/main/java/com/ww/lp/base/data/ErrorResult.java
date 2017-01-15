@@ -1,32 +1,24 @@
 package com.ww.lp.base.data;
 
 import android.os.Parcel;
-import android.os.Parcelable;
+
+import java.util.ArrayList;
 
 /**
  * Created by LinkedME06 on 16/11/27.
  */
 
-public class ErrorResult implements Parcelable {
-    private String status;
+public class ErrorResult extends BaseResult{
 
-    public ErrorInfo getData() {
-        return data;
+    public ArrayList<ErrorInfo> getErrors() {
+        return errors;
     }
 
-    public void setData(ErrorInfo data) {
-        this.data = data;
+    public void setErrors(ArrayList<ErrorInfo> errors) {
+        this.errors = errors;
     }
 
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    private ErrorInfo data;
+    private ArrayList<ErrorInfo> errors;
 
     @Override
     public int describeContents() {
@@ -35,16 +27,16 @@ public class ErrorResult implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(this.status);
-        dest.writeParcelable(this.data, flags);
+        super.writeToParcel(dest, flags);
+        dest.writeTypedList(this.errors);
     }
 
     public ErrorResult() {
     }
 
     protected ErrorResult(Parcel in) {
-        this.status = in.readString();
-        this.data = in.readParcelable(ErrorInfo.class.getClassLoader());
+        super(in);
+        this.errors = in.createTypedArrayList(ErrorInfo.CREATOR);
     }
 
     public static final Creator<ErrorResult> CREATOR = new Creator<ErrorResult>() {

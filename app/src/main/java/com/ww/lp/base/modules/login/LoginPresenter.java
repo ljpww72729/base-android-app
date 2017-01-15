@@ -6,8 +6,9 @@ import android.text.TextUtils;
 import com.android.volley.Request;
 import com.orhanobut.logger.Logger;
 import com.ww.lp.base.R;
-import com.ww.lp.base.data.LoginResult;
-import com.ww.lp.base.entity.UserInfo;
+import com.ww.lp.base.data.CommonStringResult;
+import com.ww.lp.base.data.user.LoginResult;
+import com.ww.lp.base.data.user.UserInfo;
 import com.ww.lp.base.network.ServerImp;
 import com.ww.lp.base.network.ServerInterface;
 import com.ww.lp.base.utils.StringResUtils;
@@ -16,6 +17,7 @@ import com.ww.lp.base.utils.schedulers.BaseSchedulerProvider;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import rx.SingleSubscriber;
 import rx.Subscription;
@@ -57,12 +59,59 @@ public class LoginPresenter implements LoginContract.Presenter {
 
 
     @Override
+    public void verification(UserInfo userInfo) {
+        if (validate(userInfo) && validatePhoneNum(userInfo)) {
+            Map<String, String> params = new HashMap<>();
+            params.put("email", userInfo.getEmail());
+            params.put("password", userInfo.getPassword());
+            params.put("phoneNum", userInfo.getPhoneNum());
+            Subscription subscription = mServerImp
+                    .commonSingle(requestTag, Request.Method.POST, ServerInterface.verifycation_code, params, CommonStringResult.class)
+                    .subscribeOn(mSchedulerProvider.computation())
+                    .observeOn(mSchedulerProvider.ui())
+                    .subscribe(new SingleSubscriber<CommonStringResult>() {
+                        @Override
+                        public void onSuccess(CommonStringResult commonStringResult) {
+                            mView.removeProgressDialog();
+                            //请求成功
+                            mView.verificationResult(true);
+                        }
+
+                        @Override
+                        public void onError(Throwable error) {
+                            mView.verificationResult(false);
+                            ToastUtils.toastError(error);
+                            Logger.d(error);
+                        }
+                    });
+            mSubscriptions.add(subscription);
+        }
+    }
+
+    private boolean validatePhoneNum(UserInfo userInfo) {
+        boolean validate = false;
+        if (TextUtils.isEmpty(userInfo.getPhoneNum())) {
+            ToastUtils.toastShort("请输入手机号！");
+            return false;
+        } else {
+            String phoneRegex = "^((13[0-9])|(14[5,7])|(15[0-3,5-9])|(17[0,1,3,5-8])|(18[0-9])|(147))\\d{8}$";
+            validate = Pattern.matches(phoneRegex, userInfo.getPhoneNum());
+        }
+        if (!validate){
+            ToastUtils.toastShort("请输入正确的手机号！");
+        }
+        return validate;
+    }
+
+    @Override
     public void register(@NonNull UserInfo userInfo) {
-        if (validate(userInfo)) {
+        if (validate(userInfo) && validatePhoneNum(userInfo) && validateCode(userInfo)) {
             mView.showProgressDialog(null);
             Map<String, String> params = new HashMap<>();
             params.put("email", userInfo.getEmail());
-            params.put("pwd", userInfo.getPassword());
+            params.put("password", userInfo.getPassword());
+            params.put("phoneNum", userInfo.getPhoneNum());
+            params.put("verificationCode", userInfo.getVerificationCode());
             Subscription subscription = mServerImp
                     .commonSingle(requestTag, Request.Method.POST, ServerInterface.reg, params, LoginResult.class)
                     .subscribeOn(mSchedulerProvider.computation())
@@ -86,13 +135,22 @@ public class LoginPresenter implements LoginContract.Presenter {
         }
     }
 
+    private boolean validateCode(UserInfo userInfo) {
+        if (!TextUtils.isEmpty(userInfo.getVerificationCode()) && Pattern.matches("^\\d{6}$", userInfo.getVerificationCode())){
+            return true;
+        }else{
+            ToastUtils.toastShort("验证码只能为6位数字");
+            return false;
+        }
+    }
+
     @Override
     public void login(@NonNull UserInfo userInfo) {
         if (validate(userInfo)) {
             mView.showProgressDialog(null);
             Map<String, String> params = new HashMap<>();
             params.put("email", userInfo.getEmail());
-            params.put("pwd", userInfo.getPassword());
+            params.put("password", userInfo.getPassword());
             Subscription subscription = mServerImp
                     .commonSingle(requestTag, Request.Method.POST, ServerInterface.login, params, LoginResult.class)
                     .subscribeOn(mSchedulerProvider.computation())
@@ -116,7 +174,7 @@ public class LoginPresenter implements LoginContract.Presenter {
         }
     }
 
-    public boolean validate(UserInfo userInfo) {
+    public boolean validate(com.ww.lp.base.data.user.UserInfo userInfo) {
         boolean valid = true;
 
         String email = userInfo.getEmail();

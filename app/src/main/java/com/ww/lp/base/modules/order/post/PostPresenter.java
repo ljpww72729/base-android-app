@@ -8,11 +8,12 @@ import com.android.volley.Request;
 import com.orhanobut.logger.Logger;
 import com.ww.lp.base.CustomApplication;
 import com.ww.lp.base.components.volleymw.DataPart;
-import com.ww.lp.base.data.ProjectAddResult;
+import com.ww.lp.base.data.CommonResult;
 import com.ww.lp.base.data.UploadResult;
-import com.ww.lp.base.entity.ProjectPostInfo;
+import com.ww.lp.base.data.project.ProjectInfo;
 import com.ww.lp.base.network.ServerImp;
 import com.ww.lp.base.network.ServerInterface;
+import com.ww.lp.base.utils.Constants;
 import com.ww.lp.base.utils.SPUtils;
 import com.ww.lp.base.utils.ToastUtils;
 import com.ww.lp.base.utils.schedulers.BaseSchedulerProvider;
@@ -71,45 +72,44 @@ public class PostPresenter implements PostContract.Presenter {
     }
 
     @Override
-    public void post(ProjectPostInfo projectPostInfo, final boolean isAdd) {
-        String requestUrl = ServerInterface.project_post;
+    public void post(ProjectInfo projectPostInfo, final boolean isAdd) {
+        Map<String, String> params = new HashMap<>();
+        String requestUrl = ServerInterface.project_publish;
         if (!isAdd){
             requestUrl = ServerInterface.project_edit;
+            params.put("projectId", projectPostInfo.getProjectId());
+            params.put("status", projectPostInfo.getStatus() + "");
         }
-        Map<String, String> params = new HashMap<>();
-        params.put("projectId", projectPostInfo.getProjectId());
-        params.put("userEmail", (String) SPUtils.get(CustomApplication.self(), SPUtils.USER_ID, ""));
-        params.put("status", "0");
-        params.put("flag", "release");
         // TODO: 16/11/29 此处title拼写错误
-        params.put("tittle", projectPostInfo.getTitle());
-        params.put("describe", projectPostInfo.getDescribe());
+        params.put("tittle", projectPostInfo.getTittle());
+        params.put("describes", projectPostInfo.getDescribes());
         params.put("price", projectPostInfo.getPrice());
         params.put("phoneNum", projectPostInfo.getPhoneNum());
         String img = "";
-        if (projectPostInfo.getImgs() != null && projectPostInfo.getImgs().size() > 0){
-            img = projectPostInfo.getImgs().get(0).getImg();
+        if (projectPostInfo.getProjectImgs() != null && projectPostInfo.getProjectImgs().size() > 0){
+            img = projectPostInfo.getProjectImgs().get(0).getImg();
         }
         params.put("img", img);
-        params.put("imgs", new Gson().toJson(projectPostInfo.getImgs()));
+        params.put(Constants.PROJECTIMGS, new Gson().toJson(projectPostInfo.getProjectImgs()));
         params.put("token", (String) SPUtils.get(CustomApplication.self(), SPUtils.TOKEN, ""));
         Subscription subscription = mServerImp
-                .commonSingle(requestTag, Request.Method.POST, requestUrl, params, ProjectAddResult.class)
+                .commonSingle(requestTag, Request.Method.POST, requestUrl, params, CommonResult.class)
                 .subscribeOn(mSchedulerProvider.computation())
                 .observeOn(mSchedulerProvider.ui())
-                .subscribe(new SingleSubscriber<ProjectAddResult>() {
+                .subscribe(new SingleSubscriber<CommonResult>() {
                     @Override
-                    public void onSuccess(ProjectAddResult projectInfoList) {
+                    public void onSuccess(CommonResult commonResult) {
 //                        mView.removeProgressDialog();
                         //请求成功
 //                        mView.success(loginResult);
-//                        mContractView.updateOrdertList(arrayList);
-                        mContractView.addOrModifySuccess(projectInfoList.getStatus());
+//                        mContractView.updateOrderList(arrayList);
+                        mContractView.addOrModifySuccess(commonResult.isData());
                     }
 
                     @Override
                     public void onError(Throwable error) {
 //                        mView.removeProgressDialog();
+                        mContractView.addOrModifySuccess(false);
                         ToastUtils.toastError(error);
                         Logger.d("onError");
                     }
@@ -138,15 +138,15 @@ public class PostPresenter implements PostContract.Presenter {
 
                     @Override
                     public void onError(Throwable e) {
-                        mContractView.uploadFileResult(false, null);
+                        mContractView.uploadFileResult(false, new ArrayList<String>());
                         ToastUtils.toastError(e);
                         Logger.d("onError");
                     }
 
                     @Override
                     public void onNext(UploadResult uploadResult) {
-                        uploadImgUrlList.add(uploadResult.getData().getImg());
-                        Logger.d(uploadResult.getData().getImg());
+                        uploadImgUrlList.add(uploadResult.getData());
+                        Logger.d(uploadResult.getData());
                     }
                 });
         mSubscriptions.add(subscription);

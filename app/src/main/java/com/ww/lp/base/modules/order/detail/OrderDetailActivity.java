@@ -16,6 +16,8 @@ import com.ww.lp.base.utils.schedulers.SchedulerProvider;
 public class OrderDetailActivity extends BaseActivity {
 
     public static final String PROJECT_ID = "projectId";
+    public static final String PROJECT_INFO = "projectInfo";
+    public static final String IS_PERSONAL = "is_personal";
     public static final String SHOW_PAY = "showPay";
 
     @Override

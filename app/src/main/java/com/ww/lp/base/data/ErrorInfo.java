@@ -8,34 +8,33 @@ import android.os.Parcelable;
  */
 
 public class ErrorInfo implements Parcelable {
-    private int err_code;
-
-    public int getErr_code() {
-        return err_code;
+    public int getCode() {
+        return code;
     }
 
-    public void setErr_code(int err_code) {
-        this.err_code = err_code;
+    public void setCode(int code) {
+        this.code = code;
     }
 
-    public String getErr_msg() {
-        return err_msg;
+    public String getMessage() {
+        return message;
     }
 
-    public void setErr_msg(String err_msg) {
-        this.err_msg = err_msg;
+    public void setMessage(String message) {
+        this.message = message;
     }
 
-    public String getErr_param() {
-        return err_param;
+    public String getParam() {
+        return param;
     }
 
-    public void setErr_param(String err_param) {
-        this.err_param = err_param;
+    public void setParam(String param) {
+        this.param = param;
     }
 
-    private String err_msg;
-    private String err_param;
+    private int code;
+    private String message;
+    private String param;
 
     @Override
     public int describeContents() {
@@ -44,18 +43,18 @@ public class ErrorInfo implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(this.err_code);
-        dest.writeString(this.err_msg);
-        dest.writeString(this.err_param);
+        dest.writeInt(this.code);
+        dest.writeString(this.message);
+        dest.writeString(this.param);
     }
 
     public ErrorInfo() {
     }
 
     protected ErrorInfo(Parcel in) {
-        this.err_code = in.readInt();
-        this.err_msg = in.readString();
-        this.err_param = in.readString();
+        this.code = in.readInt();
+        this.message = in.readString();
+        this.param = in.readString();
     }
 
     public static final Creator<ErrorInfo> CREATOR = new Creator<ErrorInfo>() {

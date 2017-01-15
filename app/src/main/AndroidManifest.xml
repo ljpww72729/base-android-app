@@ -14,7 +14,7 @@
     <application
             android:name="com.ww.lp.base.CustomApplication"
             android:allowBackup="true"
-            android:icon="@mipmap/ic_launcher"
+            android:icon="@drawable/app_qrzb"
             android:label="@string/app_name"
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
@@ -54,10 +54,18 @@
                 android:name=".modules.team.member.MemberActivity"
                 android:screenOrientation="portrait"/>
         <activity
+                android:name=".modules.team.member.add.MemberAddActivity"
+                android:screenOrientation="portrait"/>
+
+        <activity
                 android:name=".modules.team.developer.DeveloperActivity"
                 android:screenOrientation="portrait"/>
         <activity
                 android:name=".modules.main.user.UserInfoActivity"
+                android:screenOrientation="portrait"
+                android:windowSoftInputMode="stateHidden"/>
+        <activity
+                android:name=".modules.order.comment.CommentActivity"
                 android:screenOrientation="portrait"
                 android:windowSoftInputMode="stateHidden"/>
 
@@ -69,6 +77,7 @@
         <activity
                 android:name="me.iwf.photopicker.PhotoPagerActivity"
                 android:theme="@style/Theme.AppCompat.NoActionBar"/>
+
 
         <!-- alipay sdk begin -->
 

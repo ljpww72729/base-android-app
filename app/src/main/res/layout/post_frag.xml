@@ -3,8 +3,8 @@
         xmlns:tools="http://schemas.android.com/tools">
     <data>
         <variable
-                name="projectPostInfo"
-                type="com.ww.lp.base.entity.ProjectPostInfo"/>
+                name="projectInfo"
+                type="com.ww.lp.base.data.project.ProjectInfo"/>
     </data>
 
     <ScrollView
@@ -25,6 +25,7 @@
                     android:id="@+id/img_picker"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:textSize="@dimen/sp_14"
                     style="@style/LP_Normal_Button"
                     android:text="选择图片"/>
 
@@ -74,20 +75,20 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:inputType="numberDecimal"
-                                android:text="@={projectPostInfo.price}"
+                                android:text="@={projectInfo.price}"
                                 tools:text="100"/>
 
                         <EditText
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:text="@={projectPostInfo.title}"
+                                android:text="@={projectInfo.tittle}"
                                 tools:text="100"/>
 
                         <EditText
                                 android:inputType="phone"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:text="@={projectPostInfo.phoneNum}"
+                                android:text="@={projectInfo.phoneNum}"
                                 tools:text="100"/>
                     </LinearLayout>
                 </LinearLayout>
@@ -113,7 +114,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/dp_128"
                             android:inputType="textMultiLine"
-                            android:text="@={projectPostInfo.describe}"
+                            android:text="@={projectInfo.describes}"
                             android:id="@+id/editText"/>
                 </LinearLayout>
             </android.support.v7.widget.CardView>

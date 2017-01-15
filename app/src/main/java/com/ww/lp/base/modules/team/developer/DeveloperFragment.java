@@ -8,8 +8,10 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.ww.lp.base.BaseFragment;
+import com.ww.lp.base.CustomApplication;
 import com.ww.lp.base.R;
 import com.ww.lp.base.databinding.DeveloperFragBinding;
+import com.ww.lp.base.utils.SPUtils;
 
 import static com.google.gson.internal.$Gson$Preconditions.checkNotNull;
 
@@ -49,6 +51,7 @@ public class DeveloperFragment extends BaseFragment implements DeveloperContract
                              Bundle savedInstanceState) {
         View root = onCreateView(inflater, container, savedInstanceState, R.layout.developer_frag, false);
         binding = DeveloperFragBinding.bind(root);
+        binding.shenhe.setText(getString(R.string.shenhe, (String)SPUtils.get(CustomApplication.self(), SPUtils.ADMIN_EMAIL, "")));
         return root;
     }
 

@@ -18,9 +18,7 @@ public class TeamListActivity extends BaseActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.base_act, true, true, false);
-
         setTitle("团队列表");
-
         TeamListFragment teamListFragment = (TeamListFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.contentFrame);
 

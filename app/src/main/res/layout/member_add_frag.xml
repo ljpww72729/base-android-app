@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:fresco="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+                name="member"
+                type="com.ww.lp.base.data.team.TeamMember"/>
+    </data>
+
+    <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+            <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dp_8"
+                    android:layout_marginBottom="@dimen/dp_8">
+
+                <android.support.design.widget.TextInputEditText
+                        android:id="@+id/name"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="姓名"
+                        android:maxLines="1"
+                        android:text="@={member.username}"/>
+                <!--android:textColorHint="@color/abc_primary_text_material_dark" />-->
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dp_8"
+                    android:layout_marginBottom="@dimen/dp_8">
+
+                <android.support.design.widget.TextInputEditText
+                        android:id="@+id/position"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="职位"
+                        android:maxLines="1"
+                        android:text="@={member.position}"/>
+                <!--android:textColorHint="@color/abc_primary_text_material_dark" />-->
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dp_8"
+                    android:layout_marginBottom="@dimen/dp_8">
+
+                <android.support.design.widget.TextInputEditText
+                        android:id="@+id/year_num"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="工作年限(请输入数字)"
+                        android:maxLines="1"
+                        android:inputType="number"
+                        android:text="@={member.yearNum}"/>
+                <!--android:textColorHint="@color/abc_primary_text_material_dark" />-->
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dp_8"
+                    android:layout_marginBottom="@dimen/dp_8">
+
+                <android.support.design.widget.TextInputEditText
+                        android:id="@+id/introduction"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="个人简介"
+                        android:maxLines="10"
+                        android:inputType="textMultiLine"
+                        android:text="@={member.introduction}"/>
+                <!--android:textColorHint="@color/abc_primary_text_material_dark" />-->
+            </android.support.design.widget.TextInputLayout>
+
+            <Button
+                    android:id="@+id/img_upload"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/LP_Normal_Button"
+                    android:textSize="@dimen/sp_14"
+                    android:text="上传成员照片"/>
+
+            <com.facebook.drawee.view.SimpleDraweeView
+                    android:id="@+id/img"
+                    android:visibility="gone"
+                    tools:visibility="visible"
+                    android:layout_width="@dimen/dp_128"
+                    android:layout_height="@dimen/dp_128"
+                    android:layout_alignParentLeft="true"
+                    fresco:placeholderImage="@drawable/va_img_default"
+                    fresco:actualImageUri="@{member.img}"/>
+
+            <android.support.v7.widget.AppCompatButton
+                    android:id="@+id/btn_complete"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dp_24"
+                    android:layout_marginBottom="@dimen/dp_24"
+                    style="@style/LP_Normal_Button"
+                    android:text="完成"/>
+        </LinearLayout>
+    </ScrollView>
+</layout>

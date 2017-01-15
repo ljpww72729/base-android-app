@@ -6,8 +6,8 @@
     <data>
 
         <variable
-                name="projectDetail"
-                type="com.ww.lp.base.data.ProjectDetail"/>
+                name="projectInfo"
+                type="com.ww.lp.base.data.project.ProjectInfo"/>
     </data>
 
     <RelativeLayout
@@ -48,13 +48,13 @@
 
                         <LinearLayout
                                 android:layout_width="match_parent"
-                                android:layout_height="wrap_content">
+                                android:layout_height="wrap_content"
+                                android:padding="@dimen/dp_12">
 
                             <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
-                                    android:padding="@dimen/dp_12"
                                     android:textStyle="bold"
                                     android:text="项目名称："/>
 
@@ -62,24 +62,27 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
-                                    android:text="@={projectDetail.projectInfo.title}"
+                                    android:text="@={projectInfo.tittle}"
                                     tools:text="项目名称"/>
                         </LinearLayout>
                     <LinearLayout
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content">
+                            android:layout_height="wrap_content"
+                            android:paddingBottom="@dimen/dp_12"
+                            android:paddingRight="@dimen/dp_12"
+                            android:paddingLeft="@dimen/dp_12">
 
                         <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
-                                android:padding="@dimen/dp_12"
+
                                 android:textStyle="bold"
                                 android:text="价格："/>
                         <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="@={projectDetail.projectInfo.price}"
+                                android:text="@={projectInfo.price}"
                                 tools:text="价格"/>
                         <TextView
                                 android:layout_width="wrap_content"
@@ -87,6 +90,26 @@
                                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
                                 android:textStyle="bold"
                                 android:text=" 元"/>
+                        </LinearLayout>
+                        <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:paddingBottom="@dimen/dp_12"
+                                android:paddingRight="@dimen/dp_12"
+                                android:paddingLeft="@dimen/dp_12">
+
+                            <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+                                    android:textStyle="bold"
+                                    android:text="联系电话："/>
+                            <TextView
+                                    android:id="@+id/phone"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@={projectInfo.phoneNum}"
+                                    tools:text="电话"/>
                         </LinearLayout>
                     </LinearLayout>
 
@@ -115,7 +138,7 @@
                                 android:layout_height="wrap_content"
                                 android:paddingLeft="@dimen/dp_12"
                                 android:paddingBottom="@dimen/dp_12"
-                                android:text="@={projectDetail.projectInfo.describe}"
+                                android:text="@={projectInfo.describes}"
                                 tools:text="项目项目描述项目描述项目描述项目描述项目描述项目描述项目描述项目描述项目描述项目描述项目描述项目描述项目描述项目描述项目描述项目描述项目描述项目描述项目描述项目描述项目描述描述"/>
                     </LinearLayout>
 
@@ -142,43 +165,43 @@
                     >
 
                 <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:padding="@dimen/dp_2"
-                        android:orientation="vertical">
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:gravity="center_vertical"
+                        android:padding="@dimen/dp_2">
 
                     <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textSize="@dimen/sp_14"
-                            android:text="拨打电话"/>
-
-                    <TextView
-                            android:id="@+id/phone"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textSize="@dimen/sp_16"
-                            android:text="@{projectDetail.projectInfo.phoneNum}"
+                            android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
                             android:textStyle="bold"
-                            tools:text="电话"/>
-
+                            android:text="状态："/>
                     <TextView
+                            android:id="@+id/status"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textSize="@dimen/sp_14"
-                            android:text="(电话沟通确认后再付款)"/>
+                            tools:text="已发布"/>
                 </LinearLayout>
 
-
                 <android.support.v7.widget.AppCompatButton
-                        android:id="@+id/pay"
+                        android:id="@+id/btn_not_complete"
+                        android:visibility="gone"
+                        tools:visibility="visible"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         style="@style/LP_Normal_Button"
-                        android:text="确认付款"
-                        android:layout_alignParentTop="true"
-                        android:layout_alignParentRight="true"
-                        android:layout_alignParentEnd="true"/>
+                        android:text="未完成"
+                        android:layout_toLeftOf="@+id/btn_status"/>
+
+                <android.support.v7.widget.AppCompatButton
+                        android:id="@+id/btn_status"
+                        android:visibility="gone"
+                        tools:visibility="visible"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        style="@style/LP_Normal_Button"
+                        tools:text="确认付款"
+                        android:layout_alignParentRight="true"/>
             </RelativeLayout>
         </android.support.v7.widget.CardView>
     </RelativeLayout>

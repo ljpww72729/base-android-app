@@ -6,7 +6,7 @@
 
         <variable
                 name="member"
-                type="com.ww.lp.base.data.TeamDetail"/>
+                type="com.ww.lp.base.data.team.TeamMember"/>
     </data>
 
     <ScrollView
@@ -25,9 +25,11 @@
 
                 <RelativeLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
+                        android:layout_height="match_parent">
 
                     <com.facebook.drawee.view.SimpleDraweeView
+                            android:layout_marginTop="@dimen/dp_2"
+                            android:layout_marginLeft="@dimen/dp_2"
                             android:id="@+id/img"
                             android:layout_width="@dimen/dp_128"
                             android:layout_height="@dimen/dp_128"
@@ -76,7 +78,7 @@
                             android:id="@+id/positon"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@{member.positon}"/>
+                            android:text="@{member.position}"/>
                     </LinearLayout>
                     <LinearLayout
                             android:layout_below="@+id/position_layout"
@@ -107,6 +109,7 @@
 <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:padding="@dimen/dp_2"
         android:orientation="vertical">
     <TextView
             android:layout_width="wrap_content"

@@ -19,6 +19,9 @@ public class OrderListActivity extends BaseActivity {
     public static final String ORDER_FLAG = "order_flag";
     public static final String RELEASE = "release";
     public static final String ACCEPT = "accept";
+    public static final String ISONLYQUERYMYPUBLIS = "isOnlyQueryMyPublis";
+    public static final String PERSONAL = "1";
+    public static final String ALL = "0";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -32,7 +35,7 @@ public class OrderListActivity extends BaseActivity {
                 .findFragmentById(R.id.contentFrame);
 
         if (orderListFragment == null) {
-            orderListFragment = OrderListFragment.newInstance(getIntent().getStringExtra(ORDER_FLAG));
+            orderListFragment = OrderListFragment.newInstance(getIntent().getStringExtra(ORDER_FLAG), getIntent().getStringExtra(OrderListActivity.ISONLYQUERYMYPUBLIS));
 
             ActivityUtils.addFragmentToActivity(getSupportFragmentManager(),
                     orderListFragment, R.id.contentFrame);

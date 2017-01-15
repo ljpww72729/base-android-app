@@ -1,6 +1,7 @@
 package com.ww.lp.base.network;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
@@ -40,26 +41,26 @@ public class ServerImp implements ServerApi {
 
 
 //    @Override
-//    public Observable<LoginResult> login(final String requestTag, @NonNull final Student student) {
+//    public Observable<UserInfo> login(final String requestTag, @NonNull final Student student) {
 //        checkNotNull(student);
-//        return Observable.defer(new Func0<Observable<LoginResult>>() {
+//        return Observable.defer(new Func0<Observable<UserInfo>>() {
 //            @Override
-//            public Observable<LoginResult> call() {
+//            public Observable<UserInfo> call() {
 //                try {
 //                    ServerData<RndResult> serverDataRnd = new ServerData<RndResult>();
 //                    Map paramRnd = new HashMap();
 //                    paramRnd.put("sid", student.getSid());
 //                    return Observable.just(serverDataRnd.getServerData(requestTag, Request.Method.GET, ServerInterface.rnd, paramRnd, RndResult.class))
-//                            .concatMap(new Func1<RndResult, Observable<LoginResult>>() {
+//                            .concatMap(new Func1<RndResult, Observable<UserInfo>>() {
 //                                @Override
-//                                public Observable<LoginResult> call(RndResult rndResult) {
+//                                public Observable<UserInfo> call(RndResult rndResult) {
 //                                    try {
 //                                        System.out.println("ddd " + rndResult.getData());
-//                                        ServerData<LoginResult> serverDataLogin = new ServerData<LoginResult>();
+//                                        ServerData<UserInfo> serverDataLogin = new ServerData<UserInfo>();
 //                                        Map paramLogin = new HashMap();
 //                                        paramLogin.put("sid", student.getSid());
 //                                        paramLogin.put("password", DecriptHelper.getEncryptedPassword(student.getPassword(), rndResult.getData()));
-//                                        return Observable.just(serverDataLogin.getServerData(requestTag, Request.Method.POST, ServerInterface.login, paramLogin, LoginResult.class));
+//                                        return Observable.just(serverDataLogin.getServerData(requestTag, Request.Method.POST, ServerInterface.login, paramLogin, UserInfo.class));
 //                                    } catch (ExecutionException | InterruptedException e) {
 //                                        e.printStackTrace();
 //                                        return Observable.error(e);
@@ -82,7 +83,7 @@ public class ServerImp implements ServerApi {
                 try {
                     ServerData<T> serverData = new ServerData<T>();
                     return Observable.just(serverData.getServerData(requestTag, method, url, param, clazz));
-                } catch (InterruptedException | ExecutionException e) {
+                } catch (InterruptedException | ExecutionException  e) {
                     Log.e("routes", e.getMessage());
                     return Observable.error(e);
                 }
@@ -176,7 +177,15 @@ public class ServerImp implements ServerApi {
                             return null;
                         }
                         //压缩文件
-                        File compressFile = Compressor.getDefault(CustomApplication.self()).compressToFile(file);
+                        Compressor.Builder builder = new Compressor.Builder(CustomApplication.self());
+                        Logger.d(file.getName());
+                        if (file.getName().endsWith(".png")){
+                            Logger.d("yes png file");
+                            builder.setCompressFormat(Bitmap.CompressFormat.PNG);
+                        }else{
+                            builder.setCompressFormat(Bitmap.CompressFormat.JPEG);
+                        }
+                        File compressFile = builder.build().compressToFile(file);
                         //获取压缩后文件的字节数组
                         byte[] fileBytes = FileUtils.getFileBytes(compressFile);
                         DataPart compressDataPart = stringDataPartEntry.getValue();

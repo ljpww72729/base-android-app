@@ -2,9 +2,22 @@ package com.ww.lp.base.modules.team.member;
 
 import android.support.annotation.NonNull;
 
+import com.android.volley.Request;
+import com.orhanobut.logger.Logger;
+import com.ww.lp.base.CustomApplication;
+import com.ww.lp.base.data.BaseResult;
+import com.ww.lp.base.data.team.TeamMember;
 import com.ww.lp.base.network.ServerImp;
+import com.ww.lp.base.network.ServerInterface;
+import com.ww.lp.base.utils.SPUtils;
+import com.ww.lp.base.utils.ToastUtils;
 import com.ww.lp.base.utils.schedulers.BaseSchedulerProvider;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import rx.SingleSubscriber;
+import rx.Subscription;
 import rx.subscriptions.CompositeSubscription;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -50,4 +63,29 @@ public class MemberPresenter implements MemberContract.Presenter {
     }
 
 
+    @Override
+    public void removeMember(String teamId, TeamMember member) {
+        Map<String, String> params = new HashMap<>();
+        params.put("teamId", teamId);
+        params.put("memberId", member.getMemberId());
+        params.put("token", (String) SPUtils.get(CustomApplication.self(), SPUtils.TOKEN, ""));
+        Subscription subscription = mServerImp
+                .commonSingle(requestTag, Request.Method.POST, ServerInterface.member_delete, params, BaseResult.class)
+                .subscribeOn(mSchedulerProvider.computation())
+                .observeOn(mSchedulerProvider.ui())
+                .subscribe(new SingleSubscriber<BaseResult>() {
+                    @Override
+                    public void onSuccess(BaseResult result) {
+                        mContractView.removeResult(true);
+                    }
+
+                    @Override
+                    public void onError(Throwable error) {
+                        mContractView.removeResult(false);
+                        ToastUtils.toastError(error);
+                        Logger.d("onError");
+                    }
+                });
+        mSubscriptions.add(subscription);
+    }
 }

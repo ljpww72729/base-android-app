@@ -5,7 +5,6 @@ import android.support.annotation.Nullable;
 
 import com.ww.lp.base.BaseActivity;
 import com.ww.lp.base.R;
-import com.ww.lp.base.data.TeamDetail;
 import com.ww.lp.base.network.ServerImp;
 import com.ww.lp.base.utils.ActivityUtils;
 import com.ww.lp.base.utils.schedulers.SchedulerProvider;
@@ -21,13 +20,12 @@ public class MemberActivity extends BaseActivity {
         setContentView(R.layout.base_act, true, true, false);
 
         setTitle("成员详细信息");
-        TeamDetail teamDetail = getIntent().getParcelableExtra("member");
 
         MemberFragment teamListFragment = (MemberFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.contentFrame);
 
         if (teamListFragment == null) {
-            teamListFragment = MemberFragment.newInstance(teamDetail);
+            teamListFragment = MemberFragment.newInstance(getIntent().getExtras());
 
             ActivityUtils.addFragmentToActivity(getSupportFragmentManager(),
                     teamListFragment, R.id.contentFrame);

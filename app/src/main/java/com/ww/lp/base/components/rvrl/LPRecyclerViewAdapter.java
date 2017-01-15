@@ -32,6 +32,12 @@ public class LPRecyclerViewAdapter<E> extends RecyclerView.Adapter {
     //开始页面
     private int pageStartNum = 0;
 
+    //当前页面
+    private volatile int pageCurrentNum = pageStartNum;
+
+    //页面总数
+    private int pageCount;
+
     //是否正在加载更多
     private boolean isLoadingMore;
     //数据列表
@@ -92,6 +98,27 @@ public class LPRecyclerViewAdapter<E> extends RecyclerView.Adapter {
 
     public void setPageStartNum(int pageStartNum) {
         this.pageStartNum = pageStartNum;
+        this.pageCurrentNum = pageStartNum;
+    }
+
+    public int getPageCurrentNum() {
+        return pageCurrentNum;
+    }
+
+    public void setPageCurrentNum(int pageCurrentNum) {
+        this.pageCurrentNum = pageCurrentNum;
+    }
+
+    public int getPageCount() {
+        return pageCount;
+    }
+
+    public void setPageCount(int pageCount) {
+        this.pageCount = pageCount;
+    }
+
+    public void loadMoreSuccess(){
+        pageCurrentNum += 1;
     }
 
     public int getVisibleThreshold() {
@@ -144,7 +171,7 @@ public class LPRecyclerViewAdapter<E> extends RecyclerView.Adapter {
                     visibleItemCount = recyclerView.getChildCount();
                     totalItemCount = linearLayoutManager.getItemCount();
                     firstVisibleItem = linearLayoutManager.findFirstVisibleItemPosition();
-                    if (!isLoadingMore && (totalItemCount - visibleItemCount) <= (firstVisibleItem + visibleThreshold)) {
+                    if (!isLoadingMore && pageCount > pageCurrentNum && (totalItemCount - visibleItemCount) <= (firstVisibleItem + visibleThreshold)) {
                         if (onLoadMoreListener != null) {
                             isLoadingMore = true;
                             Logger.d("onLoadMore() is call-back!");

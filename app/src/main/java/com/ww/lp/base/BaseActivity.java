@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -113,6 +114,23 @@ public class BaseActivity extends AppCompatActivity {
             ab.setDisplayHomeAsUpEnabled(showHome);
             ab.setDisplayShowHomeEnabled(showHome);
         }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home){
+            onBackPressed();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    /**
+     * 自类重写该方法返回事件
+     */
+    @Override
+    public void onBackPressed() {
+        finish();
     }
 
     //重写，关闭当前activity

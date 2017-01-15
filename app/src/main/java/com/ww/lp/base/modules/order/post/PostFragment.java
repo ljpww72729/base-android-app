@@ -1,10 +1,12 @@
 package com.ww.lp.base.modules.order.post;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,12 +18,10 @@ import com.ww.lp.base.BaseFragment;
 import com.ww.lp.base.R;
 import com.ww.lp.base.components.rvrl.LPRecyclerViewAdapter;
 import com.ww.lp.base.components.rvrl.SingleItemClickListener;
-import com.ww.lp.base.data.CarouselInfo;
-import com.ww.lp.base.data.ProjectDetail;
-import com.ww.lp.base.data.ProjectInfo;
+import com.ww.lp.base.data.project.ProjectImg;
+import com.ww.lp.base.data.project.ProjectInfo;
 import com.ww.lp.base.databinding.PostFragBinding;
 import com.ww.lp.base.entity.ImageInfo;
-import com.ww.lp.base.entity.ProjectPostInfo;
 import com.ww.lp.base.utils.ToastUtils;
 
 import java.util.ArrayList;
@@ -43,14 +43,14 @@ public class PostFragment extends BaseFragment implements PostContract.View {
     private LinearLayoutManager mLayoutManager;
     private ArrayList<ImageInfo> mRVData = new ArrayList<>();
     private LPRecyclerViewAdapter<ImageInfo> lpRecyclerViewAdapter;
-    private ArrayList<CarouselInfo> imgCarouseList = new ArrayList<>();
+    private ArrayList<ProjectImg> imgCarouseList = new ArrayList<>();
     private boolean isAdd = true;
 
     public static PostFragment newInstance(Intent intent) {
 
         Bundle args = new Bundle();
         if (intent != null) {
-            args.putParcelable("projectDetail", intent.getParcelableExtra("projectDetail"));
+            args.putParcelable("projectInfo", intent.getParcelableExtra("projectInfo"));
         }
         PostFragment fragment = new PostFragment();
         fragment.setArguments(args);
@@ -75,21 +75,14 @@ public class PostFragment extends BaseFragment implements PostContract.View {
                              Bundle savedInstanceState) {
         View root = onCreateView(inflater, container, savedInstanceState, R.layout.post_frag, false);
         binding = PostFragBinding.bind(root);
-        ProjectPostInfo projectPostInfo = new ProjectPostInfo();
-        if (getArguments().getParcelable("projectDetail") != null) {
-            ProjectInfo projectInfo = ((ProjectDetail) getArguments().getParcelable("projectDetail")).getProjectInfo();
-            projectPostInfo.setTitle(projectInfo.getTitle());
-            projectPostInfo.setDescribe(projectInfo.getDescribe());
-            projectPostInfo.setPrice(projectInfo.getPrice());
-            projectPostInfo.setPhoneNum(projectInfo.getPhoneNum());
-            projectPostInfo.setProjectId(projectInfo.getProjectId());
-            projectPostInfo.setImg(projectInfo.getImg());
-            imgCarouseList = ((ProjectDetail) getArguments().getParcelable("projectDetail")).getCarouselInfo();
-            projectPostInfo.setImgs(imgCarouseList);
+        ProjectInfo projectInfo = new ProjectInfo();
+        if (getArguments().getParcelable("projectInfo") != null) {
+            projectInfo = getArguments().getParcelable("projectInfo");
+            imgCarouseList = projectInfo.getProjectImgs();
             isAdd = false;
             binding.btnPost.setText("修改需求");
         }
-        binding.setProjectPostInfo(projectPostInfo);
+        binding.setProjectInfo(projectInfo);
         binding.lpRv.setHasFixedSize(true);
         // use a linear layout manager
         mLayoutManager = new LinearLayoutManager(getActivity());
@@ -103,9 +96,24 @@ public class PostFragment extends BaseFragment implements PostContract.View {
             }
 
             @Override
-            public void onItemLongClick(View view, int position) {
-                deleteImg(position);
-                ToastUtils.toastLong("删除图片成功！");
+            public void onItemLongClick(View view, final int position) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setMessage("确定删除？");
+                builder.setTitle("提示信息");
+                builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        deleteImg(position);
+                        ToastUtils.toastLong("删除图片成功！");
+                    }
+                }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                }).create();
+                builder.show();
+
             }
         }));
         binding.imgPicker.setOnClickListener(new View.OnClickListener() {
@@ -121,8 +129,8 @@ public class PostFragment extends BaseFragment implements PostContract.View {
         binding.btnPost.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ProjectPostInfo projectPostInfo = binding.getProjectPostInfo();
-                projectPostInfo.setImgs(imgCarouseList);
+                ProjectInfo projectPostInfo = binding.getProjectInfo();
+                projectPostInfo.setProjectImgs(imgCarouseList);
                 mPresenter.post(projectPostInfo, isAdd);
             }
         });
@@ -164,7 +172,7 @@ public class PostFragment extends BaseFragment implements PostContract.View {
                 ImageInfo imageInfo = new ImageInfo();
                 imageInfo.setUri(Uri.parse(imgList.get(i)));
                 mRVData.add(imageInfo);
-                CarouselInfo carouselInfo = new CarouselInfo();
+                ProjectImg carouselInfo = new ProjectImg();
                 carouselInfo.setImg(imgList.get(i));
                 imgCarouseList.add(carouselInfo);
             }
@@ -173,8 +181,8 @@ public class PostFragment extends BaseFragment implements PostContract.View {
     }
 
     @Override
-    public void addOrModifySuccess(String status) {
-        if (status.equals("200")){
+    public void addOrModifySuccess(boolean result) {
+        if (result){
             if (isAdd){
                 ToastUtils.toastShort("发布成功");
             }else{

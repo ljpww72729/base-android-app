@@ -2,9 +2,23 @@ package com.ww.lp.base.modules.team.detail;
 
 import android.support.annotation.NonNull;
 
+import com.android.volley.Request;
+import com.orhanobut.logger.Logger;
+import com.ww.lp.base.CustomApplication;
+import com.ww.lp.base.data.team.TeamInfo;
+import com.ww.lp.base.data.team.TeamListResult;
 import com.ww.lp.base.network.ServerImp;
+import com.ww.lp.base.network.ServerInterface;
+import com.ww.lp.base.utils.SPUtils;
+import com.ww.lp.base.utils.ToastUtils;
 import com.ww.lp.base.utils.schedulers.BaseSchedulerProvider;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
+import rx.SingleSubscriber;
+import rx.Subscription;
 import rx.subscriptions.CompositeSubscription;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -49,5 +63,34 @@ public class TeamDetailPresenter implements TeamDetailContract.Presenter {
         mSubscriptions.clear();
     }
 
+    /**
+     * 请求团队列表
+     */
+    @Override
+    public void loadTeamList(final String teamId, String isOnlyQueryMyOwn, int pageNum) {
+        Map<String, String> params = new HashMap<>();
+        params.put("token", (String) SPUtils.get(CustomApplication.self(), SPUtils.TOKEN, ""));
+        params.put("isOnlyQueryMyOwn", isOnlyQueryMyOwn);
+        params.put("teamId", teamId);
+        params.put("pageIndex", pageNum + "");
+        Subscription subscription = mServerImp
+                .commonSingle(requestTag, Request.Method.POST, ServerInterface.team_list, params, TeamListResult.class)
+                .subscribeOn(mSchedulerProvider.computation())
+                .observeOn(mSchedulerProvider.ui())
+                .subscribe(new SingleSubscriber<TeamListResult>() {
+                    @Override
+                    public void onSuccess(TeamListResult teamList) {
+                        mContractView.loadTeamResult(true, teamList.getData().getList(), teamList.getData().getPageCount());
+                    }
+
+                    @Override
+                    public void onError(Throwable error) {
+                        mContractView.loadTeamResult(false, new ArrayList<TeamInfo>(), 0);
+                        ToastUtils.toastError(error);
+                        Logger.d(error);
+                    }
+                });
+        mSubscriptions.add(subscription);
+    }
 
 }

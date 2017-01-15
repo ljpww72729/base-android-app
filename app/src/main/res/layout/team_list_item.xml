@@ -5,7 +5,7 @@
 
         <variable
                 name="lp_rv_item"
-                type="com.ww.lp.base.data.TeamResult"/>
+                type="com.ww.lp.base.data.team.TeamInfo"/>
     </data>
 
     <android.support.v7.widget.CardView
@@ -23,6 +23,18 @@
             android:layout_height="wrap_content"
             android:text="@{lp_rv_item.teamName}"
             android:layout_centerVertical="true"/>
+
+    <RatingBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:rating="@{lp_rv_item.star}"
+            style="?android:attr/ratingBarStyleSmall"
+            android:id="@+id/team_bar"/>
+
+
 </RelativeLayout>
 
     </android.support.v7.widget.CardView>
