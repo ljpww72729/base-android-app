@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--配色方案 https://www.materialpalette.com-->
-    <color name="window_bg">#FFFFFF</color>
+    <color name="window_bg">#eeeeee</color>
 
     <color name="white">#FFFFFFFF</color>
     <color name="black">#000000</color>

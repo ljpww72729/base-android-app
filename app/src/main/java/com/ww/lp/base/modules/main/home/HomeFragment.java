@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,7 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.synnapps.carouselview.ViewListener;
 import com.ww.lp.base.BR;
 import com.ww.lp.base.BaseFragment;
+import com.ww.lp.base.CustomApplication;
 import com.ww.lp.base.R;
 import com.ww.lp.base.components.rvrl.LPRecyclerViewAdapter;
 import com.ww.lp.base.components.rvrl.LPRefreshLoadListener;
@@ -20,10 +22,12 @@ import com.ww.lp.base.components.rvrl.SingleItemClickListener;
 import com.ww.lp.base.data.ads.CarouselInfo;
 import com.ww.lp.base.data.project.ProjectInfo;
 import com.ww.lp.base.databinding.HomeFragBinding;
+import com.ww.lp.base.modules.login.LoginActivity;
 import com.ww.lp.base.modules.order.detail.OrderDetailActivity;
 import com.ww.lp.base.modules.team.developer.DeveloperActivity;
 import com.ww.lp.base.modules.team.list.TeamListActivity;
 import com.ww.lp.base.modules.webview.NormalWVActvity;
+import com.ww.lp.base.utils.SPUtils;
 
 import java.util.ArrayList;
 
@@ -97,10 +101,16 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
         binding.lpRv.addOnItemTouchListener(new SingleItemClickListener(binding.lpRv, new SingleItemClickListener.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                Intent intent = new Intent(getActivity(), OrderDetailActivity.class);
-                intent.putExtra(OrderDetailActivity.PROJECT_ID, mRVData.get(position).getProjectId());
-                intent.putExtra(OrderDetailActivity.IS_PERSONAL, false);
-                startActivity(intent);
+                if (TextUtils.isEmpty((String) SPUtils.get(CustomApplication.self(), SPUtils.TOKEN, ""))){
+                    //登录后再操
+                    Intent intent = new Intent(getActivity(), LoginActivity.class);
+                    startActivity(intent);
+                }else{
+                    Intent intent = new Intent(getActivity(), OrderDetailActivity.class);
+                    intent.putExtra(OrderDetailActivity.PROJECT_ID, mRVData.get(position).getProjectId());
+                    intent.putExtra(OrderDetailActivity.IS_PERSONAL, false);
+                    startActivity(intent);
+                }
             }
 
             @Override
