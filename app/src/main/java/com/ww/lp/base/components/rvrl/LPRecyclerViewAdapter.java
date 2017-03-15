@@ -24,6 +24,9 @@ import static com.ww.lp.base.components.rvrl.SingleItemClickListener.VIEW_PROG;
 
 public class LPRecyclerViewAdapter<E> extends RecyclerView.Adapter {
 
+    public static final int TYPE_NORMAL = 0;  //说明是不带有header的
+    public static final int TYPE_HEADER = 2;  //说明是带有Header的
+
     //剩余几个页面未展示时开始加载更多
     private int visibleThreshold = 2;
     //当前可见数，第一个可见项，所有项
@@ -57,6 +60,8 @@ public class LPRecyclerViewAdapter<E> extends RecyclerView.Adapter {
 
     //是否开启加载更多功能
     private boolean enableLoadMore = true;
+
+    private int mHeaderViewId = -1;
 
     public boolean isEnableLoadMore() {
         return enableLoadMore;
@@ -117,7 +122,7 @@ public class LPRecyclerViewAdapter<E> extends RecyclerView.Adapter {
         this.pageCount = pageCount;
     }
 
-    public void loadMoreSuccess(){
+    public void loadMoreSuccess() {
         pageCurrentNum += 1;
     }
 
@@ -133,6 +138,23 @@ public class LPRecyclerViewAdapter<E> extends RecyclerView.Adapter {
     public void setVisibleThreshold(int visibleThreshold) {
         this.visibleThreshold = visibleThreshold;
     }
+
+    //HeaderView和FooterView的get和set函数
+    public int getHeaderViewId() {
+        return mHeaderViewId;
+    }
+
+    public void setHeaderViewId(final int headerViewId) {
+        new Handler().post(new Runnable() {
+            @Override
+            public void run() {
+                mHeaderViewId = headerViewId;
+                notifyItemInserted(0);
+            }
+        });
+    }
+
+    private LPHeaderViewHolder lpHeaderViewHolder;
 
     /**
      * 基本形式，关闭刷新及加载更多功能
@@ -206,7 +228,10 @@ public class LPRecyclerViewAdapter<E> extends RecyclerView.Adapter {
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         RecyclerView.ViewHolder holder;
-        if (viewType == VIEW_ITEM) {
+        if (viewType == TYPE_HEADER) {
+            ViewDataBinding binding = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()), mHeaderViewId, parent, false);
+            holder = new LPHeaderViewHolder(binding);
+        } else if (viewType == VIEW_ITEM) {
             //data binding
             ViewDataBinding binding = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()), item_layout, parent, false);
             holder = new LPRecyclerViewHolder(binding);
@@ -220,8 +245,14 @@ public class LPRecyclerViewAdapter<E> extends RecyclerView.Adapter {
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        if (holder instanceof LPRecyclerViewHolder) {
-            final E item = mData.get(position);
+        if (holder instanceof LPHeaderViewHolder) {
+            setLPHeaderViewHolder((LPHeaderViewHolder) holder);
+        } else if (holder instanceof LPRecyclerViewHolder) {
+            int actualPostion = position;
+            if (mHeaderViewId != -1) {
+                actualPostion = actualPostion - 1;
+            }
+            final E item = mData.get(actualPostion);
             //固定格式，采用databinding设计，因此item的layout中必须包含data variable
             ((LPRecyclerViewHolder) holder).getBinding().setVariable(item_data_variable, item);
             ((LPRecyclerViewHolder) holder).getBinding().executePendingBindings();
@@ -230,13 +261,31 @@ public class LPRecyclerViewAdapter<E> extends RecyclerView.Adapter {
         }
     }
 
+    private void setLPHeaderViewHolder(LPHeaderViewHolder holder) {
+        this.lpHeaderViewHolder = holder;
+    }
+
+    public LPHeaderViewHolder getLPHeaderViewHolder() {
+        return lpHeaderViewHolder;
+    }
+
     @Override
     public int getItemViewType(int position) {
-        return mData.get(position) != null ? VIEW_ITEM : VIEW_PROG;
+        if (mHeaderViewId != -1 && position == 0) {
+            return TYPE_HEADER;
+        }
+        int actualPostion = position;
+        if (mHeaderViewId != -1) {
+            actualPostion = actualPostion - 1;
+        }
+        return mData.get(actualPostion) != null ? VIEW_ITEM : VIEW_PROG;
     }
 
     @Override
     public int getItemCount() {
+        if (mHeaderViewId != -1) {
+            return mData.size() + 1;
+        }
         return mData.size();
     }
 
@@ -259,12 +308,20 @@ public class LPRecyclerViewAdapter<E> extends RecyclerView.Adapter {
                 @Override
                 public void run() {
                     mData.add(null);
-                    notifyItemInserted(mData.size() - 1);
+                    int actualSize = mData.size();
+                    if (mHeaderViewId != -1) {
+                        actualSize = actualSize + 1;
+                    }
+                    notifyItemInserted(actualSize - 1);
                 }
             });
         } else {
+            int actualSize = mData.size();
+            if (mHeaderViewId != -1) {
+                actualSize = actualSize + 1;
+            }
             mData.remove(mData.size() - 1);
-            notifyItemRemoved(mData.size());
+            notifyItemRemoved(actualSize);
         }
     }
 
@@ -293,6 +350,23 @@ public class LPRecyclerViewAdapter<E> extends RecyclerView.Adapter {
         private ViewDataBinding binding;
 
         public LPLoadMoreViewHolder(ViewDataBinding binding) {
+            super(binding.getRoot());
+            this.binding = binding;
+        }
+
+        public ViewDataBinding getBinding() {
+            return binding;
+        }
+    }
+
+    /**
+     * 加载更多
+     */
+    public static class LPHeaderViewHolder extends RecyclerView.ViewHolder {
+
+        private ViewDataBinding binding;
+
+        public LPHeaderViewHolder(ViewDataBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
         }

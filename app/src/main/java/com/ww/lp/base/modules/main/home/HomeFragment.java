@@ -9,6 +9,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.synnapps.carouselview.ViewListener;
@@ -22,10 +23,9 @@ import com.ww.lp.base.components.rvrl.SingleItemClickListener;
 import com.ww.lp.base.data.ads.CarouselInfo;
 import com.ww.lp.base.data.project.ProjectInfo;
 import com.ww.lp.base.databinding.HomeFragBinding;
+import com.ww.lp.base.databinding.RecyclerViewHeaderBinding;
 import com.ww.lp.base.modules.login.LoginActivity;
 import com.ww.lp.base.modules.order.detail.OrderDetailActivity;
-import com.ww.lp.base.modules.team.developer.DeveloperActivity;
-import com.ww.lp.base.modules.team.list.TeamListActivity;
 import com.ww.lp.base.modules.webview.NormalWVActvity;
 import com.ww.lp.base.utils.SPUtils;
 
@@ -57,9 +57,9 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
     @Override
     public void onResume() {
         super.onResume();
-        if (mPresenter == null){
+        if (mPresenter == null) {
             getActivity().finish();
-        }else {
+        } else {
             mPresenter.subscribe();
             lpRecyclerViewAdapter.setPageCurrentNum(lpRecyclerViewAdapter.getPageStartNum());
             mPresenter.loadProjectList(lpRecyclerViewAdapter.getPageStartNum());
@@ -69,7 +69,7 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
     @Override
     public void onPause() {
         super.onPause();
-        if (mPresenter != null){
+        if (mPresenter != null) {
             mPresenter.unsubscribe();
         }
     }
@@ -134,24 +134,8 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
             }
         });
         binding.lpRv.setAdapter(lpRecyclerViewAdapter);
-
-        binding.team.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), TeamListActivity.class);
-                startActivity(intent);
-
-            }
-        });
-        binding.developer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), DeveloperActivity.class);
-                startActivity(intent);
-
-            }
-        });
-
+        //添加header
+        lpRecyclerViewAdapter.setHeaderViewId(R.layout.recycler_view_header);
         return root;
     }
 
@@ -171,6 +155,7 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
                 simpleDraweeView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        Toast.makeText(getActivity(), "lskjdlfa", Toast.LENGTH_SHORT).show();
                         if (!carouselList.get(position).getUrl().startsWith("empty") && carouselList.get(position).getUrl().startsWith("http")) {
                             Intent intent = new Intent(getActivity(), NormalWVActvity.class);
                             intent.putExtra(NormalWVActvity.LOADURL, carouselList.get(position).getUrl());
@@ -182,9 +167,12 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
                 return carouselView;
             }
         };
-        binding.homeCarouselView.setViewListener(viewListener);
-        //setPageCount方法的调用需要放到setViewListener之后
-        binding.homeCarouselView.setPageCount(carouselList.size());
+
+        if (lpRecyclerViewAdapter.getHeaderViewId() != -1) {
+            ((RecyclerViewHeaderBinding) lpRecyclerViewAdapter.getLPHeaderViewHolder().getBinding()).homeCarouselView.setViewListener(viewListener);
+            //setPageCount方法的调用需要放到setViewListener之后
+            ((RecyclerViewHeaderBinding) lpRecyclerViewAdapter.getLPHeaderViewHolder().getBinding()).homeCarouselView.setPageCount(carouselList.size());
+        }
 
     }
 
