@@ -5,8 +5,6 @@ import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
@@ -19,7 +17,6 @@ import com.ww.lp.base.components.bottombar.BottomBar;
 import com.ww.lp.base.components.bottombar.OnTabReselectListener;
 import com.ww.lp.base.components.bottombar.OnTabSelectListener;
 import com.ww.lp.base.data.user.LoginResult;
-import com.ww.lp.base.modules.login.LoginActivity;
 import com.ww.lp.base.modules.main.home.HomeFragment;
 import com.ww.lp.base.modules.main.home.HomePresenter;
 import com.ww.lp.base.modules.main.more.MoreFragment;
@@ -147,43 +144,45 @@ public class MainActivity extends BaseActivity {
             getSupportFragmentManager().beginTransaction().hide(getSupportFragmentManager().findFragmentByTag("about")).commit();
         }
     }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        if (TextUtils.isEmpty((String) SPUtils.get(this, SPUtils.TOKEN, ""))) {
-            getMenuInflater().inflate(R.menu.user_login, menu);
-        } else {
-            getMenuInflater().inflate(R.menu.user_logout, menu);
-        }
-        return true;
-    }
-
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        menu.clear();
-        if (TextUtils.isEmpty((String) SPUtils.get(this, SPUtils.TOKEN, ""))) {
-            getMenuInflater().inflate(R.menu.user_login, menu);
-        } else {
-            getMenuInflater().inflate(R.menu.user_logout, menu);
-        }
-        return super.onPrepareOptionsMenu(menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.login:
-                Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-                startActivity(intent);
-                return true;
-            case R.id.logout:
-                SPUtils.clear(MainActivity.this);
-                ToastUtils.toastShort("退出成功！");
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
+//
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        if (TextUtils.isEmpty((String) SPUtils.get(this, SPUtils.TOKEN, ""))) {
+//            getMenuInflater().inflate(R.menu.user_login, menu);
+//        } else {
+//            getMenuInflater().inflate(R.menu.user_logout, menu);
+//        }
+//        return true;
+//    }
+//
+//    @Override
+//    public boolean onPrepareOptionsMenu(Menu menu) {
+//        menu.clear();
+//        if (TextUtils.isEmpty((String) SPUtils.get(this, SPUtils.TOKEN, ""))) {
+//            getMenuInflater().inflate(R.menu.user_login, menu);
+//        } else {
+//            getMenuInflater().inflate(R.menu.user_logout, menu);
+//        }
+//        return super.onPrepareOptionsMenu(menu);
+//    }
+//
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        switch (item.getItemId()) {
+//            case R.id.login:
+//                Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+//                startActivity(intent);
+//                return true;
+//            case R.id.logout:
+////                SPUtils.clear(MainActivity.this);
+//                SPUtils.put(MainActivity.this, SPUtils.TOKEN, "");
+//                SPUtils.put(MainActivity.this, SPUtils.EMAIL, "");
+//                ToastUtils.toastShort("退出成功！");
+//                return true;
+//            default:
+//                return super.onOptionsItemSelected(item);
+//        }
+//    }
 
     public void logout() {
         Map<String, String> params = new HashMap<>();

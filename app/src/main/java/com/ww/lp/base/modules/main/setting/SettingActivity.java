@@ -1,4 +1,4 @@
-package com.ww.lp.base.modules.main.about;
+package com.ww.lp.base.modules.main.setting;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -13,26 +13,26 @@ import com.ww.lp.base.utils.schedulers.SchedulerProvider;
  * Created by LinkedME06 on 16/11/13.
  */
 
-public class AboutActivity extends BaseActivity {
+public class SettingActivity extends BaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.base_act, true, true, false);
 
-        setTitle("关于");
+        setTitle("设置");
 
-        AboutFragment tempFragment = (AboutFragment) getSupportFragmentManager()
+        SettingFragment settingFragment = (SettingFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.contentFrame);
 
-        if (tempFragment == null) {
-            tempFragment = AboutFragment.newInstance();
+        if (settingFragment == null) {
+            settingFragment = SettingFragment.newInstance();
 
             ActivityUtils.addFragmentToActivity(getSupportFragmentManager(),
-                    tempFragment, R.id.contentFrame);
+                    settingFragment, R.id.contentFrame);
         }
 
         // Create the presenter
-        new AboutPresenter(TAG, ServerImp.getInstance(getApplicationContext()), tempFragment, SchedulerProvider.getInstance());
+        new SettingPresenter(TAG, ServerImp.getInstance(getApplicationContext()), settingFragment, SchedulerProvider.getInstance());
     }
 
 }

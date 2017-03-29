@@ -83,6 +83,19 @@ public class ProjectInfo implements Parcelable {
     private int status;
     private String tittle;
 
+    public int getClassify() {
+        return classify;
+    }
+
+    public void setClassify(int classify) {
+        this.classify = classify;
+    }
+
+    private int classify = 4;
+
+    public ProjectInfo() {
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -98,9 +111,7 @@ public class ProjectInfo implements Parcelable {
         dest.writeTypedList(this.projectImgs);
         dest.writeInt(this.status);
         dest.writeString(this.tittle);
-    }
-
-    public ProjectInfo() {
+        dest.writeInt(this.classify);
     }
 
     protected ProjectInfo(Parcel in) {
@@ -112,6 +123,7 @@ public class ProjectInfo implements Parcelable {
         this.projectImgs = in.createTypedArrayList(ProjectImg.CREATOR);
         this.status = in.readInt();
         this.tittle = in.readString();
+        this.classify = in.readInt();
     }
 
     public static final Creator<ProjectInfo> CREATOR = new Creator<ProjectInfo>() {

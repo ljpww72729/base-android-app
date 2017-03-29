@@ -1,4 +1,4 @@
-package com.ww.lp.base.modules.main.user;
+package com.ww.lp.base.modules.main.setting;
 
 import android.support.annotation.NonNull;
 
@@ -10,12 +10,10 @@ import rx.subscriptions.CompositeSubscription;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * 登录Presenter
- *
- * Created by LinkedME06 on 16/10/27.
+ * Created by LinkedME06 on 16/11/13.
  */
 
-public class UserInfoPresenter implements UserInfoContract.Presenter {
+public class SettingPresenter implements SettingContract.Presenter {
 
     @NonNull
     private String requestTag;
@@ -23,22 +21,22 @@ public class UserInfoPresenter implements UserInfoContract.Presenter {
     @NonNull
     private final ServerImp mServerImp;
     @NonNull
-    private final UserInfoContract.View mView;
+    private final SettingContract.View mContractView;
     @NonNull
     private final BaseSchedulerProvider mSchedulerProvider;
     @NonNull
     private CompositeSubscription mSubscriptions;
 
-    public UserInfoPresenter(@NonNull String requestTag, @NonNull ServerImp serverImp,
-                             @NonNull UserInfoContract.View loginView,
-                             @NonNull BaseSchedulerProvider schedulerProvider) {
+    public SettingPresenter(@NonNull String requestTag, @NonNull ServerImp serverImp,
+                            @NonNull SettingContract.View contractView,
+                            @NonNull BaseSchedulerProvider schedulerProvider) {
         this.requestTag = requestTag;
         mServerImp = checkNotNull(serverImp, "serverImp cannot be null!");
-        mView = checkNotNull(loginView, "loginView cannot be null!");
+        mContractView = checkNotNull(contractView, "loginView cannot be null!");
         mSchedulerProvider = checkNotNull(schedulerProvider, "schedulerProvider cannot be null");
 
         mSubscriptions = new CompositeSubscription();
-        mView.setPresenter(this);
+        mContractView.setPresenter(this);
     }
 
     @Override

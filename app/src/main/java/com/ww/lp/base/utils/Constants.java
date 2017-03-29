@@ -30,4 +30,7 @@ public class Constants {
     public static final int ADMIN = 2;
 
     public static final String PROJECTIMGS = "projectImgs";
+
+    public static final String DES_SEPARATOR = "#######";
+
 }

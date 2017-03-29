@@ -1,6 +1,8 @@
 package com.ww.lp.base.modules.main.home;
 
 import android.content.Intent;
+import android.databinding.DataBindingUtil;
+import android.databinding.ViewDataBinding;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
@@ -9,9 +11,9 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.orhanobut.logger.Logger;
 import com.synnapps.carouselview.ViewListener;
 import com.ww.lp.base.BR;
 import com.ww.lp.base.BaseFragment;
@@ -44,6 +46,7 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
     private LinearLayoutManager mLayoutManager;
     private ArrayList<ProjectInfo> mRVData = new ArrayList<>();
     private LPRecyclerViewAdapter<ProjectInfo> lpRecyclerViewAdapter;
+    private ViewDataBinding headerBinding;
 
     public static HomeFragment newInstance() {
 
@@ -55,14 +58,16 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
     }
 
     @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
         if (mPresenter == null) {
             getActivity().finish();
         } else {
-            mPresenter.subscribe();
-            lpRecyclerViewAdapter.setPageCurrentNum(lpRecyclerViewAdapter.getPageStartNum());
-            mPresenter.loadProjectList(lpRecyclerViewAdapter.getPageStartNum());
         }
     }
 
@@ -101,11 +106,11 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
         binding.lpRv.addOnItemTouchListener(new SingleItemClickListener(binding.lpRv, new SingleItemClickListener.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                if (TextUtils.isEmpty((String) SPUtils.get(CustomApplication.self(), SPUtils.TOKEN, ""))){
+                if (TextUtils.isEmpty((String) SPUtils.get(CustomApplication.self(), SPUtils.TOKEN, ""))) {
                     //登录后再操
                     Intent intent = new Intent(getActivity(), LoginActivity.class);
                     startActivity(intent);
-                }else{
+                } else {
                     Intent intent = new Intent(getActivity(), OrderDetailActivity.class);
                     intent.putExtra(OrderDetailActivity.PROJECT_ID, mRVData.get(position).getProjectId());
                     intent.putExtra(OrderDetailActivity.IS_PERSONAL, false);
@@ -130,12 +135,20 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
             @Override
             public void onRefresh() {
                 //数据刷新操作
+                //更新header
+                mPresenter.subscribe();
                 mPresenter.loadProjectList(lpRecyclerViewAdapter.getPageStartNum());
             }
         });
         binding.lpRv.setAdapter(lpRecyclerViewAdapter);
-        //添加header
-        lpRecyclerViewAdapter.setHeaderViewId(R.layout.recycler_view_header);
+        headerBinding = DataBindingUtil.inflate(LayoutInflater.from(getActivity()), R.layout.recycler_view_header, null, false);
+        lpRecyclerViewAdapter.setmHeaderBinding(headerBinding);
+
+        //加载数据
+        lpRecyclerViewAdapter.setPageCurrentNum(lpRecyclerViewAdapter.getPageStartNum());
+        mPresenter.loadProjectList(lpRecyclerViewAdapter.getPageStartNum());
+        mPresenter.subscribe();
+
         return root;
     }
 
@@ -155,7 +168,6 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
                 simpleDraweeView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Toast.makeText(getActivity(), "lskjdlfa", Toast.LENGTH_SHORT).show();
                         if (!carouselList.get(position).getUrl().startsWith("empty") && carouselList.get(position).getUrl().startsWith("http")) {
                             Intent intent = new Intent(getActivity(), NormalWVActvity.class);
                             intent.putExtra(NormalWVActvity.LOADURL, carouselList.get(position).getUrl());
@@ -168,11 +180,20 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
             }
         };
 
-        if (lpRecyclerViewAdapter.getHeaderViewId() != -1) {
-            ((RecyclerViewHeaderBinding) lpRecyclerViewAdapter.getLPHeaderViewHolder().getBinding()).homeCarouselView.setViewListener(viewListener);
-            //setPageCount方法的调用需要放到setViewListener之后
-            ((RecyclerViewHeaderBinding) lpRecyclerViewAdapter.getLPHeaderViewHolder().getBinding()).homeCarouselView.setPageCount(carouselList.size());
-        }
+//        if (lpRecyclerViewAdapter.getHeaderViewId() != -1) {
+        ((RecyclerViewHeaderBinding) headerBinding).homeCarouselView.setViewListener(viewListener);
+        //setPageCount方法的调用需要放到setViewListener之后
+        ((RecyclerViewHeaderBinding) headerBinding).homeCarouselView.setPageCount(carouselList.size());
+//        new Handler().post(new Runnable() {
+//            @Override
+//            public void run() {
+//                binding.lpRv.smoothScrollToPosition(0);
+//            }
+//        });
+
+        Logger.d("广告显示出来了");
+        //添加header
+//        }
 
     }
 

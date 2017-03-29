@@ -13,6 +13,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.synnapps.carouselview.ViewListener;
@@ -36,6 +37,7 @@ import com.ww.lp.base.utils.ToastUtils;
 import java.util.ArrayList;
 import java.util.Map;
 
+import me.iwf.photopicker.PhotoPreview;
 import rx.functions.Action1;
 
 import static com.google.gson.internal.$Gson$Preconditions.checkNotNull;
@@ -96,6 +98,13 @@ public class OrderDetailFragment extends BaseFragment implements OrderDetailCont
                              Bundle savedInstanceState) {
         View root = onCreateView(inflater, container, savedInstanceState, R.layout.order_detail_frag, false);
         binding = OrderDetailFragBinding.bind(root);
+        if (!getArguments().getBoolean(OrderDetailActivity.IS_PERSONAL)) {
+            binding.phone.setEnabled(false);
+            binding.title.setEnabled(false);
+            binding.describes.setEnabled(false);
+            binding.classify.setEnabled(false);
+            binding.price.setEnabled(false);
+        }
         mPresenter.loadProjectInfo(getArguments().getString(PROJECT_ID));
         binding.btnStatus.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -147,9 +156,9 @@ public class OrderDetailFragment extends BaseFragment implements OrderDetailCont
                     if (OrderListActivity.RELEASE.equals(getArguments().getString(ORDER_FLAG))) {
                         //拒绝承接
                         mPresenter.editProject(projectInfo, Constants.PUBLISH);
-                    } else if (OrderListActivity.ACCEPT.equals(getArguments().getString(ORDER_FLAG))  && role == Constants.DEVELOPER) {
+                    } else if (OrderListActivity.ACCEPT.equals(getArguments().getString(ORDER_FLAG)) && role == Constants.DEVELOPER) {
                         //项目已完成 开发者才可以完成项目
-                         mPresenter.editProject(projectInfo, Constants.UNPAYED);
+                        mPresenter.editProject(projectInfo, Constants.UNPAYED);
                     }
                 } else {
                     ToastUtils.toastLong("您无权进行该操作！");
@@ -205,14 +214,20 @@ public class OrderDetailFragment extends BaseFragment implements OrderDetailCont
                 View carouselView = LayoutInflater.from(getActivity()).inflate(R.layout.carousel_view, null);
                 SimpleDraweeView simpleDraweeView = (SimpleDraweeView) carouselView.findViewById(R.id.carousel_img);
                 simpleDraweeView.setImageURI(projectImgs.get(position).getImg());
-//                simpleDraweeView.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
-//                        Intent intent = new Intent(getActivity(), NormalWVActvity.class);
-//                        intent.putExtra(NormalWVActvity.LOADURL, carouselList.get(position).getUrl());
-//                        startActivity(intent);
-//                    }
-//                });
+                simpleDraweeView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        ArrayList<String> photos = new ArrayList<String>();
+                        for (ProjectImg imageInfo : projectImgs) {
+                            photos.add(imageInfo.getImg());
+                        }
+                        PhotoPreview.builder()
+                                .setPhotos(photos)
+                                .setCurrentItem(position)
+                                .setShowDeleteButton(false)
+                                .start(getActivity());
+                    }
+                });
 
                 return carouselView;
             }
@@ -225,10 +240,30 @@ public class OrderDetailFragment extends BaseFragment implements OrderDetailCont
 
     @Override
     public void showDetail(ProjectInfo projectInfo) {
+        String describes = projectInfo.getDescribes();
+        if (!TextUtils.isEmpty(describes)) {
+            String[] describes_arr = describes.split(Constants.DES_SEPARATOR);
+            if (describes_arr.length == 3) {
+                //修改
+                int classify = Integer.valueOf(describes_arr[0]);
+                projectInfo.setClassify(classify);
+                projectInfo.setDescribes(describes_arr[2]);
+            }
+        }
         this.projectInfo = projectInfo;
+        if (TextUtils.isEmpty(projectInfo.getPhoneNum())) {
+            binding.phone.setEnabled(true);
+        }
         binding.setProjectInfo(projectInfo);
         setStatus(projectInfo.getStatus());
         updateCarouselView(projectInfo.getProjectImgs());
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(),
+                R.array.arr_classify, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        binding.classify.setAdapter(adapter);
+        binding.classify.setSelected(false);
+        binding.classify.setEnabled(false);
+        binding.classify.setSelection(projectInfo.getClassify());
     }
 
     public void setStatus(int status) {

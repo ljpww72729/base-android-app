@@ -79,13 +79,13 @@ public class LoginFragment extends BaseFragment implements LoginContract.View {
                     loginFragBinding.btnLogin.setText(getString(R.string.register));
                     loginFragBinding.btnRegister.setText(getString(R.string.has_account));
                 } else {
-                    if (timer != null){
+                    if (timer != null) {
                         timer.cancel();
                     }
                     loginFragBinding.phoneVerification.setVisibility(View.GONE);
                     loginFragBinding.btnVerification.setEnabled(true);
                     loginFragBinding.userPhone.setEnabled(true);
-                    loginFragBinding.btnVerification.setBackgroundColor(ActivityCompat.getColor(getActivity(),R.color.primary));
+                    loginFragBinding.btnVerification.setBackgroundColor(ActivityCompat.getColor(getActivity(), R.color.primary));
                     loginFragBinding.btnVerification.setText("获取验证码");
                     loginFragBinding.btnLogin.setText(getString(R.string.login));
                     loginFragBinding.btnRegister.setText(getString(R.string.no_account));
@@ -110,13 +110,14 @@ public class LoginFragment extends BaseFragment implements LoginContract.View {
     public void success(LoginResult loginResult) {
         //请求成功
         SPUtils.put(CustomApplication.self(), SPUtils.TOKEN, loginResult.getData().getToken());
-        SPUtils.put(CustomApplication.self(), SPUtils.EMAIL, TextUtils.isEmpty(loginFragBinding.getUserInfo().getEmail())?"":loginFragBinding.getUserInfo().getEmail());
-        SPUtils.put(CustomApplication.self(), SPUtils.PHONENUM, TextUtils.isEmpty(loginFragBinding.getUserInfo().getPhoneNum())?"":loginFragBinding.getUserInfo().getPhoneNum());
+        SPUtils.put(CustomApplication.self(), SPUtils.EMAIL, loginFragBinding.getUserInfo().getEmail());
+        SPUtils.put(CustomApplication.self(), SPUtils.PHONENUM, loginFragBinding.getUserInfo().getPhoneNum());
         SPUtils.put(CustomApplication.self(), SPUtils.USER_ID, loginResult.getData().getUserId());
         SPUtils.put(CustomApplication.self(), SPUtils.IS_ADMIN, loginResult.getData().getIsAdmin());
         SPUtils.put(CustomApplication.self(), SPUtils.IS_DEVELOPER, loginResult.getData().getIsDeveloper());
-        SPUtils.put(CustomApplication.self(), SPUtils.TEAM_ID, TextUtils.isEmpty(loginResult.getData().getTeamId())? "":loginResult.getData().getTeamId());
+        SPUtils.put(CustomApplication.self(), SPUtils.TEAM_ID, TextUtils.isEmpty(loginResult.getData().getTeamId()) ? "" : loginResult.getData().getTeamId());
         SPUtils.put(CustomApplication.self(), SPUtils.ADMIN_EMAIL, loginResult.getData().getAdminEmail());
+        SPUtils.put(CustomApplication.self(), SPUtils.AVATAR_IMG, loginResult.getData().getAvatarImg());
         int role = 0;
         if (loginResult.getData().getIsDeveloper() == 1) {
             //开发者
@@ -155,7 +156,7 @@ public class LoginFragment extends BaseFragment implements LoginContract.View {
         if (result) {
             loginFragBinding.btnVerification.setEnabled(false);
             loginFragBinding.userPhone.setEnabled(false);
-            loginFragBinding.btnVerification.setBackgroundColor(ActivityCompat.getColor(getActivity(),R.color.counter_text_color));
+            loginFragBinding.btnVerification.setBackgroundColor(ActivityCompat.getColor(getActivity(), R.color.counter_text_color));
             startCountDownTime(90);
         }
     }
@@ -172,7 +173,7 @@ public class LoginFragment extends BaseFragment implements LoginContract.View {
             public void onFinish() {
                 loginFragBinding.btnVerification.setEnabled(true);
                 loginFragBinding.userPhone.setEnabled(true);
-                loginFragBinding.btnVerification.setBackgroundColor(ActivityCompat.getColor(getActivity(),R.color.primary));
+                loginFragBinding.btnVerification.setBackgroundColor(ActivityCompat.getColor(getActivity(), R.color.primary));
                 loginFragBinding.btnVerification.setText("获取验证码");
             }
 
@@ -187,7 +188,7 @@ public class LoginFragment extends BaseFragment implements LoginContract.View {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (timer != null){
+        if (timer != null) {
             timer.cancel();
         }
     }

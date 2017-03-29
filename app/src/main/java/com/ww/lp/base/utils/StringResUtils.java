@@ -15,4 +15,10 @@ public class StringResUtils {
     public static String getString(@StringRes int stringRes) {
         return CustomApplication.self().getString(stringRes);
     }
+
+    public static void main(String[] args) {
+        String abc= "aaa######bb汉字b######ccc";
+        String[] a = abc.split("######");
+        System.out.println("main: " + a[0]);
+    }
 }

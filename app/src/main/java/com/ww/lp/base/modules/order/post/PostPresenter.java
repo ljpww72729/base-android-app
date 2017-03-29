@@ -75,7 +75,7 @@ public class PostPresenter implements PostContract.Presenter {
     public void post(ProjectInfo projectPostInfo, final boolean isAdd) {
         Map<String, String> params = new HashMap<>();
         String requestUrl = ServerInterface.project_publish;
-        if (!isAdd){
+        if (!isAdd) {
             requestUrl = ServerInterface.project_edit;
             params.put("projectId", projectPostInfo.getProjectId());
             params.put("status", projectPostInfo.getStatus() + "");
@@ -86,7 +86,7 @@ public class PostPresenter implements PostContract.Presenter {
         params.put("price", projectPostInfo.getPrice());
         params.put("phoneNum", projectPostInfo.getPhoneNum());
         String img = "";
-        if (projectPostInfo.getProjectImgs() != null && projectPostInfo.getProjectImgs().size() > 0){
+        if (projectPostInfo.getProjectImgs() != null && projectPostInfo.getProjectImgs().size() > 0) {
             img = projectPostInfo.getProjectImgs().get(0).getImg();
         }
         params.put("img", img);
@@ -126,6 +126,7 @@ public class PostPresenter implements PostContract.Presenter {
             File file = new File(arrayList.get(i));
             fileParams.put("img" + i, new DataPart(file.getName(), file.getAbsolutePath(), "image/jpeg"));
         }
+        uploadImgUrlList = new ArrayList<>();
         Subscription subscription = mServerImp.uploadFile(requestTag, ServerInterface.uploadFile, params, fileParams, UploadResult.class)
                 .subscribeOn(mSchedulerProvider.computation())
                 .observeOn(mSchedulerProvider.ui())
@@ -152,6 +153,5 @@ public class PostPresenter implements PostContract.Presenter {
         mSubscriptions.add(subscription);
 
     }
-
 
 }

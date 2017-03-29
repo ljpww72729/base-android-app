@@ -32,7 +32,6 @@ public class OrderDetailActivity extends BaseActivity {
 
         if (orderDetailFragment == null) {
             orderDetailFragment = OrderDetailFragment.newInstance(getIntent());
-
             ActivityUtils.addFragmentToActivity(getSupportFragmentManager(),
                     orderDetailFragment, R.id.contentFrame);
         }
@@ -40,7 +39,6 @@ public class OrderDetailActivity extends BaseActivity {
         // Create the presenter
         new OrderDetailPresenter(TAG, ServerImp.getInstance(getApplicationContext()), orderDetailFragment, SchedulerProvider.getInstance());
     }
-
 
 
 }

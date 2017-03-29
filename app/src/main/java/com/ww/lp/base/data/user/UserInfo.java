@@ -13,6 +13,19 @@ public class UserInfo implements Parcelable {
     private String userId;
     private String token;
     private String email;
+    private String avatarImg;
+    private String password;
+    private String phoneNum;
+    private String teamId;
+    private String verificationCode;
+
+    public String getAvatarImg() {
+        return avatarImg;
+    }
+
+    public void setAvatarImg(String avatarImg) {
+        this.avatarImg = avatarImg;
+    }
 
     public String getAdminEmail() {
         return adminEmail;
@@ -96,11 +109,6 @@ public class UserInfo implements Parcelable {
         this.verificationCode = verificationCode;
     }
 
-    private String password;
-    private String phoneNum;
-    private String teamId;
-    private String verificationCode;
-
 
     public UserInfo() {
     }
@@ -117,11 +125,12 @@ public class UserInfo implements Parcelable {
         dest.writeString(this.userId);
         dest.writeString(this.token);
         dest.writeString(this.email);
-        dest.writeString(this.adminEmail);
+        dest.writeString(this.avatarImg);
         dest.writeString(this.password);
         dest.writeString(this.phoneNum);
         dest.writeString(this.teamId);
         dest.writeString(this.verificationCode);
+        dest.writeString(this.adminEmail);
     }
 
     protected UserInfo(Parcel in) {
@@ -130,11 +139,12 @@ public class UserInfo implements Parcelable {
         this.userId = in.readString();
         this.token = in.readString();
         this.email = in.readString();
-        this.adminEmail = in.readString();
+        this.avatarImg = in.readString();
         this.password = in.readString();
         this.phoneNum = in.readString();
         this.teamId = in.readString();
         this.verificationCode = in.readString();
+        this.adminEmail = in.readString();
     }
 
     public static final Creator<UserInfo> CREATOR = new Creator<UserInfo>() {

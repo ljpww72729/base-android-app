@@ -25,10 +25,13 @@ public class SPUtils {
     public static final String USER_ID = "user_id";
     public static final String IS_ADMIN = "is_admin";
     public static final String IS_DEVELOPER = "is_developer";
+    public static final String AVATAR_IMG = "avatar_img";
     //0：普通用户 1：开发者 2：超级管理员
     public static final String ROLE = "role";
     public static final String TEAM_NAME = "team_name";
     public static final String TEAM_ID = "team_id";
+
+    public static final String AUTO_UPDATE = "auto_update";
 
     /**
      * 保存数据的方法，我们需要拿到保存数据的具体类型，然后根据类型调用不同的保存方法

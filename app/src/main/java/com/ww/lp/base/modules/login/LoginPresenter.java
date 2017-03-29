@@ -12,6 +12,7 @@ import com.ww.lp.base.data.user.UserInfo;
 import com.ww.lp.base.network.ServerImp;
 import com.ww.lp.base.network.ServerInterface;
 import com.ww.lp.base.utils.StringResUtils;
+import com.ww.lp.base.utils.VerifyUtils;
 import com.ww.lp.base.utils.ToastUtils;
 import com.ww.lp.base.utils.schedulers.BaseSchedulerProvider;
 
@@ -60,7 +61,7 @@ public class LoginPresenter implements LoginContract.Presenter {
 
     @Override
     public void verification(UserInfo userInfo) {
-        if (validate(userInfo) && validatePhoneNum(userInfo)) {
+        if (validate(userInfo) && VerifyUtils.isPhoneNum(userInfo.getPhoneNum())) {
             Map<String, String> params = new HashMap<>();
             params.put("email", userInfo.getEmail());
             params.put("password", userInfo.getPassword());
@@ -88,24 +89,11 @@ public class LoginPresenter implements LoginContract.Presenter {
         }
     }
 
-    private boolean validatePhoneNum(UserInfo userInfo) {
-        boolean validate = false;
-        if (TextUtils.isEmpty(userInfo.getPhoneNum())) {
-            ToastUtils.toastShort("请输入手机号！");
-            return false;
-        } else {
-            String phoneRegex = "^((13[0-9])|(14[5,7])|(15[0-3,5-9])|(17[0,1,3,5-8])|(18[0-9])|(147))\\d{8}$";
-            validate = Pattern.matches(phoneRegex, userInfo.getPhoneNum());
-        }
-        if (!validate){
-            ToastUtils.toastShort("请输入正确的手机号！");
-        }
-        return validate;
-    }
+
 
     @Override
     public void register(@NonNull UserInfo userInfo) {
-        if (validate(userInfo) && validatePhoneNum(userInfo) && validateCode(userInfo)) {
+        if (validate(userInfo) && VerifyUtils.isPhoneNum(userInfo.getPhoneNum()) && validateCode(userInfo)) {
             mView.showProgressDialog(null);
             Map<String, String> params = new HashMap<>();
             params.put("email", userInfo.getEmail());

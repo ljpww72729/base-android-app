@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -16,10 +18,10 @@ import com.ww.lp.base.CustomApplication;
 import com.ww.lp.base.R;
 import com.ww.lp.base.data.user.UserInfo;
 import com.ww.lp.base.databinding.UserInfoFragBinding;
+import com.ww.lp.base.modules.main.user.password.ModifyPWActivity;
 import com.ww.lp.base.modules.team.developer.DeveloperActivity;
 import com.ww.lp.base.utils.Constants;
 import com.ww.lp.base.utils.SPUtils;
-import com.ww.lp.base.utils.ToastUtils;
 
 import static com.google.gson.internal.$Gson$Preconditions.checkNotNull;
 
@@ -55,11 +57,15 @@ public class UserInfoFragment extends BaseFragment implements UserInfoContract.V
         View root = onCreateView(inflater, container, savedInstanceState, R.layout.user_info_frag, false);
         userInfoFragBinding = UserInfoFragBinding.bind(root);
         setHasOptionsMenu(true);
-        if ((int)SPUtils.get(CustomApplication.self(), SPUtils.ROLE, 0) == Constants.NORMAL){
-            userInfoFragBinding.btnCertification.setVisibility(View.VISIBLE);
+        if ((int) SPUtils.get(CustomApplication.self(), SPUtils.ROLE, 0) == Constants.NORMAL) {
+            userInfoFragBinding.btnCertification.setText("未认证[点击认证]");
+            userInfoFragBinding.btnCertification.setTextColor(ContextCompat.getColor(getActivity(), R.color.red));
+        } else {
+            userInfoFragBinding.btnCertification.setText("已认证");
+            userInfoFragBinding.btnCertification.setTextColor(ContextCompat.getColor(getActivity(), R.color.accent));
         }
         int role = (int) SPUtils.get(CustomApplication.self(), SPUtils.ROLE, 0);
-        switch (role){
+        switch (role) {
             case 1:
                 userInfoFragBinding.myRole.setText("开发者");
                 break;
@@ -73,18 +79,24 @@ public class UserInfoFragment extends BaseFragment implements UserInfoContract.V
         UserInfo userInfo = new UserInfo();
         userInfo.setEmail((String) SPUtils.get(CustomApplication.self(), SPUtils.EMAIL, ""));
         userInfo.setPhoneNum((String) SPUtils.get(CustomApplication.self(), SPUtils.PHONENUM, ""));
+        if (!TextUtils.isEmpty((String) SPUtils.get(CustomApplication.self(), SPUtils.AVATAR_IMG, ""))) {
+            userInfoFragBinding.avatarImg.setImageURI((String) SPUtils.get(CustomApplication.self(), SPUtils.AVATAR_IMG, ""));
+        }
         userInfoFragBinding.setUserInfo(userInfo);
-        userInfoFragBinding.btnModify.setOnClickListener(new View.OnClickListener() {
+        userInfoFragBinding.cBtnCertification.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mPresenter.modify(userInfoFragBinding.getUserInfo());
+                if ((int) SPUtils.get(CustomApplication.self(), SPUtils.ROLE, 0) == Constants.NORMAL) {
+                    Intent intent = new Intent(getActivity(), DeveloperActivity.class);
+                    startActivity(intent);
+                }
             }
         });
-        userInfoFragBinding.btnCertification.setOnClickListener(new View.OnClickListener() {
+        userInfoFragBinding.cUserAvatar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), DeveloperActivity.class);
-                startActivity(intent);
+                // TODO: 18/03/2017 上传照片
+
             }
         });
         return root;
@@ -96,20 +108,6 @@ public class UserInfoFragment extends BaseFragment implements UserInfoContract.V
     }
 
     @Override
-    public void success(boolean result) {
-        //请求成功
-        if (result){
-            userInfoFragBinding.pwdLayout.setVisibility(View.GONE);
-            userInfoFragBinding.btnModify.setVisibility(View.GONE);
-            userInfoFragBinding.userPassword.setText("");
-            ToastUtils.toastShort("密码修改成功");
-        }else{
-            ToastUtils.toastShort("密码修改失败，请重试！");
-        }
-
-    }
-
-    @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.user_info, menu);
     }
@@ -118,8 +116,8 @@ public class UserInfoFragment extends BaseFragment implements UserInfoContract.V
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.modify_pwd:
-                userInfoFragBinding.pwdLayout.setVisibility(View.VISIBLE);
-                userInfoFragBinding.btnModify.setVisibility(View.VISIBLE);
+                Intent intent = new Intent(getActivity(), ModifyPWActivity.class);
+                startActivity(intent);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

@@ -16,9 +16,12 @@ import com.ww.lp.base.CustomApplication;
 import com.ww.lp.base.R;
 import com.ww.lp.base.databinding.MoreFragBinding;
 import com.ww.lp.base.modules.login.LoginActivity;
+import com.ww.lp.base.modules.main.about.AboutActivity;
+import com.ww.lp.base.modules.main.setting.SettingActivity;
 import com.ww.lp.base.modules.main.user.UserInfoActivity;
 import com.ww.lp.base.modules.order.list.OrderListActivity;
 import com.ww.lp.base.modules.team.detail.TeamDetailActivity;
+import com.ww.lp.base.modules.team.list.TeamListActivity;
 import com.ww.lp.base.utils.Constants;
 import com.ww.lp.base.utils.SPUtils;
 import com.ww.lp.base.utils.ToastUtils;
@@ -126,6 +129,27 @@ public class MoreFragment extends BaseFragment implements MoreContract.View {
                 }
             }
         });
+        binding.otherTeam.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), TeamListActivity.class);
+                startActivity(intent);
+            }
+        });
+        binding.set.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), SettingActivity.class);
+                startActivity(intent);
+            }
+        });
+        binding.about.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), AboutActivity.class);
+                startActivity(intent);
+            }
+        });
         binding.login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -142,7 +166,9 @@ public class MoreFragment extends BaseFragment implements MoreContract.View {
                 builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        SPUtils.clear(getActivity());
+//                        SPUtils.clear(getActivity());
+                        SPUtils.put(getActivity(), SPUtils.TOKEN, "");
+                        SPUtils.put(getActivity(), SPUtils.EMAIL, "");
                         binding.login.setVisibility(View.VISIBLE);
                         binding.logout.setVisibility(View.GONE);
                         ToastUtils.toastShort("退出成功！");

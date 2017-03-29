@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools">
+        xmlns:tools="http://schemas.android.com/tools"
+        xmlns:app="http://schemas.android.com/apk/res-auto">
+
     <data>
+
         <variable
                 name="projectInfo"
                 type="com.ww.lp.base.data.project.ProjectInfo"/>
@@ -21,76 +24,122 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"/>
 
-            <Button
-                    android:id="@+id/img_picker"
+            <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="@dimen/sp_14"
-                    style="@style/LP_Normal_Button"
-                    android:text="选择图片"/>
+                    android:padding="@dimen/dp_2"
+                    android:text="温馨提示：长按图片可删除图片！"/>
 
             <android.support.v7.widget.CardView
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    app:contentPadding="@dimen/dp_8"
+                    style="@style/CardView_More"
+                    android:layout_marginBottom="@dimen/dp_6">
 
                 <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:padding="@dimen/dp_6"
                         android:orientation="horizontal">
 
-                    <LinearLayout
+                    <TextView
                             android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:orientation="vertical"
-                            android:gravity="right">
-
-                        <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="0dp"
-                                android:layout_weight="1"
-                                android:text="价格(￥)："/>
-
-                        <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="0dp"
-                                android:layout_weight="1"
-                                android:text="项目名称："/>
-
-                        <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="0dp"
-                                android:layout_weight="1"
-                                android:text="电话："/>
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_weight="1"
                             android:layout_height="wrap_content"
-                            android:orientation="vertical">
+                            android:text="项目名称："/>
 
-                        <EditText
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:inputType="numberDecimal"
-                                android:text="@={projectInfo.price}"
-                                tools:text="100"/>
+                    <EditText
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="text"
+                            android:text="@={projectInfo.tittle}"
+                            android:background="@null"
+                            android:hint="请输入项目名称"
+                            tools:text="100"/>
+                </LinearLayout>
+            </android.support.v7.widget.CardView>
 
-                        <EditText
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:text="@={projectInfo.tittle}"
-                                tools:text="100"/>
+            <android.support.v7.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:contentPadding="@dimen/dp_8"
+                    android:layout_marginBottom="1px"
+                    style="@style/CardView_More">
 
-                        <EditText
-                                android:inputType="phone"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:text="@={projectInfo.phoneNum}"
-                                tools:text="100"/>
-                    </LinearLayout>
+                <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                    <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="&#160;&#160;价格(￥)："/>
+
+                    <EditText
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="numberDecimal"
+                            android:text="@={projectInfo.price}"
+                            android:background="@null"
+                            android:hint="请输入项目金额（元）"
+                            tools:text="1000"/>
+                </LinearLayout>
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:contentPadding="@dimen/dp_8"
+                    android:layout_marginBottom="@dimen/dp_6"
+                    style="@style/CardView_More">
+
+                <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                    <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="联系电话："/>
+
+                    <EditText
+                            android:id="@+id/phone"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="phone"
+                            android:text="@={projectInfo.phoneNum}"
+                            android:background="@null"
+                            android:enabled="false"
+                            android:hint="联系人电话为注册时电话"
+                            tools:text="173497293478"/>
+                </LinearLayout>
+            </android.support.v7.widget.CardView>
+
+
+            <android.support.v7.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:contentPadding="@dimen/dp_8"
+                    android:layout_marginBottom="1px"
+                    style="@style/CardView_More">
+
+                <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                    <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="项目类型："/>
+
+                    <Spinner
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/classify"/>
+
                 </LinearLayout>
             </android.support.v7.widget.CardView>
 

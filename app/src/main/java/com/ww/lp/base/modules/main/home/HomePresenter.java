@@ -8,6 +8,7 @@ import com.ww.lp.base.CustomApplication;
 import com.ww.lp.base.data.ads.AdsListResult;
 import com.ww.lp.base.data.project.ProjectInfo;
 import com.ww.lp.base.data.project.ProjectListResult;
+import com.ww.lp.base.modules.order.list.OrderListActivity;
 import com.ww.lp.base.network.ServerImp;
 import com.ww.lp.base.network.ServerInterface;
 import com.ww.lp.base.utils.SPUtils;
@@ -94,6 +95,7 @@ public class HomePresenter implements HomeContract.Presenter {
      */
     @Override
     public void loadProjectList(int pageIndex) {
+        // TODO: 16/03/2017 需要陈斌处理不登录也可获取列表
         Map<String, String> params = new HashMap<>();
         params.put("pageIndex", pageIndex + "");
         params.put("isOnlyQueryMyPublis", "0");
@@ -107,12 +109,45 @@ public class HomePresenter implements HomeContract.Presenter {
                     public void onSuccess(ProjectListResult projectList) {
                         ArrayList<ProjectInfo> arrayList = projectList.getData().getList();
                         mContractView.updateProjectList(true, arrayList, projectList.getData().getPageCount());
+                        getPhoneNum();
                     }
 
                     @Override
                     public void onError(Throwable error) {
                         mContractView.updateProjectList(false, new ArrayList<ProjectInfo>(), 0);
                         ToastUtils.toastError(error);
+                        Logger.d(error);
+                    }
+                });
+        mSubscriptions.add(subscription);
+
+    }
+
+    /**
+     * 已发布项目列表，目的是为了获取手机号
+     */
+    public void getPhoneNum() {
+        String requestUrl = ServerInterface.project_list;
+        Map<String, String> params = new HashMap<>();
+        params.put("isOnlyQueryMyPublish", OrderListActivity.PERSONAL);
+        params.put("pageIndex", "0");
+        params.put("token", (String) SPUtils.get(CustomApplication.self(), SPUtils.TOKEN, ""));
+        Subscription subscription = mServerImp
+                .commonSingle(requestTag, Request.Method.POST, requestUrl, params, ProjectListResult.class)
+                .subscribeOn(mSchedulerProvider.computation())
+                .observeOn(mSchedulerProvider.ui())
+                .subscribe(new SingleSubscriber<ProjectListResult>() {
+                    @Override
+                    public void onSuccess(ProjectListResult projectList) {
+                        ArrayList<ProjectInfo> arrayList = projectList.getData().getList();
+                        if (arrayList.size() > 0) {
+                            String phoneNum = arrayList.get(0).getPhoneNum();
+                            SPUtils.put(CustomApplication.self(), SPUtils.PHONENUM, phoneNum);
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable error) {
                         Logger.d(error);
                     }
                 });

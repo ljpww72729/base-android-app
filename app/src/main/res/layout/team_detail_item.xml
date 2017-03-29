@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:fresco="http://schemas.android.com/apk/res-auto">
+        xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
 
@@ -10,9 +10,9 @@
     </data>
 
     <android.support.v7.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/dp_1">
+            style="@style/CardView_More"
+            app:contentPadding="@dimen/dp_8"
+            android:layout_marginBottom="1px">
 
         <RelativeLayout
                 android:layout_width="match_parent"
@@ -24,8 +24,8 @@
                     android:layout_height="@dimen/dp_64"
                     android:layout_alignParentLeft="true"
                     android:layout_centerVertical="true"
-                    fresco:placeholderImage="@drawable/va_img_default"
-                    fresco:actualImageUri="@{lp_rv_item.img}">
+                    app:placeholderImage="@drawable/va_img_default"
+                    app:actualImageUri="@{lp_rv_item.img}">
 
             </com.facebook.drawee.view.SimpleDraweeView>
 

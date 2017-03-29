@@ -3,212 +3,245 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:apps="http://schemas.android.com/tools">
 
-    <LinearLayout
+    <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:layout_height="match_parent">
 
-        <android.support.v7.widget.CardView
-                android:id="@+id/user_info"
-                style="@style/CardView_More"
-                android:layout_marginBottom="@dimen/dp_8">
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
-            <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical">
+            <android.support.v7.widget.CardView
+                    android:id="@+id/user_info"
+                    style="@style/CardView_More"
+                    android:layout_marginBottom="@dimen/dp_8">
 
-                <TextView
-                        android:layout_width="wrap_content"
+                <RelativeLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentLeft="true"
-                        android:textAppearance="@android:style/TextAppearance.Medium"
-                        android:text="个人信息"/>
+                        android:gravity="center_vertical">
 
-                <ImageView
-                        android:layout_alignParentEnd="true"
-                        android:layout_width="wrap_content"
+                    <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentLeft="true"
+                            android:textAppearance="@android:style/TextAppearance.Medium"
+                            android:text="个人信息"/>
+
+                    <ImageView
+                            android:layout_alignParentEnd="true"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:srcCompat="@drawable/va_arrow"
+                            android:layout_alignParentRight="true"/>
+                </RelativeLayout>
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView
+                    android:id="@+id/create_order"
+                    style="@style/CardView_More">
+
+                <RelativeLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        app:srcCompat="@drawable/va_arrow"
-                        android:layout_alignParentRight="true"/>
-            </RelativeLayout>
-        </android.support.v7.widget.CardView>
+                        android:gravity="center_vertical">
 
-        <android.support.v7.widget.CardView
-                android:id="@+id/create_order"
-                style="@style/CardView_More">
+                    <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentLeft="true"
+                            android:textAppearance="@android:style/TextAppearance.Medium"
+                            android:text="我发布的项目"/>
 
-            <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical">
+                    <ImageView
+                            android:layout_alignParentEnd="true"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:srcCompat="@drawable/va_arrow"
+                            android:layout_alignParentRight="true"/>
+                </RelativeLayout>
+            </android.support.v7.widget.CardView>
 
-                <TextView
-                        android:layout_width="wrap_content"
+            <android.support.v7.widget.CardView
+                    android:id="@+id/accept_order"
+                    style="@style/CardView_More"
+                    android:layout_marginTop="1px">
+
+                <RelativeLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentLeft="true"
-                        android:textAppearance="@android:style/TextAppearance.Medium"
-                        android:text="我发布的项目"/>
+                        android:gravity="center_vertical">
 
-                <ImageView
-                        android:layout_alignParentEnd="true"
-                        android:layout_width="wrap_content"
+                    <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentLeft="true"
+                            android:textAppearance="@android:style/TextAppearance.Medium"
+                            android:text="我承接的项目"/>
+
+                    <ImageView
+                            android:layout_alignParentEnd="true"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:srcCompat="@drawable/va_arrow"
+                            android:layout_alignParentRight="true"/>
+                </RelativeLayout>
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView
+                    android:id="@+id/my_team"
+                    style="@style/CardView_More"
+                    android:layout_marginTop="1px"
+                    android:layout_marginBottom="@dimen/dp_8">
+
+                <RelativeLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        app:srcCompat="@drawable/va_arrow"
-                        android:layout_alignParentRight="true"/>
-            </RelativeLayout>
-        </android.support.v7.widget.CardView>
+                        android:gravity="center_vertical">
 
-        <android.support.v7.widget.CardView
-                android:id="@+id/accept_order"
-                style="@style/CardView_More"
-                android:layout_marginTop="1px">
+                    <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentLeft="true"
+                            android:textAppearance="@android:style/TextAppearance.Medium"
+                            android:text="我的团队"/>
 
-            <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical">
+                    <ImageView
+                            android:layout_alignParentEnd="true"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:srcCompat="@drawable/va_arrow"
+                            android:layout_alignParentRight="true"/>
+                </RelativeLayout>
+            </android.support.v7.widget.CardView>
 
-                <TextView
-                        android:layout_width="wrap_content"
+            <android.support.v7.widget.CardView
+                    android:id="@+id/other_team"
+                    style="@style/CardView_More"
+                    android:layout_marginTop="1px"
+                    android:layout_marginBottom="@dimen/dp_8">
+
+                <RelativeLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentLeft="true"
-                        android:textAppearance="@android:style/TextAppearance.Medium"
-                        android:text="我承接的项目"/>
+                        android:gravity="center_vertical">
 
-                <ImageView
-                        android:layout_alignParentEnd="true"
-                        android:layout_width="wrap_content"
+                    <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentLeft="true"
+                            android:textAppearance="@android:style/TextAppearance.Medium"
+                            android:text="其他团队"/>
+
+                    <ImageView
+                            android:layout_alignParentEnd="true"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:srcCompat="@drawable/va_arrow"
+                            android:layout_alignParentRight="true"/>
+                </RelativeLayout>
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView
+                    android:id="@+id/set"
+                    style="@style/CardView_More"
+                    android:layout_marginTop="1px">
+
+                <RelativeLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        app:srcCompat="@drawable/va_arrow"
-                        android:layout_alignParentRight="true"/>
-            </RelativeLayout>
-        </android.support.v7.widget.CardView>
+                        android:gravity="center_vertical">
 
-        <android.support.v7.widget.CardView
-                android:id="@+id/my_team"
-                style="@style/CardView_More"
-                android:layout_marginTop="1px"
-                android:layout_marginBottom="@dimen/dp_8">
+                    <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentLeft="true"
+                            android:textAppearance="@android:style/TextAppearance.Medium"
+                            android:text="设置"/>
 
-            <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical">
+                    <ImageView
+                            android:layout_alignParentEnd="true"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:srcCompat="@drawable/va_arrow"
+                            android:layout_alignParentRight="true"/>
+                </RelativeLayout>
+            </android.support.v7.widget.CardView>
 
-                <TextView
-                        android:layout_width="wrap_content"
+            <android.support.v7.widget.CardView
+                    android:id="@+id/about"
+                    style="@style/CardView_More"
+                    android:layout_marginTop="1px">
+
+                <RelativeLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentLeft="true"
-                        android:textAppearance="@android:style/TextAppearance.Medium"
-                        android:text="我的团队"/>
+                        android:gravity="center_vertical">
 
-                <ImageView
-                        android:layout_alignParentEnd="true"
-                        android:layout_width="wrap_content"
+                    <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentLeft="true"
+                            android:textAppearance="@android:style/TextAppearance.Medium"
+                            android:text="关于"/>
+
+                    <ImageView
+                            android:layout_alignParentEnd="true"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:srcCompat="@drawable/va_arrow"
+                            android:layout_alignParentRight="true"/>
+                </RelativeLayout>
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView
+                    android:visibility="gone"
+                    android:layout_marginTop="@dimen/dp_16"
+                    android:id="@+id/login"
+                    style="@style/CardView_More"
+                    app:cardBackgroundColor="@color/accent">
+
+                <RelativeLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        app:srcCompat="@drawable/va_arrow"
-                        android:layout_alignParentRight="true"/>
-            </RelativeLayout>
-        </android.support.v7.widget.CardView>
+                        android:gravity="center_vertical">
 
-        <android.support.v7.widget.CardView
-                android:id="@+id/set"
-                style="@style/CardView_More"
-                android:layout_marginTop="1px">
+                    <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:textAppearance="@android:style/TextAppearance.Medium"
+                            android:textColor="@color/white"
+                            android:text="@string/login"/>
 
-            <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical">
+                </RelativeLayout>
+            </android.support.v7.widget.CardView>
 
-                <TextView
-                        android:layout_width="wrap_content"
+            <android.support.v7.widget.CardView
+                    android:layout_marginTop="@dimen/dp_16"
+                    android:layout_marginBottom="@dimen/dp_16"
+                    android:id="@+id/logout"
+                    style="@style/CardView_More"
+                    app:cardBackgroundColor="@color/red"
+                    android:visibility="gone">
+
+                <RelativeLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentLeft="true"
-                        android:textAppearance="@android:style/TextAppearance.Medium"
-                        android:text="设置"/>
+                        android:gravity="center_vertical">
 
-                <ImageView
-                        android:layout_alignParentEnd="true"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        app:srcCompat="@drawable/va_arrow"
-                        android:layout_alignParentRight="true"/>
-            </RelativeLayout>
-        </android.support.v7.widget.CardView>
+                    <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:textAppearance="@android:style/TextAppearance.Medium"
+                            android:textColor="@color/white"
+                            android:text="@string/logout"/>
 
-        <android.support.v7.widget.CardView
-                android:id="@+id/about"
-                style="@style/CardView_More"
-                android:layout_marginTop="1px">
+                </RelativeLayout>
+            </android.support.v7.widget.CardView>
 
-            <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical">
-
-                <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentLeft="true"
-                        android:textAppearance="@android:style/TextAppearance.Medium"
-                        android:text="关于"/>
-
-                <ImageView
-                        android:layout_alignParentEnd="true"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        app:srcCompat="@drawable/va_arrow"
-                        android:layout_alignParentRight="true"/>
-            </RelativeLayout>
-        </android.support.v7.widget.CardView>
-
-        <android.support.v7.widget.CardView
-                android:visibility="gone"
-                android:layout_marginTop="@dimen/dp_16"
-                android:id="@+id/login"
-                style="@style/CardView_More"
-                app:cardBackgroundColor="@color/accent">
-
-            <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical">
-
-                <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerInParent="true"
-                        android:textAppearance="@android:style/TextAppearance.Medium"
-                        android:textColor="@color/white"
-                        android:text="@string/login"/>
-
-            </RelativeLayout>
-        </android.support.v7.widget.CardView>
-
-        <android.support.v7.widget.CardView
-                android:layout_marginTop="@dimen/dp_16"
-                android:id="@+id/logout"
-                style="@style/CardView_More"
-                app:cardBackgroundColor="@color/red"
-                android:visibility="gone">
-
-            <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical">
-
-                <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerInParent="true"
-                        android:textAppearance="@android:style/TextAppearance.Medium"
-                        android:textColor="@color/white"
-                        android:text="@string/logout"/>
-
-            </RelativeLayout>
-        </android.support.v7.widget.CardView>
-
-    </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
 </layout>
