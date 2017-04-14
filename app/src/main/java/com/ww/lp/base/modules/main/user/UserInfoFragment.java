@@ -29,7 +29,7 @@ import static com.google.gson.internal.$Gson$Preconditions.checkNotNull;
  * 登录 Created by LinkedME06 on 16/10/27.
  */
 
-public class UserInfoFragment extends BaseFragment implements UserInfoContract.View {
+public class UserInfoFragment extends BaseFragment implements com.ww.lp.base.modules.main.user.UserInfoContract.View {
 
     private UserInfoFragBinding userInfoFragBinding;
     private UserInfoContract.Presenter mPresenter;
@@ -103,7 +103,7 @@ public class UserInfoFragment extends BaseFragment implements UserInfoContract.V
     }
 
     @Override
-    public void setPresenter(@NonNull UserInfoContract.Presenter presenter) {
+    public void setPresenter(@NonNull com.ww.lp.base.modules.main.user.UserInfoContract.Presenter presenter) {
         mPresenter = checkNotNull(presenter);
     }
 
