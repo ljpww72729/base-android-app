@@ -23,7 +23,6 @@ import com.ww.lp.base.BaseFragment;
 import com.ww.lp.base.CustomApplication;
 import com.ww.lp.base.R;
 import com.ww.lp.base.components.alipay.PayResult;
-import com.ww.lp.base.components.rvrl.LPRecyclerViewAdapter;
 import com.ww.lp.base.data.project.ProjectImg;
 import com.ww.lp.base.data.project.ProjectInfo;
 import com.ww.lp.base.databinding.OrderDetailFragBinding;
@@ -33,6 +32,7 @@ import com.ww.lp.base.modules.order.post.PostActivity;
 import com.ww.lp.base.utils.Constants;
 import com.ww.lp.base.utils.SPUtils;
 import com.ww.lp.base.utils.ToastUtils;
+import com.ww.lp.rvrl_lib.LPRecyclerViewAdapter;
 
 import java.util.ArrayList;
 import java.util.Map;

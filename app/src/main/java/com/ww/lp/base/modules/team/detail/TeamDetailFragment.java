@@ -16,14 +16,14 @@ import android.view.ViewGroup;
 import com.ww.lp.base.BR;
 import com.ww.lp.base.BaseFragment;
 import com.ww.lp.base.R;
-import com.ww.lp.base.components.rvrl.LPRecyclerViewAdapter;
-import com.ww.lp.base.components.rvrl.LPRefreshLoadListener;
-import com.ww.lp.base.components.rvrl.SingleItemClickListener;
 import com.ww.lp.base.data.team.TeamInfo;
 import com.ww.lp.base.data.team.TeamMember;
 import com.ww.lp.base.databinding.TeamListFragBinding;
 import com.ww.lp.base.modules.team.member.MemberActivity;
 import com.ww.lp.base.modules.team.member.add.MemberAddActivity;
+import com.ww.lp.rvrl_lib.LPRecyclerViewAdapter;
+import com.ww.lp.rvrl_lib.LPRefreshLoadListener;
+import com.ww.lp.rvrl_lib.SingleItemClickListener;
 
 import java.util.ArrayList;
 
