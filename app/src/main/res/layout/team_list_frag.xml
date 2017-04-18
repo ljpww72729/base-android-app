@@ -5,7 +5,7 @@
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-        <com.ww.lp.base.components.rvrl.ScrollChildSwipeRefreshLayout
+        <com.ww.lp.rvrl_lib.ScrollChildSwipeRefreshLayout
                 android:id="@+id/lp_scsr"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
@@ -13,6 +13,6 @@
                 android:id="@+id/lp_rv"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"/>
-        </com.ww.lp.base.components.rvrl.ScrollChildSwipeRefreshLayout>
+        </com.ww.lp.rvrl_lib.ScrollChildSwipeRefreshLayout>
     </LinearLayout>
 </layout>
