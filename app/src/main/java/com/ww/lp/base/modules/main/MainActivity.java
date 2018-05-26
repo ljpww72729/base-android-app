@@ -2,20 +2,17 @@ package com.ww.lp.base.modules.main;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.IdRes;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.BottomNavigationView;
 import android.text.TextUtils;
-import android.view.View;
-import android.widget.TextView;
+import android.view.MenuItem;
 
 import com.android.volley.Request;
 import com.orhanobut.logger.Logger;
 import com.ww.lp.base.BaseActivity;
 import com.ww.lp.base.CustomApplication;
 import com.ww.lp.base.R;
-import com.ww.lp.base.components.bottombar.BottomBar;
-import com.ww.lp.base.components.bottombar.OnTabReselectListener;
-import com.ww.lp.base.components.bottombar.OnTabSelectListener;
 import com.ww.lp.base.data.user.LoginResult;
 import com.ww.lp.base.modules.main.home.HomeFragment;
 import com.ww.lp.base.modules.main.home.HomePresenter;
@@ -42,39 +39,26 @@ import rx.SingleSubscriber;
 
 public class MainActivity extends BaseActivity {
 
-    private BottomBar bottomBar;
+    private BottomNavigationView bottomBar;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_act, true, false, false);
-        bottomBar = (BottomBar) findViewById(R.id.bottomBar);
+        bottomBar = (BottomNavigationView) findViewById(R.id.bottomBar);
         // Set up the toolbar.
         setTitle("清软众包");
         //页面切换
-        bottomBar.setOnTabSelectListener(new OnTabSelectListener() {
+        bottomBar.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
-            public void onTabSelected(@IdRes int tabId) {
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 // TODO: 16/11/25 此处需要优化，fragment重复创建
-                switchTab(tabId);
-            }
-        });
-        bottomBar.setOnTabReselectListener(new OnTabReselectListener() {
-            @Override
-            public void onTabReSelected(@IdRes int tabId) {
-                Logger.d("reselect tabId= " + tabId);
-            }
-        });
-
-        TextView add_project = (TextView) findViewById(R.id.add_project);
-        add_project.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (TextUtils.isEmpty((String) SPUtils.get(CustomApplication.self(), SPUtils.TOKEN, ""))) {
-                    ToastUtils.toastShort("请先登录后再操作！");
-                } else {
-                    Intent intent = new Intent(MainActivity.this, PostActivity.class);
-                    startActivity(intent);
+                switchTab(item.getItemId());
+                switch (item.getItemId()) {
+                    case R.id.va_add:
+                        return false;
+                    default:
+                        return true;
                 }
             }
         });
@@ -108,6 +92,12 @@ public class MainActivity extends BaseActivity {
                 }
                 break;
             case R.id.va_add:
+                if (TextUtils.isEmpty((String) SPUtils.get(CustomApplication.self(), SPUtils.TOKEN, ""))) {
+                    ToastUtils.toastShort("请先登录后再操作！");
+                } else {
+                    Intent intent = new Intent(MainActivity.this, PostActivity.class);
+                    startActivity(intent);
+                }
                 break;
             case R.id.va_about:
                 setTitle(getString(R.string.guanyu));

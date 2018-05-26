@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+            android:id="@+id/va_home"
+            android:icon="@drawable/va_home"
+            android:title="@string/shouye"/>
+    <item
+            android:id="@+id/va_add"
+            android:icon="@drawable/va_add"
+            android:title="@string/tianjia"/>
+    <item
+            android:id="@+id/va_about"
+            android:icon="@drawable/va_about"
+            android:title="@string/guanyu"/>
+
+</menu>

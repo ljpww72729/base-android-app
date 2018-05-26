@@ -10,46 +10,16 @@
             android:id="@+id/contentFrame"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_above="@+id/bar_layout"/>
+            android:layout_above="@+id/bottomBar"/>
 
-    <FrameLayout
-            android:id="@+id/bar_layout"
+    <android.support.design.widget.BottomNavigationView
+            android:layout_alignParentBottom="true"
+            android:id="@+id/bottomBar"
             android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:layout_alignParentBottom="true">
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:background="?android:attr/windowBackground"
+            app:menu="@menu/main_bottom_nav"/>
 
-        <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-            <com.ww.lp.base.components.bottombar.BottomBar
-                    android:id="@+id/bottomBar"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    app:bb_tabXmlResource="@xml/bottombar_tabs"/>
-        </LinearLayout>
-
-        <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-            <TextView
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="match_parent"/>
-
-            <TextView
-                    android:id="@+id/add_project"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="match_parent"/>
-
-            <TextView
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="match_parent"/>
-        </LinearLayout>
-
-    </FrameLayout>
 
 </RelativeLayout>

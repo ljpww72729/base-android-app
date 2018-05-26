@@ -1,51 +1,51 @@
 <resources>
 
-    <string name="app_name">国信清软</string>
+    <string translatable="false"  name="app_name">国信清软</string>
 
-    <string name="shouye">首页</string>
-    <string name="tianjia">发布</string>
-    <string name="guanyu">我的信息</string>
+    <string translatable="false" name="shouye">首页</string>
+    <string translatable="false" name="tianjia">发布</string>
+    <string translatable="false" name="guanyu">我的信息</string>
 
-    <string name="email">邮箱</string>
-    <string name="phone_email">手机号/邮箱</string>
-    <string name="password">密码</string>
-    <string name="login">登录</string>
-    <string name="login_success">登录成功</string>
-    <string name="error_invalid_email">邮箱无效！</string>
-    <string name="error_invalid_password">密码无效！密码长度为4-20位</string>
-    <string name="error_incorrect_password">邮箱或密码错误！</string>
-    <string name="error_field_required">Required</string>
-    <string name="forgot_password">忘记密码？</string>
-    <string name="register">注册</string>
-    <string name="register_success">注册成功</string>
-    <string name="no_account">无账号？注册</string>
-    <string name="has_account">已有账号？登录</string>
-    <string name="call_phone">拨打电话\n%1$s\n(电话沟通确认后再付款)</string>
-    <string name="logout">退出</string>
+    <string translatable="false" name="email">邮箱</string>
+    <string translatable="false" name="phone_email">手机号/邮箱</string>
+    <string translatable="false" name="password">密码</string>
+    <string translatable="false" name="login">登录</string>
+    <string translatable="false" name="login_success">登录成功</string>
+    <string translatable="false" name="error_invalid_email">邮箱无效！</string>
+    <string translatable="false" name="error_invalid_password">密码无效！密码长度为4-20位</string>
+    <string translatable="false" name="error_incorrect_password">邮箱或密码错误！</string>
+    <string translatable="false" name="error_field_required">Required</string>
+    <string translatable="false" name="forgot_password">忘记密码？</string>
+    <string translatable="false" name="register">注册</string>
+    <string translatable="false" name="register_success">注册成功</string>
+    <string translatable="false" name="no_account">无账号？注册</string>
+    <string translatable="false" name="has_account">已有账号？登录</string>
+    <string translatable="false" name="call_phone">拨打电话\n%1$s\n(电话沟通确认后再付款)</string>
+    <string translatable="false" name="logout">退出</string>
 
-    <string name="price">价格：%1$s元</string>
+    <string translatable="false" name="price">价格：%1$s元</string>
 
-    <string name="publish">待承接</string>
-    <string name="chengjie">承接</string>
-    <string name="accept">已承接</string>
-    <string name="jujuechengjie">拒绝承接</string>
-    <string name="yiwancheng">已完成</string>
-    <string name="unpay">已完成未支付</string>
-    <string name="zhifu">支付</string>
-    <string name="payed">完成且已支付</string>
-    <string name="pingja">评价</string>
+    <string translatable="false" name="publish">待承接</string>
+    <string translatable="false" name="chengjie">承接</string>
+    <string translatable="false" name="accept">已承接</string>
+    <string translatable="false" name="jujuechengjie">拒绝承接</string>
+    <string translatable="false" name="yiwancheng">已完成</string>
+    <string translatable="false" name="unpay">已完成未支付</string>
+    <string translatable="false" name="zhifu">支付</string>
+    <string translatable="false" name="payed">完成且已支付</string>
+    <string translatable="false" name="pingja">评价</string>
 
 
-    <string name="progressActivityErrorButton">重试</string>
-    <string name="progressActivityEmptyTitlePlaceholder">无任何数据</string>
-    <string name="progressActivityEmptyContentPlaceholder">无任何数据\n是不是进错门了？</string>
-    <string name="progressActivityErrorTitlePlaceholder">无法连接</string>
-    <string name="progressActivityErrorContentPlaceholder">无法连接到服务器\n请检查网络并重试</string>
-    <string name="count_down_str">%d秒</string>
-    <string name="shenhe">要成为开发者需提供以下资料发送到%1$s邮箱，等待审核通过</string>
-    <string name="version">版本：%1$s</string>
+    <string translatable="false" name="progressActivityErrorButton">重试</string>
+    <string translatable="false" name="progressActivityEmptyTitlePlaceholder">无任何数据</string>
+    <string translatable="false" name="progressActivityEmptyContentPlaceholder">无任何数据\n是不是进错门了？</string>
+    <string translatable="false" name="progressActivityErrorTitlePlaceholder">无法连接</string>
+    <string translatable="false" name="progressActivityErrorContentPlaceholder">无法连接到服务器\n请检查网络并重试</string>
+    <string translatable="false" name="count_down_str">%d秒</string>
+    <string translatable="false" name="shenhe">要成为开发者需提供以下资料发送到%1$s邮箱，等待审核通过</string>
+    <string translatable="false" name="version">版本：%1$s</string>
 
-    <string name="company_info">1.北京国信清软科技有限责任公司注册在有“中国硅谷”之称的北京中关村高科技园区，
+    <string translatable="false" name="company_info">1.北京国信清软科技有限责任公司注册在有“中国硅谷”之称的北京中关村高科技园区，
         始创于2007年6月，由一支来自IT前沿、高素质、高学历、经验丰富的讲师团队；
         是一家集实训、咨询、开发、服务于一体的高新技术产业公司。
         国信清软和多家企业合作，同时在全国多个院校建立了实训基地。
